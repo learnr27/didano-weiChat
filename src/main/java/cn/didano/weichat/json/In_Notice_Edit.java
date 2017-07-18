@@ -14,13 +14,13 @@ public class In_Notice_Edit {
 	@ApiModelProperty(value = "内容",required=true)
 	private String content;
 
-	@ApiModelProperty(value = "优先级",required=true)
+	@ApiModelProperty(value = "优先级 0 -普通 1-置顶",required=true)
 	private Byte priority;
-	@ApiModelProperty(value = "通知类型",required=true)
+	@ApiModelProperty(value = "通知类型 0-晨检报告 1-园长通知 2-接送报告 3-公众号 4-其他",required=true)
 	private Byte noticeType;
 	@ApiModelProperty(value = "用户id",required=true)
 	private List<Integer> userId;
-	@ApiModelProperty(value = "用户类型",required=true)
+	@ApiModelProperty(value = "用户类型 1-单个用户 2-多个用户",required=true)
 	private Byte user_type;
 	public String getTitle() {
 		return title;

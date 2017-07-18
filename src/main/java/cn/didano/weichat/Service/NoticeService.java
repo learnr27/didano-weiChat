@@ -7,12 +7,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.didano.weichat.dao.Tb_head_sculptureMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
 import cn.didano.weichat.dao.Tb_noticeUserMapper;
 import cn.didano.weichat.exception.DBExceptionEnums;
 import cn.didano.weichat.exception.ServiceException;
+import cn.didano.weichat.json.In_Read_Date;
+import cn.didano.weichat.model.Tb_head_sculpture;
+import cn.didano.weichat.model.Tb_head_sculptureExample;
 import cn.didano.weichat.model.Tb_notice;
-import cn.didano.weichat.model.Tb_noticeExample;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_noticeUserExample;
 
@@ -23,6 +26,20 @@ public class NoticeService {
 	private Tb_noticeMapper noticeMapper;
 	@Autowired
 	private Tb_noticeUserMapper noticeUserMapper;
+	@Autowired
+	private Tb_head_sculptureMapper headMapper;
+	
+	/**
+	 * 根据通知类型查找头像
+	 */
+	public List<Tb_head_sculpture> selectHeadByNoticeType(byte type){
+		Tb_head_sculptureExample condition = new Tb_head_sculptureExample();
+		Tb_head_sculptureExample.Criteria criteria = condition.createCriteria();
+		   //对于已经deleted=1的不显示 禁用不显示
+		 	criteria.andDeletedEqualTo(false);
+		 	criteria.andNoticeTypeEqualTo(type);
+		 	return headMapper.selectByExample(condition);
+	}
 	
 	/**
 	 * 插入tb_notice
@@ -61,20 +78,23 @@ public class NoticeService {
  		//查询出置顶的消息
  		for (int i = 0; i < noticeUser.size(); i++) {
  			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
+ 			notice.setIs_read(noticeUser.get(i).getIsRead());
  			if(notice.getPriority()==1){
  				priority.add(i);
  			}
 		}
  		for (int i = 0; i < priority.size(); i++) {
  			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
+ 			notice.setIs_read(noticeUser.get(i).getIsRead());
  			notices.add(notice);
  			//去除已经置顶的消息
  			noticeUser.remove(i);
 		}
  		
  		//按时间排序
- 		for (int i = noticeUser.size()-1; i >=0 ; i--) {
+ 		for (int i = noticeUser.size()-1; i >=0 ; i--) {			
 			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
+			notice.setIs_read(noticeUser.get(i).getIsRead());
 			notices.add(notice);
 		}
  		//倒序
@@ -101,7 +121,20 @@ public class NoticeService {
 		return row;
 				
 	}
-	
+	/**
+	 * 通告用户id通知id删除该用户的某条消息
+	 */
+	public int deleteNoticeByUserId(In_Read_Date date){
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		criteria.andNoticeIdEqualTo(date.getNoticeId());
+		criteria.andDeletedEqualTo(false);
+		criteria.andUserIdEqualTo(date.getUserId());
+		List<Tb_noticeUser> noticeUsers = noticeUserMapper.selectByExample(condition);
+		Tb_noticeUser noticeUser=noticeUsers.get(0);
+		noticeUser.setDeleted(true);
+		return noticeUserMapper.updateByPrimaryKeySelective(noticeUser);
+	}
 	/**
 	 * 通告通知id删除通知信息
 	 */

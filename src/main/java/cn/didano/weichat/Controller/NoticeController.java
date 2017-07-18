@@ -22,6 +22,7 @@ import cn.didano.weichat.json.In_Notice_Edit;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
+import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import io.swagger.annotations.Api;
@@ -123,12 +124,19 @@ public class NoticeController {
 	@ResponseBody
 	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("user_id") Integer user_id,@PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,user_id=" + user_id);
-
+		Tb_notice notice = null;
+		Tb_head_sculpture head = null;
 		List<Tb_notice> notices = null;
 		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			notices = noticeService.findNoticeByUserId(user_id,user_type);
+			//获取头像地址
+			for (int i = 0; i < notices.size(); i++) {
+				notice=notices.get(i);
+				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
+				notice.setHeadUrl(head.getAddress());
+			}
 			outList = new OutList<Tb_notice>(notices.size(), notices);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
@@ -137,27 +145,53 @@ public class NoticeController {
 			back.setServiceExceptionWithLog(e.getExceptionEnums());
 		} catch (Exception ex) {
 			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
 		}
 		return back;
 	}
 	
 	/**
 	 *
-	 * 删除通知消息
+	 * 撤回通知消息
 	 *
 	 * @param teacher_id
 	 * @return
 	 */
-	@PostMapping(value = "deleteNotice/{notice_id}")
-	@ApiOperation(value = " 删除通知消息", notes = " 删除通知消息")
+	@PostMapping(value = "withdrawnNotice/{notice_id}")
+	@ApiOperation(value = " 撤回通知消息", notes = "撤回通知消息")
 	@ResponseBody
-	public Out<String> deleteStaff(@PathVariable("notice_id") Integer notice_id) {
-		logger.info("访问  NoticeController:deleteNotic,notice_id=" + notice_id);
+	public Out<String> withdrawnNotice(@PathVariable("notice_id") Integer notice_id) {
+		logger.info("访问  NoticeController:withdrawnNotice,notice_id=" + notice_id);
 		Out<String> back = new Out<String>();
 		try {
 			noticeService.deleteNoticeById(notice_id);
 			int rowNum=noticeService.deleteNoticeUserByNoticeId(notice_id);
+			if (rowNum > 0) {
+				back.setBackTypeWithLog(BackType.SUCCESS_DELETE, "rowNum=" + rowNum);
+			} else {
+				back.setBackTypeWithLog(BackType.FAIL_DELETE_NO_DELETE, "rowNum=" + rowNum);
+			}
+		} catch (ServiceException e) {
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		}
+		return back;
+	}
+	/**
+	 *
+	 * 用户删除自己的消息
+	 *
+	 * @param teacher_id
+	 * @return
+	 */
+	@PostMapping(value = "deleteNoticeByUser")
+	@ApiOperation(value = "  用户删除自己的消息", notes = "  用户删除自己的消息")
+	@ResponseBody
+	public Out<String> deleteNoticeByUser(@RequestBody In_Read_Date date) {
+		logger.info("访问  NoticeController:deleteNoticeByUser,date=" + date);
+		Out<String> back = new Out<String>();
+		try {
+			int rowNum=noticeService.deleteNoticeByUserId(date);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "rowNum=" + rowNum);
 			} else {
@@ -169,7 +203,6 @@ public class NoticeController {
 		}
 		return back;
 	}
-	
 	/**
 	 *
 	 * 设置消息已读
@@ -178,7 +211,7 @@ public class NoticeController {
 	 * @return
 	 */
 	@PostMapping(value = "setNoticeRead")
-	@ApiOperation(value = " 删除通知消息", notes = " 删除通知消息")
+	@ApiOperation(value = "  设置消息已读", notes = "  设置消息已读")
 	@ResponseBody
 	public Out<String> setNoticeRead(@RequestBody In_Read_Date date) {
 		logger.info("访问  NoticeController:setNoticeRead,date=" + date);

@@ -22,8 +22,29 @@ public class Tb_notice {
     private Date updated;
 
     private Boolean deleted;
+//手写加入
+    private byte is_read;
+    
+    private String headUrl;
+    
+    
+    public String getHeadUrl() {
+		return headUrl;
+	}
 
-    public Integer getId() {
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
+	}
+
+	public byte getIs_read() {
+		return is_read;
+	}
+
+	public void setIs_read(byte is_read) {
+		this.is_read = is_read;
+	}
+
+	public Integer getId() {
         return id;
     }
 
