@@ -27,8 +27,18 @@ public class Tb_notice {
     
     private String headUrl;
     
+    private String date;
     
-    public String getHeadUrl() {
+    
+    public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public String getHeadUrl() {
 		return headUrl;
 	}
 

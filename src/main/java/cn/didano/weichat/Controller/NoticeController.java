@@ -2,6 +2,7 @@ package cn.didano.weichat.Controller;
 
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -136,6 +137,13 @@ public class NoticeController {
 				notice=notices.get(i);
 				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
 				notice.setHeadUrl(head.getAddress());
+			}
+			//转换时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String date = null;
+			for (int i = 0; i < notices.size(); i++) {
+				date = sdf.format(notices.get(i).getCreated());
+				notices.get(i).setDate(date);
 			}
 			outList = new OutList<Tb_notice>(notices.size(), notices);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
