@@ -2,6 +2,7 @@ package cn.didano.weichat.Service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,33 +73,33 @@ public class NoticeService {
  		condition.setOrderByClause("created");
  		List<Tb_noticeUser> noticeUser= noticeUserMapper.selectByExample(condition);
  		List<Tb_notice> notices = new ArrayList<Tb_notice>();
- 		List<Integer> priority=new ArrayList<Integer>();
  		Tb_notice notice = null;
  		
  		//查询出置顶的消息
  		for (int i = 0; i < noticeUser.size(); i++) {
  			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
+ 			//查询出未读状态
  			notice.setIs_read(noticeUser.get(i).getIsRead());
  			if(notice.getPriority()==1){
- 				priority.add(i);
+ 				notices.add(notice);
+ 				//去除已经置顶的消息
+ 		 		noticeUser.remove(i);
+ 				
  			}
 		}
- 		for (int i = 0; i < priority.size(); i++) {
- 			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
- 			notice.setIs_read(noticeUser.get(i).getIsRead());
- 			notices.add(notice);
- 			//去除已经置顶的消息
- 			noticeUser.remove(i);
-		}
  		
+ 		Collections.sort(noticeUser, new Comparator<Tb_noticeUser>(){
+ 			 public int compare(Tb_noticeUser o1, Tb_noticeUser o2) {
+ 			    return (int)(o1.getCreated().getTime()-o2.getCreated().getTime());
+ 			 }
+ 		});
  		//按时间排序
  		for (int i = noticeUser.size()-1; i >=0 ; i--) {			
 			notice = noticeMapper.selectByPrimaryKey(noticeUser.get(i).getNoticeId());
 			notice.setIs_read(noticeUser.get(i).getIsRead());
 			notices.add(notice);
 		}
- 		//倒序
- 		Collections.reverse(notices);
+ 		
  		return notices;
 	}
 	/**

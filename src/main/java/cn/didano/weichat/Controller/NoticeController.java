@@ -139,7 +139,7 @@ public class NoticeController {
 				notice.setHeadUrl(head.getAddress());
 			}
 			//转换时间格式
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
 			for (int i = 0; i < notices.size(); i++) {
 				date = sdf.format(notices.get(i).getCreated());

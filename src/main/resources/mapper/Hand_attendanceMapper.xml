@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_attendanceMapper">
+
+<select id ="getDayArriveSchoolStatistic" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="Integer">
+SELECT COUNT(id) AS num FROM (
+                    SELECT tb_student_detection.* FROM tb_student_detection
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_detection.student_id
+                    WHERE tb_student_detection.deleted = 0 AND DATE_FORMAT(tb_student_detection.created, '%Y-%m-%d') = #{date} 
+                    AND tb_student.school_id = #{school_id}
+                    GROUP BY tb_student_detection.student_id 
+                ) AS temp
+</select>
+
+<select id="getDayLeaveSchoolStatistic" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="Integer">
+SELECT COUNT(id) AS num FROM (
+                    SELECT tb_student_away_record.* FROM tb_student_away_record
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_away_record.student_id
+                    WHERE DATE_FORMAT(tb_student_away_record.created, '%Y-%m-%d') = #{date }
+                    AND tb_student.school_id = #{school_id}
+                    GROUP BY tb_student_away_record.student_id 
+                ) AS temp
+  </select>
+
+<select id="getClassArriveSchoolNumList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_classArriveAndLeaveInfo">
+SELECT temp.class_id,temp.title,COUNT(temp.id) AS num FROM (
+                    SELECT
+                        tb_student.class_id,
+                        tb_class.title,
+                        tb_student_detection.*
+                    FROM tb_student_detection
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_detection.student_id
+                    LEFT JOIN tb_class ON tb_class.id = tb_student.class_id
+                    WHERE tb_student_detection.deleted = 0 AND DATE_FORMAT(tb_student_detection.created, '%Y-%m-%d') = #{date}
+                    AND tb_student.school_id = #{school_id}
+                    GROUP BY tb_student_detection.student_id 
+                ) AS temp GROUP BY temp.class_id
+  </select>
+  
+  <select id="getClassLeaveSchoolNumList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_classArriveAndLeaveInfo">
+SELECT temp.class_id,temp.title,COUNT(temp.id) AS num FROM (
+                    SELECT
+                        tb_student.class_id,
+                        tb_class.title,
+                        tb_student_away_record.*
+                    FROM tb_student_away_record
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_away_record.student_id
+                    LEFT JOIN tb_class ON tb_class.id = tb_student.class_id
+                    WHERE DATE_FORMAT(tb_student_away_record.created, '%Y-%m-%d') = #{date}
+                    AND tb_student.school_id = #{school_id} 
+                    GROUP BY tb_student_away_record.student_id 
+                ) AS temp GROUP BY temp.class_id
+  </select>
+  
+    <select id="getTeacherClassArriveSchoolList" parameterType="String" resultType="cn.didano.weichat.model.Tb_student_detection">
+SELECT
+                    tb_student.class_id,
+                    tb_class.title,
+                    tb_student_detection.*
+                    FROM tb_student_detection
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_detection.student_id
+                    LEFT JOIN tb_class ON tb_class.id = tb_student.class_id
+                    LEFT JOIN tb_staff_class ON tb_staff_class.class_id = tb_class.id
+                    LEFT JOIN tb_staff ON tb_staff.id = tb_staff_class.staff_id
+                    WHERE tb_student_detection.deleted = 0 AND DATE_FORMAT(tb_student_detection.created, '%Y-%m-%d') = #{date}
+  </select>
+  
+      <select id="getTeacherClassLeaveSchoolList" parameterType="String" resultType="cn.didano.weichat.model.Tb_student_detection">
+SELECT
+                    tb_student.class_id,
+                    tb_class.title,
+                    tb_student_away_record.*
+                    FROM tb_student_away_record
+                    LEFT JOIN tb_student ON tb_student.id = tb_student_away_record.student_id
+                    LEFT JOIN tb_class ON tb_class.id = tb_student.class_id
+                    LEFT JOIN tb_staff_class ON tb_staff_class.class_id = tb_class.id
+                    LEFT JOIN tb_staff ON tb_staff.id = tb_staff_class.staff_id
+                    WHERE DATE_FORMAT(tb_student_away_record.created, '%Y-%m-%d') = #{date}
+  </select>
+  
+      <select id="getClassArriveStudentList" parameterType="String" resultType="cn.didano.weichat.model.Tb_student_detection">
+SELECT
+                    tb_student.name,
+                    tb_student_detection.*
+                FROM tb_student_detection
+                LEFT JOIN tb_student ON tb_student.id = tb_student_detection.student_id
+                WHERE tb_student_detection.deleted = 0 AND DATE_FORMAT(tb_student_detection.created, '%Y-%m-%d') = #{date}
+  </select>
+  
+     <select id="getClassLeaveStudentList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Tb_student_detection">
+select tmp1.*,tmp2.relation_title as title 
+        		from (SELECT tb_student.name,tb_student_away_record.*
+					FROM tb_student_away_record, tb_student WHERE  tb_student.school_id = #{school_id} 
+					AND tb_student.class_id = #{class_id}  and  tb_student_away_record.student_id=tb_student.id 
+					and  DATE_FORMAT( tb_student_away_record.created, '%Y-%m-%d' ) = #{date} ) as tmp1
+				left join (
+					SELECT a . *
+					FROM tb_student_parent a, tb_student b
+					WHERE b.school_id = #{school_id} 
+					AND b.class_id = #{class_id} 
+					AND a.student_id = b.id ) as tmp2 on tmp1.parent_id=tmp2.parent_id
+  </select>
+  
+   <select id="getSchoolTemperatureStatisticList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Tb_student_detection">
+SELECT temp2.* FROM (
+                    SELECT temp.* FROM (
+                        SELECT tb_class.title,tb_student.name,tb_student_detection.* FROM tb_student_detection
+                        LEFT JOIN tb_student ON tb_student.id = tb_student_detection.student_id
+                        LEFT JOIN tb_class ON tb_class.id = tb_student.class_id
+                        WHERE tb_student_detection.deleted = 0 
+                        AND tb_student.school_id = #{school_id} 
+                        AND DATE_FORMAT(tb_student_detection.created, '%Y-%m-%d') = #{date}
+                        ORDER BY tb_student_detection.created DESC
+                    ) AS temp
+                    GROUP BY temp.student_id
+                    ORDER BY temp.created DESC
+                ) AS temp2
+                WHERE temp2.temperature > temp2.temperature_threshold 
+  </select>
+  
+   <select id="getStudentsNum" parameterType="Integer" resultType="Integer">
+ SELECT COUNT(*) AS mum FROM tb_student
+        WHERE deleted = 0
+        AND class_id = #{class_id} 
+  </select>
+  
+     <select id="getDaySignStatisticList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Tb_staff">
+SELECT tb_class.title,tb_staff_signdate.sign_status,
+                tb_staff_signdate.in_time,
+                tb_staff_signdate.out_time,
+                tb_staff.* 
+                FROM tb_staff
+                LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
+                AND tb_staff_signdate.sign_timestamp = #{date} 
+                LEFT JOIN tb_staff_class ON tb_staff_class.staff_id = tb_staff.id
+                LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
+                WHERE tb_staff.deleted = 0
+                AND tb_staff.school_id = #{school_id}
+                AND tb_staff.type != " . ACT_SCHOOL_HEADMASTER . "
+                ORDER BY tb_staff.type DESC
+  </select>
+  
+    <select id="getMonthSignStatisticList" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Tb_staff_signdate">
+SELECT
+                    COUNT(tb_staff_signdate.id) AS num,
+                    tb_staff_signdate.*
+                FROM
+                    tb_staff_signdate
+                LEFT JOIN tb_staff ON tb_staff.id = tb_staff_signdate.staff_id
+                WHERE
+                    tb_staff_signdate.deleted = 0
+                AND tb_staff_signdate.staff_id = #{staff_id}
+                AND tb_staff.school_id = #{school_id}
+                AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m') = #{date}
+                GROUP BY tb_staff_signdate.sign_status
+  </select>
+</mapper>
