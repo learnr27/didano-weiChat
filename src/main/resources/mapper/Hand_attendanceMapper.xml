@@ -154,4 +154,17 @@ SELECT
                 AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m') = #{date}
                 GROUP BY tb_staff_signdate.sign_status
   </select>
+  
+  <select id="findStaffInfoById" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
+  SELECT * FROM tb_staff b LEFT JOIN tb_staff_class a ON a.staff_id = b.id WHERE b.id = #{id}
+  </select>
+   <select id="findStudentArriveAndLeaveByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">
+  SELECT e.title,a.name,b.created AS arriveTime ,c.created AS leaveTime,d.relation_title AS parent FROM tb_student a 
+LEFT JOIN tb_student_detection b ON  a.id=b.student_id 
+LEFT JOIN tb_student_away_record c ON a.id=c.student_id
+LEFT JOIN tb_student_parent d ON a.id = d.student_id
+LEFT JOIN tb_class e ON a.class_id = e.id
+WHERE a.class_id=#{class_id}
+    
+  </select>
 </mapper>

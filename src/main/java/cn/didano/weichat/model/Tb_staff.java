@@ -37,14 +37,24 @@ public class Tb_staff {
     //手写
     private String title;
     
+    private Integer class_id;
+    
     private byte sign_status;
     
     private Date in_time;
     
     private Date out_time;
     
+   
+    public Integer getClass_id() {
+		return class_id;
+	}
 
-    public String getTitle() {
+	public void setClass_id(Integer class_id) {
+		this.class_id = class_id;
+	}
+
+	public String getTitle() {
 		return title;
 	}
 

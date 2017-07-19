@@ -1,10 +1,10 @@
 package cn.didano.weichat.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import cn.didano.weichat.model.Hand_attendanceData;
 import cn.didano.weichat.model.Hand_classArriveAndLeaveInfo;
+import cn.didano.weichat.model.Hand_studentArriveAndLeaveDate;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staff_signdate;
 import cn.didano.weichat.model.Tb_student_detection;
@@ -22,5 +22,6 @@ public interface Hand_attendanceMapper {
     int getStudentsNum(Integer class_id);
     List<Tb_staff> getDaySignStatisticList(Hand_attendanceData data);
     List<Tb_staff_signdate> getMonthSignStatisticList(Hand_attendanceData data);
-    
+    Tb_staff findStaffInfoById(Integer id);
+    List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveByClass(Integer class_id);
 }
