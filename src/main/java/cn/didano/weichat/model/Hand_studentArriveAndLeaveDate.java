@@ -8,7 +8,29 @@ public class Hand_studentArriveAndLeaveDate {
 	private String name;
 	private Date arriveTime;
 	private Date leaveTime;
+	private String arrive;
+	private String leave;
 	private String parent;
+	private String title;
+	
+	public String getArrive() {
+		return arrive;
+	}
+	public void setArrive(String arrive) {
+		this.arrive = arrive;
+	}
+	public String getLeave() {
+		return leave;
+	}
+	public void setLeave(String leave) {
+		this.leave = leave;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
 	public int getId() {
 		return id;
 	}

@@ -158,13 +158,19 @@ SELECT
   <select id="findStaffInfoById" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
   SELECT * FROM tb_staff b LEFT JOIN tb_staff_class a ON a.staff_id = b.id WHERE b.id = #{id}
   </select>
-   <select id="findStudentArriveAndLeaveByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">
-  SELECT e.title,a.name,b.created AS arriveTime ,c.created AS leaveTime,d.relation_title AS parent FROM tb_student a 
+   <select id="findStudentArriveAndLeaveByClass" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">
+   SELECT temp1.*,e.title,d.relation_title AS parent FROM (SELECT temp.* ,c.created AS leaveTime ,c.parent_id FROM(SELECT a.class_id,a.id,a.name,b.created AS arriveTime FROM tb_student a 
 LEFT JOIN tb_student_detection b ON  a.id=b.student_id 
-LEFT JOIN tb_student_away_record c ON a.id=c.student_id
-LEFT JOIN tb_student_parent d ON a.id = d.student_id
-LEFT JOIN tb_class e ON a.class_id = e.id
-WHERE a.class_id=#{class_id}
+WHERE a.class_id=#{class_id} AND a.deleted=0 AND DATE_FORMAT(b.created, '%Y-%m-%d') = #{date}
+) AS temp
+LEFT JOIN tb_student_away_record c ON temp.id=c.student_id AND DATE_FORMAT(c.created, '%Y-%m-%d') = #{date}
+) AS temp1
+LEFT JOIN tb_student_parent d ON temp1.id = d.student_id AND d.parent_id=temp1.parent_id 
+LEFT JOIN tb_class e ON temp1.class_id = e.id
     
+  </select>
+  
+  <select id="findTeacherMonthAttendanceById" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_teacherAttendance">
+ SELECT staff_id,created,sign_status FROM tb_staff_signdate WHERE staff_id = #{staff_id} AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m') = #{date}
   </select>
 </mapper>

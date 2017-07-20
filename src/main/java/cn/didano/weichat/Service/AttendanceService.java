@@ -9,6 +9,7 @@ import cn.didano.weichat.dao.Hand_attendanceMapper;
 import cn.didano.weichat.model.Hand_attendanceData;
 import cn.didano.weichat.model.Hand_classArriveAndLeaveInfo;
 import cn.didano.weichat.model.Hand_studentArriveAndLeaveDate;
+import cn.didano.weichat.model.Hand_teacherAttendance;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staff_signdate;
 
@@ -18,6 +19,12 @@ public class AttendanceService {
 	@Autowired
 	private Hand_attendanceMapper attendanceMapper;
 	
+	/**
+	 * 根据老师id查询该老师本月考勤情况
+	 */
+	 public List<Hand_teacherAttendance> findTeacherMonthAttendanceById(Hand_attendanceData data){
+		 return attendanceMapper.findTeacherMonthAttendanceById(data);
+	 }
 	/**
 	 * 根据班级查找该学校应到人数
 	 */
@@ -47,7 +54,9 @@ public class AttendanceService {
 	/**
 	 * 根据班级id查找该班级学生到校离校情况
 	 */
-	public List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveByClass(Integer class_id){
-		return attendanceMapper.findStudentArriveAndLeaveByClass(class_id);
+	public List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveByClass(Hand_attendanceData data){
+		return attendanceMapper.findStudentArriveAndLeaveByClass(data);
 	}
+	
+	
 }
