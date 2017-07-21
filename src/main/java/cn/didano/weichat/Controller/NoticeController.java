@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,6 +39,7 @@ public class NoticeController {
 	static Logger logger = Logger.getLogger(NoticeController.class);
 	@Autowired
 	private NoticeService noticeService;
+	
 
 	/**
 	 * 发布通知
@@ -48,6 +50,7 @@ public class NoticeController {
 	@ApiOperation(value = "发布通知", notes = "发布通知")
 	@PostMapping(value = "publish_notice")
 	@ResponseBody
+	//@SendTo("/topic/message")
 	public Out<String> publish_notice(
 			@ApiParam(value = "发布通知", required = true) @RequestBody In_Notice_Edit notice_edit) {
 		logger.info("访问  NoticeController:publish_notice,notice_e=" + notice_edit);
@@ -78,6 +81,8 @@ public class NoticeController {
 				notice.setPersonType((byte) 2);
 			}
 			notice.setCreated(new Date());
+			// 广播通知
+			noticeService.broadcast(notice);
 			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
 			int rowNum = 0;
