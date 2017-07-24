@@ -21,6 +21,7 @@ import cn.didano.weichat.model.Hand_attendanceData;
 import cn.didano.weichat.model.Hand_clasStudentArriveAndLeave;
 import cn.didano.weichat.model.Hand_classArriveAndLeaveInfo;
 import cn.didano.weichat.model.Hand_classArriveData;
+import cn.didano.weichat.model.Hand_schoolArriveDate;
 import cn.didano.weichat.model.Hand_studentArriveAndLeaveDate;
 import cn.didano.weichat.model.Hand_teacherAttendance;
 import cn.didano.weichat.model.Tb_staff;
@@ -44,7 +45,7 @@ public class AttendanceController {
 	 * @throws IllegalAccessException
 	 */
 	@PostMapping(value = "classAttendance_findtByTeacher/{staff_id}/{date}")
-	@ApiOperation(value = "根据老师id,时间查找班级应到人数实到人数未到人数", notes = "根据老师id,时间查找班级应到人数实到人数未到人数")
+	@ApiOperation(value = "老师角色，根据老师id,时间查找班级应到人数实到人数未到人数", notes = "老师角色，根据老师id,时间查找班级应到人数实到人数未到人数")
 	@ResponseBody
 	public Out<Hand_classArriveData> notice_findtByUserid(@PathVariable("staff_id") Integer staff_id,@PathVariable("date") String date) {
 		logger.info("访问  AttendanceController:classAttendance_findtByTeacher,staff_id=" + staff_id);
@@ -117,7 +118,7 @@ public class AttendanceController {
 	 * @throws IllegalAccessException
 	 */
 	@PostMapping(value = "studentAttendance_findtByClass/{class_id}/{date}")
-	@ApiOperation(value = "老师查询某个班级所有人到校离校情况", notes = "老师查询某个班级所有人到校离校情况")
+	@ApiOperation(value = "老师角色，老师查询某个班级所有人到校离校情况", notes = "老师角色，老师查询某个班级所有人到校离校情况")
 	@ResponseBody
 	public Out<Hand_clasStudentArriveAndLeave> studentAttendance_findtByClass(@PathVariable("class_id") Integer class_id,@PathVariable("date") String date) {
 		logger.info("访问  AttendanceController:studentAttendance_findtByClass,staff_id=" + class_id);
@@ -155,6 +156,52 @@ public class AttendanceController {
 			}
 			
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	
+	/**
+	 * 根据学校id查询该学校老师和学生到校情况
+	 * 园长角色
+	 * @throws ParseException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@PostMapping(value = "schoolAttendance_findtByschoolId{school_id}/{date}")
+	@ApiOperation(value = "园长角色，根据学校id查询该学校老师和学生到校情况", notes = "园长角色，根据学校id查询该学校老师和学生到校情况")
+	@ResponseBody
+	public Out<Hand_schoolArriveDate> schoolAttendance_findtByschoolId(@PathVariable("school_id") Integer school_id,@PathVariable("date") String date) {
+		logger.info("访问  AttendanceController:schoolAttendance_findtByschoolIdr,school_id=" + school_id);
+		Hand_schoolArriveDate schoolDate = null;
+		Hand_attendanceData data = null;
+		Out<Hand_schoolArriveDate> back = new Out<Hand_schoolArriveDate>();
+		try {
+			schoolDate = new Hand_schoolArriveDate();
+			data = new Hand_attendanceData();
+			data.setSchool_id(school_id);
+			data.setDate(date);
+			//获取该学校学生总人数
+			int allStudent = attendanceService.getSchoolAllStudentNum(school_id);
+			//获取该时间学校到校人数
+			int arriveStudent = attendanceService.findSchoolStudentArriveNum(data);
+			schoolDate.setAllStudentNum(allStudent);
+			schoolDate.setStudentArriveNum(arriveStudent);
+	        schoolDate.setStudentNoArriveNum(allStudent-arriveStudent);		
+			//获取该学校员工总数
+			int allStaff = attendanceService.getSchoolAllStaffNum(school_id);
+			//获取该学校当天到的员工数
+			int arriveStaff = attendanceService.getSchoolStaffArriveNum(data);
+			schoolDate.setAllTeacherNum(allStaff);
+			schoolDate.setTeacherArriveNum(arriveStaff);
+			schoolDate.setTeacherNoArriveNum(allStaff-arriveStaff);
+			back.setBackTypeWithLog(schoolDate, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());

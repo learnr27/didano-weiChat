@@ -58,5 +58,31 @@ public class AttendanceService {
 		return attendanceMapper.findStudentArriveAndLeaveByClass(data);
 	}
 	
+	/**
+	 * 查看某个学校当天已到所有学生数量
+	 */
+	public int findSchoolStudentArriveNum(Hand_attendanceData data){
+		return attendanceMapper.getDayArriveSchoolStatistic(data);
+	}
 	
+	/**
+	 * 查看某个学校当天应当学生数量
+	 */
+	public int getSchoolAllStudentNum(Integer schoolId){
+		return attendanceMapper.getSchoolAllStudentNum(schoolId);
+	}
+	
+	/**
+	 * 查看某个学校当天应到的职工数量
+	 */
+	public int getSchoolAllStaffNum(Integer schoolId){
+		return attendanceMapper.getSchoolAllStaffNum(schoolId);
+	}
+	
+	/**
+	 * 查看某个学校当天实际到的职工数
+	 */
+	public int getSchoolStaffArriveNum(Hand_attendanceData data){
+		return attendanceMapper.getSchoolArriveStaffNum(data);
+	}
 }

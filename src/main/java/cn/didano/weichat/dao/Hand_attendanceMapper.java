@@ -13,6 +13,9 @@ import cn.didano.weichat.model.Tb_student_detection;
 public interface Hand_attendanceMapper {
 	int getDayArriveSchoolStatistic(Hand_attendanceData data);
 	int getDayLeaveSchoolStatistic(Hand_attendanceData data);
+	int getSchoolAllStudentNum(Integer schoolId);
+	int getSchoolAllStaffNum(Integer schoolId);
+	int getSchoolArriveStaffNum(Hand_attendanceData data);
 	List<Hand_classArriveAndLeaveInfo> getClassArriveSchoolNumList(Hand_attendanceData data);
 	List<Hand_classArriveAndLeaveInfo> getClassLeaveSchoolNumList(Hand_attendanceData data);
     List<Tb_student_detection>  getTeacherClassArriveSchoolList(String date);
