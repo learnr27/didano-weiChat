@@ -244,6 +244,7 @@ public class AttendanceController {
 			attendanceData= new Hand_attendanceData();
 			attendanceData.setSchool_id(school_id);		
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			//转换为unix时间格式
 			long sign_timestamp=sdf.parse(date).getTime()/1000;
 			attendanceData.setSign_timestamp(sign_timestamp);
 			staffs = attendanceService.getDaySignStatisticList(attendanceData);
