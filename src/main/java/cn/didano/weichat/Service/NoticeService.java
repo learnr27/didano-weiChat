@@ -7,12 +7,13 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import cn.didano.weichat.Controller.AttendanceController;
 import cn.didano.weichat.dao.Tb_head_sculptureMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
 import cn.didano.weichat.dao.Tb_noticeUserMapper;
@@ -40,7 +41,6 @@ public class NoticeService {
 
 	// 需要添加用户参数，作为发布对象过滤 //@SendTo("/topic/message")
 	public void broadcast(Tb_notice notice) throws Exception { // convert from
-																// object to
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = mapper.writeValueAsString(notice);
 		logger.info("jsonInString="+jsonInString);
@@ -48,18 +48,6 @@ public class NoticeService {
 		return;
 	}
 
-	// 需要添加用户参数，作为发布对象过滤
-	/*
-	 * @SendTo("/topic/message") public Tb_notice broadcast(Tb_notice notice)
-	 * throws Exception { // convert from object to JSON
-	 * 
-	 * ObjectMapper mapper = new ObjectMapper(); String jsonInString =
-	 * mapper.writeValueAsString(notice);
-	 * 
-	 * this.messageTemplate.convertAndSend("/topic/message", jsonInString);
-	 * 
-	 * Thread.sleep(1000); // simulated delay return notice; // return; }
-	 */
 
 	/**
 	 * 根据通知类型查找头像

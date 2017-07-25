@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +51,6 @@ public class NoticeController {
 	@ApiOperation(value = "发布通知", notes = "发布通知")
 	@PostMapping(value = "publish_notice")
 	@ResponseBody
-	//@SendTo("/topic/message")
 	public Out<String> publish_notice(
 			@ApiParam(value = "发布通知", required = true) @RequestBody In_Notice_Edit notice_edit) {
 		logger.info("访问  NoticeController:publish_notice,notice_e=" + notice_edit);
