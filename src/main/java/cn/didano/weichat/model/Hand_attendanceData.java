@@ -7,7 +7,15 @@ public class Hand_attendanceData {
 	private Integer class_id;
 	private Integer staff_id;
 	private String date;
+	private long sign_timestamp;
 	
+	
+	public long getSign_timestamp() {
+		return sign_timestamp;
+	}
+	public void setSign_timestamp(long sign_timestamp) {
+		this.sign_timestamp = sign_timestamp;
+	}
 	public Integer getClass_id() {
 		return class_id;
 	}

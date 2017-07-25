@@ -3,7 +3,12 @@ package cn.didano.weichat.Controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +22,7 @@ import cn.didano.weichat.Service.AttendanceService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_attendanceData;
 import cn.didano.weichat.model.Hand_clasStudentArriveAndLeave;
 import cn.didano.weichat.model.Hand_classArriveAndLeaveInfo;
@@ -39,7 +45,7 @@ public class AttendanceController {
 	
 	/**
 	 * 根据用户id,时间查找班级应到人数实到人数未到人数
-	 *老师角色
+	 * 老师角色
 	 * @throws ParseException
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
@@ -197,6 +203,10 @@ public class AttendanceController {
 			//获取该学校员工总数
 			int allStaff = attendanceService.getSchoolAllStaffNum(school_id);
 			//获取该学校当天到的员工数
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			//获取unix时间戳
+			long sign_timestamp=sdf.parse(date).getTime()/1000;
+			data.setSign_timestamp(sign_timestamp);
 			int arriveStaff = attendanceService.getSchoolStaffArriveNum(data);
 			schoolDate.setAllTeacherNum(allStaff);
 			schoolDate.setTeacherArriveNum(arriveStaff);
@@ -207,6 +217,116 @@ public class AttendanceController {
 			logger.warn(e.getMessage());
 			back.setServiceExceptionWithLog(e.getExceptionEnums());
 		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	
+	/**
+	 * 园长
+	 * 查询某个学校员工到校离校情况
+	 * @throws ParseException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@PostMapping(value = "staffAttendance_findtBySchool/{school_id}/{date}")
+	@ApiOperation(value = "园长角色，查询某个学校员工到校离校情况", notes = "园长角色，查询某个学校员工到校离校情况")
+	@ResponseBody
+	public Out<OutList<Tb_staff>> staffAttendance_findtBySchool(@PathVariable("school_id") Integer school_id,@PathVariable("date") String date) {
+		logger.info("访问  AttendanceController:staffAttendance_findtBySchool,school_id=" + school_id);
+	
+		Hand_attendanceData attendanceData=null;
+        List<Tb_staff> staffs=null;
+		OutList<Tb_staff> outList = null;
+		Out<OutList<Tb_staff>> back = new Out<OutList<Tb_staff>>();
+		try {
+			attendanceData= new Hand_attendanceData();
+			attendanceData.setSchool_id(school_id);		
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			long sign_timestamp=sdf.parse(date).getTime()/1000;
+			attendanceData.setSign_timestamp(sign_timestamp);
+			staffs = attendanceService.getDaySignStatisticList(attendanceData);
+			outList = new OutList<Tb_staff>(staffs.size(), staffs);
+			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {	
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	
+	/**
+	 * 园长
+	 * 查询某个学校所有学生到校离校情况
+	 * @throws ParseException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@PostMapping(value = "studentAttendance_findtBySchool/{school_id}/{date}")
+	@ApiOperation(value = "园长角色，查询某个学校所有学生到校离校情况", notes = "园长角色，查询某个学校所有学生到校离校情况")
+	@ResponseBody
+	public Out<OutList<Hand_clasStudentArriveAndLeave>> studentAttendance_findtBySchool(@PathVariable("school_id") Integer school_id,@PathVariable("date") String date) {
+		logger.info("访问  AttendanceController:studentAttendance_findtBySchool,school_id=" + school_id);	
+		Hand_attendanceData attendanceData=null;
+        List<Hand_clasStudentArriveAndLeave> studentInfos=null;
+        Hand_clasStudentArriveAndLeave info = null;
+        List<Hand_studentArriveAndLeaveDate> studentDate = null;
+        Map<Integer,List<Hand_studentArriveAndLeaveDate>> map = new HashMap<Integer,List<Hand_studentArriveAndLeaveDate>>();
+		OutList<Hand_clasStudentArriveAndLeave> outList = null;
+		Out<OutList<Hand_clasStudentArriveAndLeave>> back = new Out<OutList<Hand_clasStudentArriveAndLeave>>();
+		try {
+			attendanceData = new Hand_attendanceData();
+			info = new Hand_clasStudentArriveAndLeave();
+			studentInfos = new ArrayList<Hand_clasStudentArriveAndLeave>();
+			attendanceData.setSchool_id(school_id);
+			attendanceData.setDate(date);
+			//获取学生到校离校数据
+			studentDate = attendanceService.findStudentArriveAndLeaveBySchool(attendanceData);
+			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			for (int i = 0; i < studentDate.size(); i++) {
+				//转换到校离校时间格式
+				if(studentDate.get(i).getArriveTime()!=null){
+					studentDate.get(i).setArrive(sdf.format(studentDate.get(i).getArriveTime()));;
+				}else{
+					studentDate.get(i).setArrive("未到校");
+				}
+				if(studentDate.get(i).getLeaveTime()!=null){
+					studentDate.get(i).setLeave(sdf.format(studentDate.get(i).getLeaveTime()));
+				}else{
+					studentDate.get(i).setLeave("未离校");
+				}
+				 int class_id = studentDate.get(i).getClass_id();
+				 //按班级id组装map
+				if(map.containsKey(class_id)){
+					map.get(class_id).add(studentDate.get(i));
+				}else{
+					List<Hand_studentArriveAndLeaveDate> mapDate =  new ArrayList<Hand_studentArriveAndLeaveDate>();
+					mapDate.add(studentDate.get(i));
+					map.put(class_id, mapDate);
+				}
+			}
+			//循环map按班级分类学生
+			Set<Integer> keys=map.keySet();
+			Iterator<Integer> it = keys.iterator();
+			while(it.hasNext()){
+				int key = it.next();
+				info.setClass_id(key);
+				info.setStudentDate(map.get(key));
+				info.setTitle(map.get(key).get(0).getTitle());
+				studentInfos.add(info);
+			}
+			outList = new OutList<Hand_clasStudentArriveAndLeave>(studentInfos.size(), studentInfos);
+			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {	
 			logger.warn(ex.getMessage());
 			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
 		}

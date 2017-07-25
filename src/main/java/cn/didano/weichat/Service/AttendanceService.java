@@ -57,7 +57,12 @@ public class AttendanceService {
 	public List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveByClass(Hand_attendanceData data){
 		return attendanceMapper.findStudentArriveAndLeaveByClass(data);
 	}
-	
+	/**
+	 * 根据学校id查找该学校学生到校离校情况
+	 */
+	public List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveBySchool(Hand_attendanceData data){
+		return attendanceMapper.findStudentArriveAndLeaveBySchool(data);
+	}
 	/**
 	 * 查看某个学校当天已到所有学生数量
 	 */
@@ -84,5 +89,11 @@ public class AttendanceService {
 	 */
 	public int getSchoolStaffArriveNum(Hand_attendanceData data){
 		return attendanceMapper.getSchoolArriveStaffNum(data);
+	}
+	/**
+	 * 查看某个学校员工到校情况详情
+	 */
+	public List<Tb_staff> getDaySignStatisticList(Hand_attendanceData data){
+		return attendanceMapper.getDaySignStatisticList(data);
 	}
 }

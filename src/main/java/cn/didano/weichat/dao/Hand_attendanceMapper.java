@@ -28,5 +28,6 @@ public interface Hand_attendanceMapper {
     List<Tb_staff_signdate> getMonthSignStatisticList(Hand_attendanceData data);
     Tb_staff findStaffInfoById(Integer id);
     List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveByClass(Hand_attendanceData data);
+    List<Hand_studentArriveAndLeaveDate> findStudentArriveAndLeaveBySchool(Hand_attendanceData data);
     List<Hand_teacherAttendance> findTeacherMonthAttendanceById(Hand_attendanceData data);
 }

@@ -131,7 +131,7 @@ SELECT tb_class.title,tb_staff_signdate.sign_status,
                 tb_staff.* 
                 FROM tb_staff
                 LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
-                AND tb_staff_signdate.sign_timestamp = #{date} 
+                AND tb_staff_signdate.sign_timestamp = #{sign_timestamp} 
                 LEFT JOIN tb_staff_class ON tb_staff_class.staff_id = tb_staff.id
                 LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
                 WHERE tb_staff.deleted = 0
@@ -194,7 +194,7 @@ LEFT JOIN tb_class e ON temp1.class_id = e.id
                 tb_staff.* 
                 FROM tb_staff
                 LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
-                AND DATE_FORMAT(tb_staff_signdate.created, '%Y-%m-%d') = #{date}
+                AND tb_staff_signdate.sign_timestamp = #{sign_timestamp}
                 LEFT JOIN tb_staff_class ON tb_staff_class.staff_id = tb_staff.id
                 LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
                 WHERE tb_staff.deleted = 0
@@ -202,5 +202,18 @@ LEFT JOIN tb_class e ON temp1.class_id = e.id
                 AND tb_staff.type != 31
                 ORDER BY tb_staff.type DESC)aa
                 WHERE sign_status IS NOT null
+  </select>
+  
+   <select id="findStudentArriveAndLeaveBySchool" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">
+    SELECT temp1.*,e.id AS class_id,e.title,d.relation_title AS parent FROM (SELECT temp.* ,c.created AS leaveTime ,c.parent_id FROM(SELECT a.class_id,a.id,a.name,b.created AS arriveTime FROM tb_student a 
+LEFT JOIN tb_student_detection b ON  a.id=b.student_id 
+WHERE a.school_id=#{school_id} AND a.deleted=0 AND DATE_FORMAT(b.created, '%Y-%m-%d') = #{date}
+) AS temp
+LEFT JOIN tb_student_away_record c ON temp.id=c.student_id AND DATE_FORMAT(c.created, '%Y-%m-%d') = #{date}
+) AS temp1
+LEFT JOIN tb_student_parent d ON temp1.id = d.student_id AND d.parent_id=temp1.parent_id 
+LEFT JOIN tb_class e ON temp1.class_id = e.id
+   
+    
   </select>
 </mapper>

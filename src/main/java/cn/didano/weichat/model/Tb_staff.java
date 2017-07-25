@@ -2,6 +2,8 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Tb_staff {
     private Integer id;
 
@@ -78,6 +80,7 @@ public class Tb_staff {
 		this.sign_status = sign_status;
 	}
 
+	@JsonFormat(pattern = "HH:mm",timezone="GMT+8")
 	public Date getIn_time() {
 		return in_time;
 	}
@@ -86,6 +89,7 @@ public class Tb_staff {
 		this.in_time = in_time;
 	}
 
+	@JsonFormat(pattern = "HH:mm",timezone="GMT+8")
 	public Date getOut_time() {
 		return out_time;
 	}
