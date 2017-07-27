@@ -27,7 +27,7 @@ public class GreetingController {
 	@PostMapping(value = "greeting")
 	@ResponseBody
     @MessageMapping("/erlang")
-    @SendTo("/topic/mygod")
+    @SendTo("/topic/message")
     public Greeting greeting(HelloMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
         return new Greeting("Hello, " + message.getName() + "!");

@@ -20,7 +20,7 @@ public class In_Notice_Edit {
 	private Byte noticeType;
 	@ApiModelProperty(value = "用户id",required=true)
 	private List<Integer> userId;
-	@ApiModelProperty(value = "用户类型 1-单个用户 2-多个用户",required=true)
+	@ApiModelProperty(value = "用户类型 ",required=true)
 	private Byte user_type;
 	public String getTitle() {
 		return title;

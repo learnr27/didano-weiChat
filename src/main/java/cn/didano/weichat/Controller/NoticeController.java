@@ -81,8 +81,7 @@ public class NoticeController {
 				notice.setPersonType((byte) 2);
 			}
 			notice.setCreated(new Date());
-			// 广播通知
-			noticeService.broadcast(notice);
+			
 			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
 			int rowNum = 0;
@@ -98,6 +97,8 @@ public class NoticeController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
+			// 广播通知 websocket
+			noticeService.broadcast(notice);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
 
