@@ -46,8 +46,7 @@ public class NoticeService {
 	 * 插入tb_notice
 	 */
 	public int insertNoticeSelective(Tb_notice record) {
-		if (record == null)
-			throw new ServiceException(DBExceptionEnums.ERROR_DB_CONTENT_NULL);
+	     System.out.println(1111);	
 		return noticeMapper.insertSelective(record);
 	}
 	

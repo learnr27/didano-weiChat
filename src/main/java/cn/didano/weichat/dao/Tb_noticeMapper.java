@@ -1,9 +1,12 @@
 package cn.didano.weichat.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeExample;
-import java.util.List;
-import org.apache.ibatis.annotations.Param;
+import cn.didano.weichat.model.Tb_staff;
 
 public interface Tb_noticeMapper {
     long countByExample(Tb_noticeExample example);
@@ -27,4 +30,6 @@ public interface Tb_noticeMapper {
     int updateByPrimaryKeySelective(Tb_notice record);
 
     int updateByPrimaryKey(Tb_notice record);
+    //手写
+    List<Tb_staff> selectBossByParentId(Integer userId);
 }

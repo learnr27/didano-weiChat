@@ -69,8 +69,10 @@ public class NoticeController {
 				notice.setPersonType((byte) 2);
 			}
 			notice.setCreated(new Date());
-			// 插入通知表
+			System.out.println(notice);
+			// 插入通知表			
 			noticeService.insertNoticeSelective(notice);
+			System.out.println(11);
 			int rowNum = 0;
 			// 设置用户标记表
 			for (int i = 0; i < num; i++) {
@@ -84,6 +86,7 @@ public class NoticeController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
+			System.out.println(22);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
 

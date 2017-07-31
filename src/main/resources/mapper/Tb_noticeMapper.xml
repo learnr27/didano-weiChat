@@ -271,4 +271,8 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <select id="selectBossByParentId" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
+  SELECT * FROM tb_staff WHERE school_id=(SELECT school_id FROM tb_school_parent WHERE id =#{userId}) and type=31
+  
+  </select>
 </mapper>

@@ -20,6 +20,7 @@ public class Tb_notice {
     private Date updated;
 
     private Boolean deleted;
+
   //手写加入
     private byte is_read;
     
@@ -122,4 +123,13 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+	@Override
+	public String toString() {
+		return "Tb_notice [id=" + id + ", title=" + title + ", content=" + content + ", priority=" + priority
+				+ ", personType=" + personType + ", noticeType=" + noticeType + ", created=" + created + ", updated="
+				+ updated + ", deleted=" + deleted + ", is_read=" + is_read + ", headUrl=" + headUrl + ", date=" + date
+				+ "]";
+	}
+    
 }
