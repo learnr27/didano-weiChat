@@ -1,11 +1,15 @@
 package cn.didano.weichat.Controller;
 
+import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +22,9 @@ import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_MailBox_Edit;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_addressName;
+import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_notice_reply;
@@ -57,6 +63,7 @@ public class MailBoxController {
 			System.out.println(mail_edit.getUserId());
 			boss = mailBoxService.selectBossByParentId(mail_edit.getUserId());
 			addressName = mailBoxService.selectAddressName(mail_edit.getUserId());
+			//获取该学校所有园长id
 			for (int i = 0; i < boss.size(); i++) {
 				bossId.add(boss.get(i).getId());
 			}
@@ -152,6 +159,36 @@ public class MailBoxController {
 		} catch (Exception ex) {
 			logger.warn(ex.getMessage());
 			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	
+	/**
+	 * 根据通知id查找关于该条信息的回复
+	 *
+	 * @throws ParseException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@PostMapping(value = "findReply_ByNoticeId/{noticeId}")
+	@ApiOperation(value = "根据通知id查找关于该条信息的回复", notes = "根据通知id查找关于该条信息的回复")
+	@ResponseBody
+	public Out<OutList<Tb_notice_reply>> findReply_ByNoticeId(@PathVariable("noticeId") Integer noticeId) {
+		logger.info("访问  MailBoxController:findReply_ByNoticeId,noticeId=" + noticeId);
+		List<Tb_notice_reply> notices = null;
+		OutList<Tb_notice_reply> outList = null;
+		Out<OutList<Tb_notice_reply>> back = new Out<OutList<Tb_notice_reply>>();
+		try {
+			notices =mailBoxService.selectReplyByNoticeId(noticeId);
+			outList = new OutList<Tb_notice_reply>(notices.size(), notices);
+			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
 		}
 		return back;
 	}

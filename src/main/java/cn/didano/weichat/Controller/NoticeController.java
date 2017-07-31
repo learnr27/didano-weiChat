@@ -65,6 +65,7 @@ public class NoticeController {
 			staff = mailService.selectBossById(notice_edit.getOnlineId());
 			notice = new Tb_notice();			
 			BeanUtils.copyProperties(notice, notice_edit);
+			//设置发送者身份
 			notice.setAddresserId(notice_edit.getOnlineId());
 			if(staff.getType()==31){
 				notice.setAddresserName(staff.getName()+"园长");
