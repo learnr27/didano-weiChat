@@ -59,15 +59,6 @@ public class NoticeController {
 		try {
 			notice = new Tb_notice();
 			BeanUtils.copyProperties(notice, notice_edit);
-			String content = notice_edit.getContent();
-			String content_preview = null;
-			// 截取消息预览
-			if (content.length() >= 20) {
-				content_preview = content.substring(0, 20);
-			} else {
-				content_preview = content.substring(0);
-			}
-			notice.setContentPreview(content_preview);
 			int num = notice_edit.getUserId().size();
 			// 判断用户类型
 			if (num == 1) {

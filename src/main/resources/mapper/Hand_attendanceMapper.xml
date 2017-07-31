@@ -136,7 +136,7 @@ SELECT tb_class.title,tb_staff_signdate.sign_status,
                 LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
                 WHERE tb_staff.deleted = 0
                 AND tb_staff.school_id = #{school_id}
-                AND tb_staff.type != " . ACT_SCHOOL_HEADMASTER . "
+                AND tb_staff.type != 31
                 ORDER BY tb_staff.type DESC
   </select>
   

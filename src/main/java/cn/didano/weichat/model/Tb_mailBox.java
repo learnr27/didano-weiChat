@@ -2,56 +2,28 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_notice {
+public class Tb_mailBox {
     private Integer id;
 
     private String title;
 
     private String content;
 
-    private Byte priority;
+    private Integer receiverid;
 
-    private Byte personType;
+    private Byte receivertype;
 
-    private Byte noticeType;
+    private Integer addresserid;
+
+    private String addressername;
 
     private Date created;
 
     private Date updated;
 
     private Boolean deleted;
-  //手写加入
-    private byte is_read;
-    
-    private String headUrl;
-    
-    private String date;
-    
-    public byte getIs_read() {
-		return is_read;
-	}
 
-	public void setIs_read(byte is_read) {
-		this.is_read = is_read;
-	}
-
-	public String getHeadUrl() {
-		return headUrl;
-	}
-
-	public void setHeadUrl(String headUrl) {
-		this.headUrl = headUrl;
-	}
-
-	public String getDate() {
-		return date;
-	}
-
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -75,28 +47,36 @@ public class Tb_notice {
         this.content = content == null ? null : content.trim();
     }
 
-    public Byte getPriority() {
-        return priority;
+    public Integer getReceiverid() {
+        return receiverid;
     }
 
-    public void setPriority(Byte priority) {
-        this.priority = priority;
+    public void setReceiverid(Integer receiverid) {
+        this.receiverid = receiverid;
     }
 
-    public Byte getPersonType() {
-        return personType;
+    public Byte getReceivertype() {
+        return receivertype;
     }
 
-    public void setPersonType(Byte personType) {
-        this.personType = personType;
+    public void setReceivertype(Byte receivertype) {
+        this.receivertype = receivertype;
     }
 
-    public Byte getNoticeType() {
-        return noticeType;
+    public Integer getAddresserid() {
+        return addresserid;
     }
 
-    public void setNoticeType(Byte noticeType) {
-        this.noticeType = noticeType;
+    public void setAddresserid(Integer addresserid) {
+        this.addresserid = addresserid;
+    }
+
+    public String getAddressername() {
+        return addressername;
+    }
+
+    public void setAddressername(String addressername) {
+        this.addressername = addressername == null ? null : addressername.trim();
     }
 
     public Date getCreated() {

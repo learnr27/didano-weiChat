@@ -10,10 +10,8 @@ public class In_Notice_Edit {
 
 	@ApiModelProperty(value = "标题",required=true)
 	private String title ;
-
 	@ApiModelProperty(value = "内容",required=true)
 	private String content;
-
 	@ApiModelProperty(value = "优先级 0 -普通 1-置顶",required=true)
 	private Byte priority;
 	@ApiModelProperty(value = "通知类型 0-晨检报告 1-园长通知 2-接送报告 3-公众号 4-其他",required=true)

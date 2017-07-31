@@ -64,7 +64,6 @@ public class AttendanceController {
 		Hand_classArriveAndLeaveInfo info = null;
 		Out<Hand_classArriveData> back = new Out<Hand_classArriveData>();
 		try {
-			
 			data = new Hand_classArriveData();
 			attendanceDate = new Hand_attendanceData();
 			attendanceDate.setSchool_id(staff.getSchool_id());

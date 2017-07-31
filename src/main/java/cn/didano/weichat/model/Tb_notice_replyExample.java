@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Tb_noticeExample {
+public class Tb_notice_replyExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public Tb_noticeExample() {
+    public Tb_notice_replyExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 
@@ -165,76 +165,6 @@ public class Tb_noticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andTitleIsNull() {
-            addCriterion("title is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleIsNotNull() {
-            addCriterion("title is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleEqualTo(String value) {
-            addCriterion("title =", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleNotEqualTo(String value) {
-            addCriterion("title <>", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleGreaterThan(String value) {
-            addCriterion("title >", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleGreaterThanOrEqualTo(String value) {
-            addCriterion("title >=", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleLessThan(String value) {
-            addCriterion("title <", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleLessThanOrEqualTo(String value) {
-            addCriterion("title <=", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleLike(String value) {
-            addCriterion("title like", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleNotLike(String value) {
-            addCriterion("title not like", value, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleIn(List<String> values) {
-            addCriterion("title in", values, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleNotIn(List<String> values) {
-            addCriterion("title not in", values, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleBetween(String value1, String value2) {
-            addCriterion("title between", value1, value2, "title");
-            return (Criteria) this;
-        }
-
-        public Criteria andTitleNotBetween(String value1, String value2) {
-            addCriterion("title not between", value1, value2, "title");
-            return (Criteria) this;
-        }
-
         public Criteria andContentIsNull() {
             addCriterion("content is null");
             return (Criteria) this;
@@ -305,183 +235,193 @@ public class Tb_noticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andPriorityIsNull() {
-            addCriterion("priority is null");
+        public Criteria andNoticeidIsNull() {
+            addCriterion("noticeId is null");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityIsNotNull() {
-            addCriterion("priority is not null");
+        public Criteria andNoticeidIsNotNull() {
+            addCriterion("noticeId is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityEqualTo(Byte value) {
-            addCriterion("priority =", value, "priority");
+        public Criteria andNoticeidEqualTo(Integer value) {
+            addCriterion("noticeId =", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityNotEqualTo(Byte value) {
-            addCriterion("priority <>", value, "priority");
+        public Criteria andNoticeidNotEqualTo(Integer value) {
+            addCriterion("noticeId <>", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityGreaterThan(Byte value) {
-            addCriterion("priority >", value, "priority");
+        public Criteria andNoticeidGreaterThan(Integer value) {
+            addCriterion("noticeId >", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityGreaterThanOrEqualTo(Byte value) {
-            addCriterion("priority >=", value, "priority");
+        public Criteria andNoticeidGreaterThanOrEqualTo(Integer value) {
+            addCriterion("noticeId >=", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityLessThan(Byte value) {
-            addCriterion("priority <", value, "priority");
+        public Criteria andNoticeidLessThan(Integer value) {
+            addCriterion("noticeId <", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityLessThanOrEqualTo(Byte value) {
-            addCriterion("priority <=", value, "priority");
+        public Criteria andNoticeidLessThanOrEqualTo(Integer value) {
+            addCriterion("noticeId <=", value, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityIn(List<Byte> values) {
-            addCriterion("priority in", values, "priority");
+        public Criteria andNoticeidIn(List<Integer> values) {
+            addCriterion("noticeId in", values, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityNotIn(List<Byte> values) {
-            addCriterion("priority not in", values, "priority");
+        public Criteria andNoticeidNotIn(List<Integer> values) {
+            addCriterion("noticeId not in", values, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityBetween(Byte value1, Byte value2) {
-            addCriterion("priority between", value1, value2, "priority");
+        public Criteria andNoticeidBetween(Integer value1, Integer value2) {
+            addCriterion("noticeId between", value1, value2, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPriorityNotBetween(Byte value1, Byte value2) {
-            addCriterion("priority not between", value1, value2, "priority");
+        public Criteria andNoticeidNotBetween(Integer value1, Integer value2) {
+            addCriterion("noticeId not between", value1, value2, "noticeid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIsNull() {
-            addCriterion("person_type is null");
+        public Criteria andAddresseridIsNull() {
+            addCriterion("addresserId is null");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIsNotNull() {
-            addCriterion("person_type is not null");
+        public Criteria andAddresseridIsNotNull() {
+            addCriterion("addresserId is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeEqualTo(Byte value) {
-            addCriterion("person_type =", value, "personType");
+        public Criteria andAddresseridEqualTo(Integer value) {
+            addCriterion("addresserId =", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotEqualTo(Byte value) {
-            addCriterion("person_type <>", value, "personType");
+        public Criteria andAddresseridNotEqualTo(Integer value) {
+            addCriterion("addresserId <>", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeGreaterThan(Byte value) {
-            addCriterion("person_type >", value, "personType");
+        public Criteria andAddresseridGreaterThan(Integer value) {
+            addCriterion("addresserId >", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("person_type >=", value, "personType");
+        public Criteria andAddresseridGreaterThanOrEqualTo(Integer value) {
+            addCriterion("addresserId >=", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeLessThan(Byte value) {
-            addCriterion("person_type <", value, "personType");
+        public Criteria andAddresseridLessThan(Integer value) {
+            addCriterion("addresserId <", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("person_type <=", value, "personType");
+        public Criteria andAddresseridLessThanOrEqualTo(Integer value) {
+            addCriterion("addresserId <=", value, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIn(List<Byte> values) {
-            addCriterion("person_type in", values, "personType");
+        public Criteria andAddresseridIn(List<Integer> values) {
+            addCriterion("addresserId in", values, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotIn(List<Byte> values) {
-            addCriterion("person_type not in", values, "personType");
+        public Criteria andAddresseridNotIn(List<Integer> values) {
+            addCriterion("addresserId not in", values, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeBetween(Byte value1, Byte value2) {
-            addCriterion("person_type between", value1, value2, "personType");
+        public Criteria andAddresseridBetween(Integer value1, Integer value2) {
+            addCriterion("addresserId between", value1, value2, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("person_type not between", value1, value2, "personType");
+        public Criteria andAddresseridNotBetween(Integer value1, Integer value2) {
+            addCriterion("addresserId not between", value1, value2, "addresserid");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeIsNull() {
-            addCriterion("notice_type is null");
+        public Criteria andAddressernameIsNull() {
+            addCriterion("addresserName is null");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeIsNotNull() {
-            addCriterion("notice_type is not null");
+        public Criteria andAddressernameIsNotNull() {
+            addCriterion("addresserName is not null");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeEqualTo(Byte value) {
-            addCriterion("notice_type =", value, "noticeType");
+        public Criteria andAddressernameEqualTo(String value) {
+            addCriterion("addresserName =", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeNotEqualTo(Byte value) {
-            addCriterion("notice_type <>", value, "noticeType");
+        public Criteria andAddressernameNotEqualTo(String value) {
+            addCriterion("addresserName <>", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeGreaterThan(Byte value) {
-            addCriterion("notice_type >", value, "noticeType");
+        public Criteria andAddressernameGreaterThan(String value) {
+            addCriterion("addresserName >", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("notice_type >=", value, "noticeType");
+        public Criteria andAddressernameGreaterThanOrEqualTo(String value) {
+            addCriterion("addresserName >=", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeLessThan(Byte value) {
-            addCriterion("notice_type <", value, "noticeType");
+        public Criteria andAddressernameLessThan(String value) {
+            addCriterion("addresserName <", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("notice_type <=", value, "noticeType");
+        public Criteria andAddressernameLessThanOrEqualTo(String value) {
+            addCriterion("addresserName <=", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeIn(List<Byte> values) {
-            addCriterion("notice_type in", values, "noticeType");
+        public Criteria andAddressernameLike(String value) {
+            addCriterion("addresserName like", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeNotIn(List<Byte> values) {
-            addCriterion("notice_type not in", values, "noticeType");
+        public Criteria andAddressernameNotLike(String value) {
+            addCriterion("addresserName not like", value, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeBetween(Byte value1, Byte value2) {
-            addCriterion("notice_type between", value1, value2, "noticeType");
+        public Criteria andAddressernameIn(List<String> values) {
+            addCriterion("addresserName in", values, "addressername");
             return (Criteria) this;
         }
 
-        public Criteria andNoticeTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("notice_type not between", value1, value2, "noticeType");
+        public Criteria andAddressernameNotIn(List<String> values) {
+            addCriterion("addresserName not in", values, "addressername");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressernameBetween(String value1, String value2) {
+            addCriterion("addresserName between", value1, value2, "addressername");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddressernameNotBetween(String value1, String value2) {
+            addCriterion("addresserName not between", value1, value2, "addressername");
             return (Criteria) this;
         }
 
