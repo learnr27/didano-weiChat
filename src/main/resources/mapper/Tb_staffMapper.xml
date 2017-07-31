@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_staff">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="type" jdbcType="TINYINT" property="type" />
-    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="school_id" jdbcType="INTEGER" property="school_id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="rfid" jdbcType="VARCHAR" property="rfid" />

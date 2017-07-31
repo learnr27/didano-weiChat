@@ -17,10 +17,19 @@ public class In_Notice_Edit {
 	private Byte priority;
 	@ApiModelProperty(value = "通知类型 0-晨检报告 1-园长通知 2-接送报告 3-公众号 4-其他",required=true)
 	private Byte noticeType;
-	@ApiModelProperty(value = "用户id",required=true)
-	private List<Integer> userId = new ArrayList<Integer>();;
+	@ApiModelProperty(value = "登录者id",required=true)
+	private Integer onlineId;
+	@ApiModelProperty(value = "接收者id",required=true)
+	private List<Integer> userId = new ArrayList<Integer>();
 	@ApiModelProperty(value = "用户类型 ",required=true)
 	private Byte user_type;
+	
+	public Integer getOnlineId() {
+		return onlineId;
+	}
+	public void setOnlineId(Integer onlineId) {
+		this.onlineId = onlineId;
+	}
 	public String getTitle() {
 		return title;
 	}

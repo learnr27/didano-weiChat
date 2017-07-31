@@ -18,8 +18,10 @@ import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_MailBox_Edit;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.model.Hand_addressName;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
+import cn.didano.weichat.model.Tb_notice_reply;
 import cn.didano.weichat.model.Tb_staff;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,10 +51,12 @@ public class MailBoxController {
 
 		List<Tb_staff> boss = null;
 		List<Integer> bossId = new ArrayList<Integer>();
+		List<Hand_addressName> addressName=null;
 		Out<String> back = new Out<String>();
 		try {
 			System.out.println(mail_edit.getUserId());
 			boss = mailBoxService.selectBossByParentId(mail_edit.getUserId());
+			addressName = mailBoxService.selectAddressName(mail_edit.getUserId());
 			for (int i = 0; i < boss.size(); i++) {
 				bossId.add(boss.get(i).getId());
 			}
@@ -62,6 +66,8 @@ public class MailBoxController {
 			notice.setPriority((byte) 0);
 			notice.setIs_read((byte) 0);
 			notice.setCreated(new Date());
+			notice.setAddresserId(mail_edit.getUserId());
+			notice.setAddresserName(addressName.get(0).getName()+"的"+addressName.get(0).getRelation_title());
 			// 判断用户类型
 			if (boss.size() == 1) {
 				// 单个用户
@@ -86,6 +92,50 @@ public class MailBoxController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
+			if (rowNum>0) {
+				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum="+rowNum);
+
+			} else {
+				// 更新有问题
+				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+			}
+			// end else
+
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	
+	/**
+	 * 回复邮件
+	 *
+	 * @param c_channel
+	 * @return
+	 */
+	@ApiOperation(value = "回复邮件", notes = "回复邮件")
+	@PostMapping(value = "reply_mail")
+	@ResponseBody
+	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Edit mail_edit) {
+		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_edit);
+
+		Tb_staff boss = null;
+        Tb_notice_reply noticeReply =null;
+		Out<String> back = new Out<String>();
+		try {
+			noticeReply = new Tb_notice_reply();
+			boss = mailBoxService.selectBossById(mail_edit.getUserId());
+			noticeReply.setAddresserid(boss.getId());
+			noticeReply.setAddressername(boss.getName()+"园长");
+			noticeReply.setContent(mail_edit.getContent());
+			noticeReply.setCreated(new Date());
+			noticeReply.setNoticeid(mail_edit.getNoticeId());
+			int rowNum=mailBoxService.replyMail(noticeReply);
 			if (rowNum>0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum="+rowNum);
 

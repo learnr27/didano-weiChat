@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
@@ -26,6 +27,7 @@ import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
+import cn.didano.weichat.model.Tb_staff;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -38,6 +40,8 @@ public class NoticeController {
 	static Logger logger = Logger.getLogger(NoticeController.class);
 	@Autowired
 	private NoticeService noticeService;
+	@Autowired
+	private MailBoxService mailService;
 
 	/**
 	 * 发布通知
@@ -54,11 +58,19 @@ public class NoticeController {
 
 		Tb_notice notice = null;
 		Tb_noticeUser noticeUser = null;
+		Tb_staff staff =null;
 		Out<String> back = new Out<String>();
 
 		try {
-			notice = new Tb_notice();
+			staff = mailService.selectBossById(notice_edit.getOnlineId());
+			notice = new Tb_notice();			
 			BeanUtils.copyProperties(notice, notice_edit);
+			notice.setAddresserId(notice_edit.getOnlineId());
+			if(staff.getType()==31){
+				notice.setAddresserName(staff.getName()+"园长");
+			}else if(staff.getType()==32){
+				notice.setAddresserName(staff.getName()+"老师");
+			}
 			int num = notice_edit.getUserId().size();
 			// 判断用户类型
 			if (num == 1) {

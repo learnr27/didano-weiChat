@@ -365,6 +365,136 @@ public class Tb_noticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andAddresserIdIsNull() {
+            addCriterion("addresser_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdIsNotNull() {
+            addCriterion("addresser_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdEqualTo(Integer value) {
+            addCriterion("addresser_id =", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdNotEqualTo(Integer value) {
+            addCriterion("addresser_id <>", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdGreaterThan(Integer value) {
+            addCriterion("addresser_id >", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("addresser_id >=", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdLessThan(Integer value) {
+            addCriterion("addresser_id <", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdLessThanOrEqualTo(Integer value) {
+            addCriterion("addresser_id <=", value, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdIn(List<Integer> values) {
+            addCriterion("addresser_id in", values, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdNotIn(List<Integer> values) {
+            addCriterion("addresser_id not in", values, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdBetween(Integer value1, Integer value2) {
+            addCriterion("addresser_id between", value1, value2, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("addresser_id not between", value1, value2, "addresserId");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameIsNull() {
+            addCriterion("addresser_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameIsNotNull() {
+            addCriterion("addresser_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameEqualTo(String value) {
+            addCriterion("addresser_name =", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameNotEqualTo(String value) {
+            addCriterion("addresser_name <>", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameGreaterThan(String value) {
+            addCriterion("addresser_name >", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameGreaterThanOrEqualTo(String value) {
+            addCriterion("addresser_name >=", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameLessThan(String value) {
+            addCriterion("addresser_name <", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameLessThanOrEqualTo(String value) {
+            addCriterion("addresser_name <=", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameLike(String value) {
+            addCriterion("addresser_name like", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameNotLike(String value) {
+            addCriterion("addresser_name not like", value, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameIn(List<String> values) {
+            addCriterion("addresser_name in", values, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameNotIn(List<String> values) {
+            addCriterion("addresser_name not in", values, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameBetween(String value1, String value2) {
+            addCriterion("addresser_name between", value1, value2, "addresserName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAddresserNameNotBetween(String value1, String value2) {
+            addCriterion("addresser_name not between", value1, value2, "addresserName");
+            return (Criteria) this;
+        }
+
         public Criteria andPersonTypeIsNull() {
             addCriterion("person_type is null");
             return (Criteria) this;

@@ -11,6 +11,10 @@ public class Tb_notice {
 
     private Byte priority;
 
+    private Integer addresserId;
+
+    private String addresserName;
+
     private Byte personType;
 
     private Byte noticeType;
@@ -84,6 +88,22 @@ public class Tb_notice {
         this.priority = priority;
     }
 
+    public Integer getAddresserId() {
+        return addresserId;
+    }
+
+    public void setAddresserId(Integer addresserId) {
+        this.addresserId = addresserId;
+    }
+
+    public String getAddresserName() {
+        return addresserName;
+    }
+
+    public void setAddresserName(String addresserName) {
+        this.addresserName = addresserName == null ? null : addresserName.trim();
+    }
+
     public Byte getPersonType() {
         return personType;
     }
@@ -123,13 +143,4 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
-
-	@Override
-	public String toString() {
-		return "Tb_notice [id=" + id + ", title=" + title + ", content=" + content + ", priority=" + priority
-				+ ", personType=" + personType + ", noticeType=" + noticeType + ", created=" + created + ", updated="
-				+ updated + ", deleted=" + deleted + ", is_read=" + is_read + ", headUrl=" + headUrl + ", date=" + date
-				+ "]";
-	}
-    
 }

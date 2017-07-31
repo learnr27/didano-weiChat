@@ -6,6 +6,8 @@
     <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="priority" jdbcType="TINYINT" property="priority" />
+    <result column="addresser_id" jdbcType="INTEGER" property="addresserId" />
+    <result column="addresser_name" jdbcType="VARCHAR" property="addresserName" />
     <result column="person_type" jdbcType="TINYINT" property="personType" />
     <result column="notice_type" jdbcType="TINYINT" property="noticeType" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
@@ -71,7 +73,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, content, priority, person_type, notice_type, created, updated, deleted
+    id, title, content, priority, addresser_id, addresser_name, person_type, notice_type, 
+    created, updated, deleted
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_noticeExample" resultMap="BaseResultMap">
     select
@@ -109,11 +112,13 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tb_notice (title, content, priority, 
-      person_type, notice_type, created, 
-      updated, deleted)
+      addresser_id, addresser_name, person_type, 
+      notice_type, created, updated, 
+      deleted)
     values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{priority,jdbcType=TINYINT}, 
-      #{personType,jdbcType=TINYINT}, #{noticeType,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP}, 
-      #{updated,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
+      #{addresserId,jdbcType=INTEGER}, #{addresserName,jdbcType=VARCHAR}, #{personType,jdbcType=TINYINT}, 
+      #{noticeType,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_notice">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -129,6 +134,12 @@
       </if>
       <if test="priority != null">
         priority,
+      </if>
+      <if test="addresserId != null">
+        addresser_id,
+      </if>
+      <if test="addresserName != null">
+        addresser_name,
       </if>
       <if test="personType != null">
         person_type,
@@ -155,6 +166,12 @@
       </if>
       <if test="priority != null">
         #{priority,jdbcType=TINYINT},
+      </if>
+      <if test="addresserId != null">
+        #{addresserId,jdbcType=INTEGER},
+      </if>
+      <if test="addresserName != null">
+        #{addresserName,jdbcType=VARCHAR},
       </if>
       <if test="personType != null">
         #{personType,jdbcType=TINYINT},
@@ -194,6 +211,12 @@
       <if test="record.priority != null">
         priority = #{record.priority,jdbcType=TINYINT},
       </if>
+      <if test="record.addresserId != null">
+        addresser_id = #{record.addresserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.addresserName != null">
+        addresser_name = #{record.addresserName,jdbcType=VARCHAR},
+      </if>
       <if test="record.personType != null">
         person_type = #{record.personType,jdbcType=TINYINT},
       </if>
@@ -220,6 +243,8 @@
       title = #{record.title,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
       priority = #{record.priority,jdbcType=TINYINT},
+      addresser_id = #{record.addresserId,jdbcType=INTEGER},
+      addresser_name = #{record.addresserName,jdbcType=VARCHAR},
       person_type = #{record.personType,jdbcType=TINYINT},
       notice_type = #{record.noticeType,jdbcType=TINYINT},
       created = #{record.created,jdbcType=TIMESTAMP},
@@ -240,6 +265,12 @@
       </if>
       <if test="priority != null">
         priority = #{priority,jdbcType=TINYINT},
+      </if>
+      <if test="addresserId != null">
+        addresser_id = #{addresserId,jdbcType=INTEGER},
+      </if>
+      <if test="addresserName != null">
+        addresser_name = #{addresserName,jdbcType=VARCHAR},
       </if>
       <if test="personType != null">
         person_type = #{personType,jdbcType=TINYINT},
@@ -264,6 +295,8 @@
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
       priority = #{priority,jdbcType=TINYINT},
+      addresser_id = #{addresserId,jdbcType=INTEGER},
+      addresser_name = #{addresserName,jdbcType=VARCHAR},
       person_type = #{personType,jdbcType=TINYINT},
       notice_type = #{noticeType,jdbcType=TINYINT},
       created = #{created,jdbcType=TIMESTAMP},
@@ -271,8 +304,12 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="selectBossByParentId" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
+   <select id="selectBossByParentId" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
   SELECT * FROM tb_staff WHERE school_id=(SELECT school_id FROM tb_school_parent WHERE id =#{userId}) and type=31
-  
+  </select>
+  <select id="selectAddressName" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_addressName">
+  SELECT temp.student_id,temp.parent_id,temp.relation_title,b.name FROM (SELECT a.student_id,a.relation_title,a.parent_id FROM tb_student_parent a 
+WHERE a.parent_id=(SELECT id FROM tb_school_parent WHERE id =#{userId})) as temp
+LEFT JOIN tb_student b ON temp.student_id = b.id
   </select>
 </mapper>
