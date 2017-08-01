@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -20,11 +22,11 @@ import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
-import cn.didano.weichat.json.In_MailBox_Edit;
+import cn.didano.weichat.json.In_MailBox_Reply;
+import cn.didano.weichat.json.In_MailBox_Write;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_addressName;
-import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_notice_reply;
@@ -52,28 +54,28 @@ public class MailBoxController {
 	@ApiOperation(value = " 写邮件", notes = " 写邮件")
 	@PostMapping(value = "write_mail")
 	@ResponseBody
-	public Out<String> write_mail(@ApiParam(value = " 写邮件", required = true) @RequestBody In_MailBox_Edit mail_edit) {
-		logger.info("MailBoxController:write_mail,mail_edit=" + mail_edit);
+	public Out<String> write_mail(@ApiParam(value = " 写邮件", required = true) @RequestBody In_MailBox_Write mail_write) {
+		logger.info("MailBoxController:write_mail,mail_write=" + mail_write);
 
 		List<Tb_staff> boss = null;
 		List<Integer> bossId = new ArrayList<Integer>();
 		List<Hand_addressName> addressName=null;
 		Out<String> back = new Out<String>();
 		try {
-			System.out.println(mail_edit.getUserId());
-			boss = mailBoxService.selectBossByParentId(mail_edit.getUserId());
-			addressName = mailBoxService.selectAddressName(mail_edit.getUserId());
+			System.out.println(mail_write.getUserId());
+			boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
+			addressName = mailBoxService.selectAddressName(mail_write.getUserId());
 			//获取该学校所有园长id
 			for (int i = 0; i < boss.size(); i++) {
 				bossId.add(boss.get(i).getId());
 			}
 			Tb_notice notice = new Tb_notice();
-			notice.setContent(mail_edit.getContent());
+			notice.setContent(mail_write.getContent());
 			notice.setNoticeType((byte) 4);
 			notice.setPriority((byte) 0);
 			notice.setIs_read((byte) 0);
-			notice.setCreated(new Date());
-			notice.setAddresserId(mail_edit.getUserId());
+			notice.setCreated(new Date()); 
+			notice.setAddresserId(mail_write.getUserId());
 			notice.setAddresserName(addressName.get(0).getName()+"的"+addressName.get(0).getRelation_title());
 			// 判断用户类型
 			if (boss.size() == 1) {
@@ -128,20 +130,26 @@ public class MailBoxController {
 	@ApiOperation(value = "回复邮件", notes = "回复邮件")
 	@PostMapping(value = "reply_mail")
 	@ResponseBody
-	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Edit mail_edit) {
-		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_edit);
-
-		Tb_staff boss = null;
+	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Reply mail_reply) {
+		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);	 
         Tb_notice_reply noticeReply =null;
 		Out<String> back = new Out<String>();
 		try {
+			
 			noticeReply = new Tb_notice_reply();
-			boss = mailBoxService.selectBossById(mail_edit.getUserId());
-			noticeReply.setAddresserid(boss.getId());
-			noticeReply.setAddressername(boss.getName()+"园长");
-			noticeReply.setContent(mail_edit.getContent());
+			//根据登录者的身份设置发送者称呼
+			if(mail_reply.getUserType()==31){
+				Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
+				noticeReply.setAddressername(boss.getName()+"园长");
+			}else{
+				Hand_addressName parent = mailBoxService.selectAddressName(mail_reply.getUserId()).get(0);
+				noticeReply.setAddressername(parent .getName()+"的"+parent .getRelation_title());
+			}
+			noticeReply.setAddresserid(mail_reply.getUserId());			
+			noticeReply.setContent(mail_reply.getContent());
 			noticeReply.setCreated(new Date());
-			noticeReply.setNoticeid(mail_edit.getNoticeId());
+			noticeReply.setNoticeid(mail_reply.getNoticeId());
+			//插入回信表
 			int rowNum=mailBoxService.replyMail(noticeReply);
 			if (rowNum>0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum="+rowNum);
@@ -180,6 +188,17 @@ public class MailBoxController {
 		Out<OutList<Tb_notice_reply>> back = new Out<OutList<Tb_notice_reply>>();
 		try {
 			notices =mailBoxService.selectReplyByNoticeId(noticeId);
+			//根据时间排序
+			Collections.sort(notices, new Comparator<Tb_notice_reply>(){
+	 			 public int compare(Tb_notice_reply o1, Tb_notice_reply o2) {
+	 			    return (int)(o2.getCreated().getTime()-o1.getCreated().getTime());
+	 			 }
+	 		});
+			//转换时间格式
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			for (int i = 0; i < notices.size(); i++) {
+				notices.get(i).setDate(sdf.format(notices.get(i).getCreated()));
+			}
 			outList = new OutList<Tb_notice_reply>(notices.size(), notices);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {

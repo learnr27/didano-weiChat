@@ -18,8 +18,20 @@ public class Tb_notice_reply {
     private Date updated;
 
     private Boolean deleted;
+    
+    //手写
+    private String date;
+    
 
-    public Integer getId() {
+    public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public Integer getId() {
         return id;
     }
 
