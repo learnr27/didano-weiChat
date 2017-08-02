@@ -140,6 +140,7 @@ public class AttendanceController {
 			//查询到校离校数据
 			studentDate = attendanceService.findStudentArriveAndLeaveByClass(attendanceData);
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+			if(studentDate.size()!=0){
 			//转换到校离校时间格式
 			for (int i = 0; i < studentDate.size(); i++) {
 				arriveAndLeave=studentDate.get(i);
@@ -154,12 +155,10 @@ public class AttendanceController {
 					arriveAndLeave.setLeave("未离校");
 				}
 			}
-			data.setStudentDate(studentDate);
-			data.setClass_id(class_id);
-			if(studentDate!=null){
+			data.setStudentDate(studentDate);			
 			data.setTitle(studentDate.get(0).getTitle());
 			}
-			
+			data.setClass_id(class_id);
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
@@ -179,8 +178,8 @@ public class AttendanceController {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	@PostMapping(value = "schoolAttendance_findtByschoolId{school_id}/{date}")
-	@ApiOperation(value = "园长角色，根据学校id查询该学校老师和学生到校情况", notes = "园长角色，根据学校id查询该学校老师和学生到校情况")
+	@PostMapping(value = "schoolAttendance_findtByschoolId/{school_id}/{date}")
+	@ApiOperation(value = "园长角色，根据学校id查询该	老师和学生到校情况", notes = "园长角色，根据学校id查询该学校老师和学生到校情况")
 	@ResponseBody
 	public Out<Hand_schoolArriveDate> schoolAttendance_findtByschoolId(@PathVariable("school_id") Integer school_id,@PathVariable("date") String date) {
 		logger.info("访问  AttendanceController:schoolAttendance_findtByschoolIdr,school_id=" + school_id);

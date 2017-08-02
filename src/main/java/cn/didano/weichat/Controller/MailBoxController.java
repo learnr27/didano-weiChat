@@ -195,7 +195,7 @@ public class MailBoxController {
 	 			 }
 	 		});
 			//转换时间格式
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 			for (int i = 0; i < notices.size(); i++) {
 				notices.get(i).setDate(sdf.format(notices.get(i).getCreated()));
 			}
