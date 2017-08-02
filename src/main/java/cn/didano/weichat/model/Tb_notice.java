@@ -143,4 +143,7 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+	
+    
 }
