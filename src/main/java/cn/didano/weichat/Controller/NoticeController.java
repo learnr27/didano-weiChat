@@ -58,19 +58,19 @@ public class NoticeController {
 
 		Tb_notice notice = null;
 		Tb_noticeUser noticeUser = null;
-		Tb_staff staff =null;
+		Tb_staff staff = null;
 		Out<String> back = new Out<String>();
 
 		try {
 			staff = mailService.selectBossById(notice_edit.getOnlineId());
-			notice = new Tb_notice();			
+			notice = new Tb_notice();
 			BeanUtils.copyProperties(notice, notice_edit);
-			//设置发送者身份
+			// 设置发送者身份
 			notice.setAddresserId(notice_edit.getOnlineId());
-			if(staff.getType()==31){
-				notice.setAddresserName(staff.getName()+"园长");
-			}else if(staff.getType()==32){
-				notice.setAddresserName(staff.getName()+"老师");
+			if (staff.getType() == 31) {
+				notice.setAddresserName(staff.getName() + "园长");
+			} else if (staff.getType() == 32) {
+				notice.setAddresserName(staff.getName() + "老师");
 			}
 			int num = notice_edit.getUserId().size();
 			// 判断用户类型
@@ -83,7 +83,7 @@ public class NoticeController {
 			}
 			notice.setCreated(new Date());
 			System.out.println(notice);
-			// 插入通知表			
+			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
 			System.out.println(11);
 			int rowNum = 0;
@@ -130,7 +130,8 @@ public class NoticeController {
 	@PostMapping(value = "notice_findtByUserid/{user_id}/{user_type}")
 	@ApiOperation(value = "根据用户id,用户类型查找消息列表", notes = "根据用户id,用户类型查找消息列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("user_id") Integer user_id,@PathVariable("user_type") byte user_type) {
+	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("user_id") Integer user_id,
+			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,user_id=" + user_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
@@ -138,14 +139,14 @@ public class NoticeController {
 		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
-			notices = noticeService.findNoticeByUserId(user_id,user_type);
-			//获取头像地址
+			notices = noticeService.findNoticeByUserId(user_id, user_type);
+			// 获取头像地址
 			for (int i = 0; i < notices.size(); i++) {
-				notice=notices.get(i);
+				notice = notices.get(i);
 				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
 				notice.setHeadUrl(head.getAddress());
 			}
-			//转换时间格式
+			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
 			for (int i = 0; i < notices.size(); i++) {
@@ -164,7 +165,7 @@ public class NoticeController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 *
 	 * 撤回通知消息
@@ -180,7 +181,7 @@ public class NoticeController {
 		Out<String> back = new Out<String>();
 		try {
 			noticeService.deleteNoticeById(notice_id);
-			int rowNum=noticeService.deleteNoticeUserByNoticeId(notice_id);
+			int rowNum = noticeService.deleteNoticeUserByNoticeId(notice_id);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_DELETE, "rowNum=" + rowNum);
 			} else {
@@ -192,6 +193,7 @@ public class NoticeController {
 		}
 		return back;
 	}
+
 	/**
 	 *
 	 * 用户删除自己的消息
@@ -206,7 +208,7 @@ public class NoticeController {
 		logger.info("访问  NoticeController:deleteNoticeByUser,date=" + date);
 		Out<String> back = new Out<String>();
 		try {
-			int rowNum=noticeService.deleteNoticeByUserId(date);
+			int rowNum = noticeService.deleteNoticeByUserId(date);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "rowNum=" + rowNum);
 			} else {
@@ -218,6 +220,7 @@ public class NoticeController {
 		}
 		return back;
 	}
+
 	/**
 	 *
 	 * 设置消息已读
@@ -232,7 +235,7 @@ public class NoticeController {
 		logger.info("访问  NoticeController:setNoticeRead,date=" + date);
 		Out<String> back = new Out<String>();
 		try {
-			int rowNum=noticeService.setNoticeRead(date.getUserId(), date.getNoticeId());
+			int rowNum = noticeService.setNoticeRead(date.getUserId(), date.getNoticeId());
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "rowNum=" + rowNum);
 			} else {

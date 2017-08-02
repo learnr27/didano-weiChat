@@ -41,6 +41,7 @@ public class ParentController {
 	private HobbyService hobbyService;
 	@Autowired
 	private DreamService dreamService;
+
 	/**
 	 * 根据家长电话查看所有孩子
 	 *
@@ -53,7 +54,7 @@ public class ParentController {
 	@ResponseBody
 	public Out<OutList<Tb_student>> studentfindByParentPhone(@PathVariable("parentPhone") String parentPhone) {
 		logger.info("访问  ParentController:studentfindByParentPhone,student_id=" + parentPhone);
-		List<Tb_student> students=null;
+		List<Tb_student> students = null;
 		OutList<Tb_student> outList = null;
 		Out<OutList<Tb_student>> back = new Out<OutList<Tb_student>>();
 		try {
@@ -66,7 +67,7 @@ public class ParentController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 * 查找所有爱好
 	 *
@@ -76,7 +77,7 @@ public class ParentController {
 	@ResponseBody
 	public Out<OutList<Tb_hobby>> findAllHobby() {
 		logger.info("访问  ParentController:findAllHobby");
-		List<Tb_hobby> hobbys=null;
+		List<Tb_hobby> hobbys = null;
 		OutList<Tb_hobby> outList = null;
 		Out<OutList<Tb_hobby>> back = new Out<OutList<Tb_hobby>>();
 		try {
@@ -89,7 +90,7 @@ public class ParentController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 * 查找所有梦想
 	 *
@@ -99,7 +100,7 @@ public class ParentController {
 	@ResponseBody
 	public Out<OutList<Tb_dream>> findAllDreams() {
 		logger.info("访问  ParentController:findAllDreams");
-		List<Tb_dream> dreams=null;
+		List<Tb_dream> dreams = null;
 		OutList<Tb_dream> outList = null;
 		Out<OutList<Tb_dream>> back = new Out<OutList<Tb_dream>>();
 		try {
@@ -112,7 +113,7 @@ public class ParentController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 * 编辑首页学生相关信息
 	 *
@@ -123,28 +124,29 @@ public class ParentController {
 	@PostMapping(value = "student_setting")
 	@ResponseBody
 	public Out<String> student_setting(
-			@ApiParam(value = "编辑首页学生相关信息", required = true) @RequestBody In_StudentSetting_Edit  student_e) {
+			@ApiParam(value = "编辑首页学生相关信息", required = true) @RequestBody In_StudentSetting_Edit student_e) {
 		logger.info("访问  ParentController:student_setting,student_e=" + student_e);
-	
-		Tb_student student =null;
-		Hand_parentAndStudentId parentAndStudent =new Hand_parentAndStudentId();
+
+		Tb_student student = null;
+		Hand_parentAndStudentId parentAndStudent = new Hand_parentAndStudentId();
 		parentAndStudent.setParentId(student_e.getParentId());
-		parentAndStudent.setStudentId(student_e.getStudentId());;
+		parentAndStudent.setStudentId(student_e.getStudentId());
+		;
 		Out<String> back = new Out<String>();
-		
+
 		try {
 			student = studentService.getStudentByParentId(parentAndStudent);
 			BeanUtils.copyProperties(student, student_e);
 			int rowNum = studentService.updateStudentSetting(student);
-					if (rowNum > 0) {
-						back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "Id=" + "," + ":rowNum=" + rowNum);
+			if (rowNum > 0) {
+				back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "Id=" + "," + ":rowNum=" + rowNum);
 
-					} else {
-						// 更新有问题
-						back.setBackTypeWithLog(BackType.FAIL_UPDATE_NORMAL, "rowNum=" + rowNum);
-					}
-				 // end else
-			
+			} else {
+				// 更新有问题
+				back.setBackTypeWithLog(BackType.FAIL_UPDATE_NORMAL, "rowNum=" + rowNum);
+			}
+			// end else
+
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			back.setServiceExceptionWithLog(e.getExceptionEnums());

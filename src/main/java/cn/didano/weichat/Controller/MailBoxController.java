@@ -59,13 +59,13 @@ public class MailBoxController {
 
 		List<Tb_staff> boss = null;
 		List<Integer> bossId = new ArrayList<Integer>();
-		List<Hand_addressName> addressName=null;
+		List<Hand_addressName> addressName = null;
 		Out<String> back = new Out<String>();
 		try {
 			System.out.println(mail_write.getUserId());
 			boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 			addressName = mailBoxService.selectAddressName(mail_write.getUserId());
-			//获取该学校所有园长id
+			// 获取该学校所有园长id
 			for (int i = 0; i < boss.size(); i++) {
 				bossId.add(boss.get(i).getId());
 			}
@@ -74,9 +74,9 @@ public class MailBoxController {
 			notice.setNoticeType((byte) 4);
 			notice.setPriority((byte) 0);
 			notice.setIs_read((byte) 0);
-			notice.setCreated(new Date()); 
+			notice.setCreated(new Date());
 			notice.setAddresserId(mail_write.getUserId());
-			notice.setAddresserName(addressName.get(0).getName()+"的"+addressName.get(0).getRelation_title());
+			notice.setAddresserName(addressName.get(0).getName() + "的" + addressName.get(0).getRelation_title());
 			// 判断用户类型
 			if (boss.size() == 1) {
 				// 单个用户
@@ -96,13 +96,13 @@ public class MailBoxController {
 				noticeUser.setIsRead((byte) 0);
 				noticeUser.setNoticeId(notice.getId());
 				noticeUser.setUserId(boss.get(i).getId());
-				noticeUser.setUserType((byte)31);
+				noticeUser.setUserType((byte) 31);
 				noticeUser.setCreated(new Date());
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
-			if (rowNum>0) {
-				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum="+rowNum);
+			if (rowNum > 0) {
+				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
 
 			} else {
 				// 更新有问题
@@ -120,7 +120,7 @@ public class MailBoxController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 * 回复邮件
 	 *
@@ -131,28 +131,28 @@ public class MailBoxController {
 	@PostMapping(value = "reply_mail")
 	@ResponseBody
 	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Reply mail_reply) {
-		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);	 
-        Tb_notice_reply noticeReply =null;
+		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);
+		Tb_notice_reply noticeReply = null;
 		Out<String> back = new Out<String>();
 		try {
-			
+
 			noticeReply = new Tb_notice_reply();
-			//根据登录者的身份设置发送者称呼
-			if(mail_reply.getUserType()==31){
+			// 根据登录者的身份设置发送者称呼
+			if (mail_reply.getUserType() == 31) {
 				Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
-				noticeReply.setAddressername(boss.getName()+"园长");
-			}else{
+				noticeReply.setAddressername(boss.getName() + "园长");
+			} else {
 				Hand_addressName parent = mailBoxService.selectAddressName(mail_reply.getUserId()).get(0);
-				noticeReply.setAddressername(parent .getName()+"的"+parent .getRelation_title());
+				noticeReply.setAddressername(parent.getName() + "的" + parent.getRelation_title());
 			}
-			noticeReply.setAddresserid(mail_reply.getUserId());			
+			noticeReply.setAddresserid(mail_reply.getUserId());
 			noticeReply.setContent(mail_reply.getContent());
 			noticeReply.setCreated(new Date());
 			noticeReply.setNoticeid(mail_reply.getNoticeId());
-			//插入回信表
-			int rowNum=mailBoxService.replyMail(noticeReply);
-			if (rowNum>0) {
-				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum="+rowNum);
+			// 插入回信表
+			int rowNum = mailBoxService.replyMail(noticeReply);
+			if (rowNum > 0) {
+				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
 
 			} else {
 				// 更新有问题
@@ -170,7 +170,7 @@ public class MailBoxController {
 		}
 		return back;
 	}
-	
+
 	/**
 	 * 根据通知id查找关于该条信息的回复
 	 *
@@ -187,14 +187,14 @@ public class MailBoxController {
 		OutList<Tb_notice_reply> outList = null;
 		Out<OutList<Tb_notice_reply>> back = new Out<OutList<Tb_notice_reply>>();
 		try {
-			notices =mailBoxService.selectReplyByNoticeId(noticeId);
-			//根据时间排序
-			Collections.sort(notices, new Comparator<Tb_notice_reply>(){
-	 			 public int compare(Tb_notice_reply o1, Tb_notice_reply o2) {
-	 			    return (int)(o2.getCreated().getTime()-o1.getCreated().getTime());
-	 			 }
-	 		});
-			//转换时间格式
+			notices = mailBoxService.selectReplyByNoticeId(noticeId);
+			// 根据时间排序
+			Collections.sort(notices, new Comparator<Tb_notice_reply>() {
+				public int compare(Tb_notice_reply o1, Tb_notice_reply o2) {
+					return (int) (o2.getCreated().getTime() - o1.getCreated().getTime());
+				}
+			});
+			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 			for (int i = 0; i < notices.size(); i++) {
 				notices.get(i).setDate(sdf.format(notices.get(i).getCreated()));

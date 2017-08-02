@@ -15,7 +15,7 @@ public class In_Notice_Edit {
 	private String content;
 	@ApiModelProperty(value = "优先级 0 -普通 1-置顶",required=true)
 	private Byte priority;
-	@ApiModelProperty(value = "通知类型 0-晨检报告 1-园长通知 2-接送报告 3-公众号 4-其他",required=true)
+	@ApiModelProperty(value = "通知类型 0-晨检报告 1-园长通知 2-接送报告 3-公众号 4-园长信箱",required=true)
 	private Byte noticeType;
 	@ApiModelProperty(value = "登录者id",required=true)
 	private Integer onlineId;
