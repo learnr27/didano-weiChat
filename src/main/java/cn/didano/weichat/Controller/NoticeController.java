@@ -64,7 +64,6 @@ public class NoticeController {
 		Tb_noticeUser noticeUser = null;
 		Tb_staff staff = null;
 		Out<String> back = new Out<String>();
-
 		try {
 			staff = mailService.selectBossById(notice_edit.getOnlineId());
 			notice = new Tb_notice();
@@ -88,7 +87,6 @@ public class NoticeController {
 			notice.setCreated(new Date());
 			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
-			System.out.println(11);
 			int rowNum = 0;
 			// 设置用户标记表
 			for (int i = 0; i < num; i++) {

@@ -51,6 +51,7 @@ public class NoticeService {
 		for (int i = 0; i < users.size(); i++) {
 			userId.add(users.get(i).getUserId());
 		}
+		
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = mapper.writeValueAsString(userId);
 		logger.info("jsonInString="+jsonInString);
@@ -74,8 +75,9 @@ public class NoticeService {
 	/**
 	 * 插入tb_notice
 	 */
-	public int insertNoticeSelective(Tb_notice record) {
-	     System.out.println(1111);	
+	public int insertNoticeSelective(Tb_notice record) {	
+		if (record == null)
+			throw new ServiceException(DBExceptionEnums.ERROR_DB_CONTENT_NULL);
 		return noticeMapper.insertSelective(record);
 	}
 

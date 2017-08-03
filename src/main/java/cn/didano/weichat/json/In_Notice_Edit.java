@@ -23,7 +23,7 @@ public class In_Notice_Edit {
 	@ApiModelProperty(value = "接收者id",required=true)
 	private List<Integer> userId = new ArrayList<Integer>();
 
-	@ApiModelProperty(value = "用户类型 ",required=true)
+	@ApiModelProperty(value = "接收者类型 ",required=true)
 	private Byte user_type;
 	
 	public Integer getOnlineId() {
