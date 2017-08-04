@@ -23,12 +23,42 @@ public class GreetingController {
         return new Greeting("Hello, " + message.getName() + "!");
     }*/
 
-	@ApiOperation(value = "问候", notes = "问候")
+	@ApiOperation(value = "微信消息列表", notes = "微信消息列表")
 	@PostMapping(value = "greeting")
 	@ResponseBody
-    @MessageMapping("/erlang")
-    @SendTo("/topic/message")
+    @MessageMapping("/notice")
+    @SendTo("/topic/notice")
     public Greeting greeting(HelloMessage message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return new Greeting("Hello, " + message.getName() + "!");
+    }
+	
+	@ApiOperation(value = "电子班牌老师风采", notes = "电子班牌老师风采")
+	@PostMapping(value = "teacherInfo")
+	@ResponseBody
+    @MessageMapping("/teacherInfo")
+    @SendTo("/topic/teacherInfo")
+    public Greeting teacherInfo(HelloMessage message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return new Greeting("Hello, " + message.getName() + "!");
+    }
+	
+	@ApiOperation(value = "电子班牌老师推送", notes = "电子班牌老师推送")
+	@PostMapping(value = "teacherAdvice")
+	@ResponseBody
+    @MessageMapping("/teacherAdvice")
+    @SendTo("/topic/teacherAdvice")
+    public Greeting teacherAdvice(HelloMessage message) throws Exception {
+        Thread.sleep(1000); // simulated delay
+        return new Greeting("Hello, " + message.getName() + "!");
+    }
+	
+	@ApiOperation(value = "电子班牌晨检信息", notes = "电子班牌晨检信息")
+	@PostMapping(value = "detectionInfo")
+	@ResponseBody
+    @MessageMapping("/detectionInfo")
+    @SendTo("/topic/detectionInfo")
+    public Greeting detectionInfo(HelloMessage message) throws Exception {
         Thread.sleep(1000); // simulated delay
         return new Greeting("Hello, " + message.getName() + "!");
     }

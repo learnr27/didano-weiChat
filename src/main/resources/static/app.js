@@ -17,7 +17,7 @@ function connect() {
 	stompClient.connect({}, function(frame) {
 		setConnected(true);
 		console.log('Connected: ' + frame);
-		stompClient.subscribe('/topic/message', function(greeting) {
+		stompClient.subscribe('/topic/notice', function(greeting) {
 //			var list = JSON.parse(greeting.body);
 //			var id = "";
 //			for (var i = 0; i < list.length; i++) {
@@ -29,7 +29,7 @@ function connect() {
 //				}
 //			}
 //			showGreeting(id);
-			 location.reload();
+               location.reload();
 		});
 	});
 }
@@ -43,7 +43,7 @@ function disconnect() {
 }
 
 function sendName() {
-	stompClient.send("/topic/message", {}, JSON.stringify({
+	stompClient.send("/app/notice", {}, JSON.stringify({
 		'name' : $("#name").val()
 	}));
 }

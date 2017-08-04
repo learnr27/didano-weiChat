@@ -40,22 +40,22 @@ public class NoticeService {
 	private SimpMessagingTemplate messageTemplate;
 
 	// 需要添加用户参数，作为发布对象过滤 //@SendTo("/topic/message")  添加一个用户id列表，返回给前端，前端根据用户id判断是否加入websocket频道，以此接受消息
-	public void broadcast(Tb_notice notice) throws Exception { // convert from
-		Tb_noticeUserExample condition = new Tb_noticeUserExample();
-		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
-		// 对于已经deleted=1的不显示 禁用不显示
-		criteria.andDeletedEqualTo(false);
-		criteria.andNoticeIdEqualTo(notice.getId());
-		List<Tb_noticeUser> users = noticeUserMapper.selectByExample(condition);
-		List<Integer> userId = new ArrayList<Integer>();
-		for (int i = 0; i < users.size(); i++) {
-			userId.add(users.get(i).getUserId());
-		}
+	public void broadcast(String channel) throws Exception { // convert from
+//		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+//		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+//		// 对于已经deleted=1的不显示 禁用不显示
+//		criteria.andDeletedEqualTo(false);
+//		criteria.andNoticeIdEqualTo(notice.getId());
+//		List<Tb_noticeUser> users = noticeUserMapper.selectByExample(condition);
+//		List<Integer> userId = new ArrayList<Integer>();
+//		for (int i = 0; i < users.size(); i++) {
+//			userId.add(users.get(i).getUserId());
+//		}
 		
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString = mapper.writeValueAsString(userId);
-		logger.info("jsonInString="+jsonInString);
-		this.messageTemplate.convertAndSend("/topic/message",jsonInString);
+//		ObjectMapper mapper = new ObjectMapper();
+//		String jsonInString = mapper.writeValueAsString(userId);
+		logger.info("channel="+channel);
+		this.messageTemplate.convertAndSend(channel,channel);
 		return;
 	}
 

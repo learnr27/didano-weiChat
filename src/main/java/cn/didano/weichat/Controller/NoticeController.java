@@ -9,8 +9,6 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
+import cn.didano.weichat.Service.WebSocketService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
@@ -30,6 +29,7 @@ import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_websocket__channel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -46,6 +46,8 @@ public class NoticeController {
 	@Autowired
 	private MailBoxService mailService;
 
+	@Autowired
+	private WebSocketService websocketService;
 
 	/**
 	 * 发布通知
@@ -100,8 +102,10 @@ public class NoticeController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
+			List<Tb_websocket__channel> noticeChannel = websocketService.selcetChannelByType((byte)0);
+			
 			// 广播通知 websocket
-			noticeService.broadcast(notice);
+			noticeService.broadcast(noticeChannel.get(0).getChannel());
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
 
