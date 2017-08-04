@@ -2,7 +2,7 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_websocket__channel {
+public class Tb_websocket_channel {
     private Integer id;
 
     private String channel;

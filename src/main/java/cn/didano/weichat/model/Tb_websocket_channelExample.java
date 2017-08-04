@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Tb_websocket__channelExample {
+public class Tb_websocket_channelExample {
     protected String orderByClause;
 
     protected boolean distinct;
 
     protected List<Criteria> oredCriteria;
 
-    public Tb_websocket__channelExample() {
+    public Tb_websocket_channelExample() {
         oredCriteria = new ArrayList<Criteria>();
     }
 

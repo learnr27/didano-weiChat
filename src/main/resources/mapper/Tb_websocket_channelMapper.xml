@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.didano.weichat.dao.Tb_websocket__channelMapper">
-  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_websocket__channel">
+<mapper namespace="cn.didano.weichat.dao.Tb_websocket_channelMapper">
+  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_websocket_channel">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="channel" jdbcType="VARCHAR" property="channel" />
     <result column="channel_type" jdbcType="TINYINT" property="channelType" />
@@ -70,14 +70,14 @@
   <sql id="Base_Column_List">
     id, channel, channel_type, created, updated, deleted
   </sql>
-  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_websocket__channelExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_websocket_channelExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tb_websocket__channel
+    from tb_websocket_channel
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -88,33 +88,33 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from tb_websocket__channel
+    from tb_websocket_channel
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_websocket__channel
+    delete from tb_websocket_channel
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_websocket__channelExample">
-    delete from tb_websocket__channel
+  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_websocket_channelExample">
+    delete from tb_websocket_channel
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_websocket__channel">
+  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_websocket_channel">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_websocket__channel (channel, channel_type, created, 
+    insert into tb_websocket_channel (channel, channel_type, created, 
       updated, deleted)
     values (#{channel,jdbcType=VARCHAR}, #{channelType,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP}, 
       #{updated,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_websocket__channel">
+  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_websocket_channel">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_websocket__channel
+    insert into tb_websocket_channel
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="channel != null">
         channel,
@@ -150,14 +150,14 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_websocket__channelExample" resultType="java.lang.Long">
-    select count(*) from tb_websocket__channel
+  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_websocket_channelExample" resultType="java.lang.Long">
+    select count(*) from tb_websocket_channel
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tb_websocket__channel
+    update tb_websocket_channel
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
@@ -183,7 +183,7 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tb_websocket__channel
+    update tb_websocket_channel
     set id = #{record.id,jdbcType=INTEGER},
       channel = #{record.channel,jdbcType=VARCHAR},
       channel_type = #{record.channelType,jdbcType=TINYINT},
@@ -194,8 +194,8 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_websocket__channel">
-    update tb_websocket__channel
+  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_websocket_channel">
+    update tb_websocket_channel
     <set>
       <if test="channel != null">
         channel = #{channel,jdbcType=VARCHAR},
@@ -215,8 +215,8 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_websocket__channel">
-    update tb_websocket__channel
+  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_websocket_channel">
+    update tb_websocket_channel
     set channel = #{channel,jdbcType=VARCHAR},
       channel_type = #{channelType,jdbcType=TINYINT},
       created = #{created,jdbcType=TIMESTAMP},

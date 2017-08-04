@@ -29,7 +29,7 @@ import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_staff;
-import cn.didano.weichat.model.Tb_websocket__channel;
+import cn.didano.weichat.model.Tb_websocket_channel;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -102,7 +102,7 @@ public class NoticeController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
-			List<Tb_websocket__channel> noticeChannel = websocketService.selcetChannelByType((byte)0);
+			List<Tb_websocket_channel> noticeChannel = websocketService.selcetChannelByType((byte)0);
 			
 			// 广播通知 websocket
 			noticeService.broadcast(noticeChannel.get(0).getChannel());
