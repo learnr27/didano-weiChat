@@ -48,15 +48,15 @@ public class MailBoxController {
 	private NoticeService noticeService;
 
 	/**
-	 * 写邮件
+	 * 写邮件，回复邮件
 	 *
 	 * @param c_channel
 	 * @return
 	 */
-	@ApiOperation(value = " 写邮件", notes = " 写邮件")
+	@ApiOperation(value = " 写邮件，回复邮件", notes = " 写邮件，回复邮件")
 	@PostMapping(value = "write_mail")
 	@ResponseBody
-	public Out<String> write_mail(@ApiParam(value = " 写邮件", required = true) @RequestBody In_MailBox_Reply mail_write) {
+	public Out<String> write_mail(@ApiParam(value = "写邮件，回复邮件", required = true) @RequestBody In_MailBox_Reply mail_write) {
 		logger.info("MailBoxController:write_mail,mail_write=" + mail_write);
 
 		Hand_UserAndStudent data = null;
@@ -67,6 +67,7 @@ public class MailBoxController {
 		List<Integer> receiveId = new ArrayList<Integer>();		
 		Out<String> back = new Out<String>();
 		try {
+			//写邮件
 			if(mail_write.getNoticeId()==0){
 			data =new Hand_UserAndStudent();
 			data.setStudentId(mail_write.getStudentId());
@@ -121,7 +122,7 @@ public class MailBoxController {
 				// 更新有问题
 				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
 			}
-			// end else
+			// 回复邮件
 			}else{
 				noticeReply = new Tb_notice_reply();
 				data = new Hand_UserAndStudent();
@@ -141,8 +142,10 @@ public class MailBoxController {
 				noticeReply.setNoticeid(mail_write.getNoticeId());
 				// 插入回信表
 				int rowNum = mailBoxService.replyMail(noticeReply);
+				//刷新其他接收者的时间，好让别人回复时，其他人收到新消息后再消息列表会排在前面
+				int row = noticeService.refreshTime(mail_write.getNoticeId());
 				if (rowNum > 0) {
-					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
+					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum+",row=" + row);
 
 				} else {
 					// 更新有问题
@@ -159,61 +162,6 @@ public class MailBoxController {
 		}
 		return back;
 	}
-
-	/**
-	 * 回复邮件
-	 *
-	 * @param c_channel
-	 * @return
-	 */
-	@ApiOperation(value = "回复邮件", notes = "回复邮件")
-	@PostMapping(value = "reply_mail")
-	@ResponseBody
-	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Reply mail_reply) {
-		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);
-		Tb_notice_reply noticeReply = null;
-		Hand_UserAndStudent data = null;
-		Out<String> back = new Out<String>();
-		try {
-
-			noticeReply = new Tb_notice_reply();
-			data = new Hand_UserAndStudent();
-			data.setStudentId(mail_reply.getStudentId());
-			data.setUserId(mail_reply.getUserId());
-			// 根据登录者的身份设置发送者称呼
-			if (mail_reply.getUserType() == 31) {
-				Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
-				noticeReply.setAddressername(boss.getName() + "园长");
-			} else {
-				Hand_addressName parent = mailBoxService.selectAddressName(data);
-				noticeReply.setAddressername(parent.getName() + "的" + parent.getRelation_title());
-			}
-			noticeReply.setAddresserid(mail_reply.getUserId());
-			noticeReply.setContent(mail_reply.getContent());
-			noticeReply.setCreated(new Date());
-			noticeReply.setNoticeid(mail_reply.getNoticeId());
-			// 插入回信表
-			int rowNum = mailBoxService.replyMail(noticeReply);
-			if (rowNum > 0) {
-				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
-
-			} else {
-				// 更新有问题
-				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
-			}
-			// end else
-
-		} catch (ServiceException e) {
-			// 服务层错误，包括 内部service 和 对外service
-			logger.warn(e.getMessage());
-			back.setServiceExceptionWithLog(e.getExceptionEnums());
-		} catch (Exception ex) {
-			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
-		}
-		return back;
-	}
-
 	/**
 	 * 根据通知id查找关于该条信息的回复
 	 *
@@ -254,4 +202,59 @@ public class MailBoxController {
 		}
 		return back;
 	}
+//	/**
+//	 * 回复邮件
+//	 *
+//	 * @param c_channel
+//	 * @return
+//	 */
+//	@ApiOperation(value = "回复邮件", notes = "回复邮件")
+//	@PostMapping(value = "reply_mail")
+//	@ResponseBody
+//	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Reply mail_reply) {
+//		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);
+//		Tb_notice_reply noticeReply = null;
+//		Hand_UserAndStudent data = null;
+//		Out<String> back = new Out<String>();
+//		try {
+//
+//			noticeReply = new Tb_notice_reply();
+//			data = new Hand_UserAndStudent();
+//			data.setStudentId(mail_reply.getStudentId());
+//			data.setUserId(mail_reply.getUserId());
+//			// 根据登录者的身份设置发送者称呼
+//			if (mail_reply.getUserType() == 31) {
+//				Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
+//				noticeReply.setAddressername(boss.getName() + "园长");
+//			} else {
+//				Hand_addressName parent = mailBoxService.selectAddressName(data);
+//				noticeReply.setAddressername(parent.getName() + "的" + parent.getRelation_title());
+//			}
+//			noticeReply.setAddresserid(mail_reply.getUserId());
+//			noticeReply.setContent(mail_reply.getContent());
+//			noticeReply.setCreated(new Date());
+//			noticeReply.setNoticeid(mail_reply.getNoticeId());
+//			// 插入回信表
+//			int rowNum = mailBoxService.replyMail(noticeReply);
+//			if (rowNum > 0) {
+//				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
+//
+//			} else {
+//				// 更新有问题
+//				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+//			}
+//			// end else
+//
+//		} catch (ServiceException e) {
+//			// 服务层错误，包括 内部service 和 对外service
+//			logger.warn(e.getMessage());
+//			back.setServiceExceptionWithLog(e.getExceptionEnums());
+//		} catch (Exception ex) {
+//			logger.warn(ex.getMessage());
+//			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+//		}
+//		return back;
+//	}
+
+	
 }

@@ -3,16 +3,13 @@ package cn.didano.weichat.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.didano.weichat.dao.Tb_head_sculptureMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
@@ -60,6 +57,15 @@ public class NoticeService {
 	}
 
 
+	/**
+	 * 根据通知id更新用户表的时间
+	 */
+	public int refreshTime(Integer noticeId){
+		
+		Tb_notice notice = noticeMapper.selectByPrimaryKey(noticeId);
+		notice.setCreated(new Date());					
+		return noticeMapper.updateByPrimaryKeySelective(notice);
+	}
 	/**
 	 * 根据通知类型查找头像
 	 */
