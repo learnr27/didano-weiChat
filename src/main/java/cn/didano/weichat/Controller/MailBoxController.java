@@ -67,7 +67,7 @@ public class MailBoxController {
 		List<Integer> receiveId = new ArrayList<Integer>();		
 		Out<String> back = new Out<String>();
 		try {
-			//写邮件
+			//通知id没有时就是写邮件
 			if(mail_write.getNoticeId()==0){
 			data =new Hand_UserAndStudent();
 			data.setStudentId(mail_write.getStudentId());

@@ -3,6 +3,7 @@ package cn.didano.weichat.Controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,8 @@ import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
-import cn.didano.weichat.json.OutList;
+import cn.didano.weichat.model.Hand_homeMailBox;
+import cn.didano.weichat.model.Hand_noticeList;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
@@ -136,15 +138,19 @@ public class NoticeController {
 	@PostMapping(value = "notice_findtByUserid/{user_id}/{user_type}")
 	@ApiOperation(value = "根据用户id,用户类型查找消息列表", notes = "根据用户id,用户类型查找消息列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("user_id") Integer user_id,
+	public Out<Hand_noticeList> notice_findtByUserid(@PathVariable("user_id") Integer user_id,
 			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,user_id=" + user_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
 		List<Tb_notice> notices = null;
-		OutList<Tb_notice> outList = null;
-		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
+		Hand_noticeList data = null;
+		List<Hand_homeMailBox> boxs = null;
+		Hand_homeMailBox box = null;
+		Out<Hand_noticeList> back = new Out<Hand_noticeList>();
 		try {
+			 boxs = new ArrayList<Hand_homeMailBox>();
+			data = new Hand_noticeList();
 			notices = noticeService.findNoticeByUserId(user_id, user_type);
 			// 获取头像地址
 			for (int i = 0; i < notices.size(); i++) {
@@ -158,9 +164,20 @@ public class NoticeController {
 			for (int i = 0; i < notices.size(); i++) {
 				date = sdf.format(notices.get(i).getCreated());
 				notices.get(i).setDate(date);
+				//挑出园长信箱的通知消息单独为一个集合
+				if(notices.get(i).getNoticeType()==4){
+					box = new Hand_homeMailBox();
+					box.setName(notices.get(i).getAddresserName().split("的")[0]+"小朋友家");
+					box.getMailBox().add(notices.get(i));
+					boxs.add(box);
+					notices.remove(i);
+				}
 			}
-			outList = new OutList<Tb_notice>(notices.size(), notices);
-			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			//设置园长信箱数据
+			data.setMailBox(boxs);
+			//设置消息列表数据
+			data.setNotices(notices);
+			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());
