@@ -26,11 +26,13 @@ import cn.didano.weichat.json.In_MailBox_Reply;
 import cn.didano.weichat.json.In_MailBox_Write;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
+import cn.didano.weichat.model.Hand_UserAndStudent;
 import cn.didano.weichat.model.Hand_addressName;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_notice_reply;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_student_parent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -54,20 +56,31 @@ public class MailBoxController {
 	@ApiOperation(value = " 写邮件", notes = " 写邮件")
 	@PostMapping(value = "write_mail")
 	@ResponseBody
-	public Out<String> write_mail(@ApiParam(value = " 写邮件", required = true) @RequestBody In_MailBox_Write mail_write) {
+	public Out<String> write_mail(@ApiParam(value = " 写邮件", required = true) @RequestBody In_MailBox_Reply mail_write) {
 		logger.info("MailBoxController:write_mail,mail_write=" + mail_write);
 
+		Hand_UserAndStudent data = null;
+		Tb_notice_reply noticeReply = null;
+		Hand_addressName addressName = null;
 		List<Tb_staff> boss = null;
-		List<Integer> bossId = new ArrayList<Integer>();
-		List<Hand_addressName> addressName = null;
+		List<Tb_student_parent> parents=null;
+		List<Integer> receiveId = new ArrayList<Integer>();		
 		Out<String> back = new Out<String>();
 		try {
-			System.out.println(mail_write.getUserId());
+			if(mail_write.getNoticeId()==0){
+			data =new Hand_UserAndStudent();
+			data.setStudentId(mail_write.getStudentId());
+			data.setUserId(mail_write.getUserId());
+			parents=mailBoxService.findParentByStudentId(mail_write.getStudentId());
 			boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
-			addressName = mailBoxService.selectAddressName(mail_write.getUserId());
+			addressName = mailBoxService.selectAddressName(data);
 			// 获取该学校所有园长id
 			for (int i = 0; i < boss.size(); i++) {
-				bossId.add(boss.get(i).getId());
+				receiveId.add(boss.get(i).getId());
+			}
+			//获取该学生其他家长id
+			for (int i = 0; i < parents.size(); i++) {
+				receiveId.add(parents.get(i).getId());
 			}
 			Tb_notice notice = new Tb_notice();
 			notice.setContent(mail_write.getContent());
@@ -76,7 +89,7 @@ public class MailBoxController {
 			notice.setIs_read((byte) 0);
 			notice.setCreated(new Date());
 			notice.setAddresserId(mail_write.getUserId());
-			notice.setAddresserName(addressName.get(0).getName() + "的" + addressName.get(0).getRelation_title());
+			notice.setAddresserName(addressName.getName() + "的" + addressName.getRelation_title());
 			// 判断用户类型
 			if (boss.size() == 1) {
 				// 单个用户
@@ -109,7 +122,33 @@ public class MailBoxController {
 				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
 			}
 			// end else
+			}else{
+				noticeReply = new Tb_notice_reply();
+				data = new Hand_UserAndStudent();
+				data.setStudentId(mail_write.getStudentId());
+				data.setUserId(mail_write.getUserId());
+				// 根据登录者的身份设置发送者称呼
+				if (mail_write.getUserType() == 31) {
+					Tb_staff staff = mailBoxService.selectBossById(mail_write.getUserId());
+					noticeReply.setAddressername(staff.getName() + "园长");
+				} else {
+					Hand_addressName parent = mailBoxService.selectAddressName(data);
+					noticeReply.setAddressername(parent.getName() + "的" + parent.getRelation_title());
+				}
+				noticeReply.setAddresserid(mail_write.getUserId());
+				noticeReply.setContent(mail_write.getContent());
+				noticeReply.setCreated(new Date());
+				noticeReply.setNoticeid(mail_write.getNoticeId());
+				// 插入回信表
+				int rowNum = mailBoxService.replyMail(noticeReply);
+				if (rowNum > 0) {
+					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
 
+				} else {
+					// 更新有问题
+					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+				}
+			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());
@@ -133,16 +172,20 @@ public class MailBoxController {
 	public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true) @RequestBody In_MailBox_Reply mail_reply) {
 		logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);
 		Tb_notice_reply noticeReply = null;
+		Hand_UserAndStudent data = null;
 		Out<String> back = new Out<String>();
 		try {
 
 			noticeReply = new Tb_notice_reply();
+			data = new Hand_UserAndStudent();
+			data.setStudentId(mail_reply.getStudentId());
+			data.setUserId(mail_reply.getUserId());
 			// 根据登录者的身份设置发送者称呼
 			if (mail_reply.getUserType() == 31) {
 				Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
 				noticeReply.setAddressername(boss.getName() + "园长");
 			} else {
-				Hand_addressName parent = mailBoxService.selectAddressName(mail_reply.getUserId()).get(0);
+				Hand_addressName parent = mailBoxService.selectAddressName(data);
 				noticeReply.setAddressername(parent.getName() + "的" + parent.getRelation_title());
 			}
 			noticeReply.setAddresserid(mail_reply.getUserId());

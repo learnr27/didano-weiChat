@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import cn.didano.weichat.model.Hand_UserAndStudent;
 import cn.didano.weichat.model.Hand_addressName;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeExample;
@@ -33,5 +34,5 @@ public interface Tb_noticeMapper {
     int updateByPrimaryKey(Tb_notice record);
     //手写
     List<Tb_staff> selectBossByParentId(Integer userId);
-    List<Hand_addressName> selectAddressName(Integer userId);
+    Hand_addressName selectAddressName(Hand_UserAndStudent record);
 }
