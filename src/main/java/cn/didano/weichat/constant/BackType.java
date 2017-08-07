@@ -63,6 +63,9 @@ public enum BackType {
 	FAIL_DELETE_NO_CARD("此卡不存在", 2183),
 	FAIL_DELETE_NO_RFID("数据库中已经存在该rfid", 2183),
 	FAIL_DELETE_NO_ICNUMBER("数据库中已经存在该ic_number", 2183),
+	//fail getUser 2201
+	FAIL_SEARCH_UNKNOWN_USER("未知帐号",2201),
+	FAIL_SEARCH_INCORRECT_USER("帐号或密码错误",2202),
 	;
 	private String message;
 	private int code;

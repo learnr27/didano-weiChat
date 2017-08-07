@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset=utf-8>
+<title>小诺健康机器人</title>
+<meta name=viewport
+	content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no">
+<link rel=stylesheet type=text/css href=./static/css/reset.css>
+<link rel=stylesheet
+	href=//webapp.didistatic.com/static/webapp/shield/z/mofang-icons/mofang-icons/svg/0.0.4/mofang-icons.min.css
+	type=text/css>
+<script type=text/javascript>
+	<!-- const WX_URL = "http://localhost:7180"; -->
+	const WX_URL = "http://119.23.152.164:7180";
+</script>
+<link href=static/css/app.8386b71dc88acedb1b9644b6384d964c.css
+	rel=stylesheet>
+</head>
+<body>
+
+	<div id="app-box"></div>
+	<div style="display: none">
+		<p id="openId" th:text="${openid}" />
+	</div>
+
+	<script>
+		const openid = document.getElementById("openId").innerText;
+		console.log(openid);
+		alert(openid);
+	</script>
+	<script type=text/javascript
+		src=static/js/manifest.ecee19a91c67b525499a.js></script>
+	<script type=text/javascript
+		src=static/js/vendor.f0aeebe86dbc942635ef.js></script>
+	<script type=text/javascript src=static/js/app.0ca9c682c88798a6bb0e.js></script>
+	<p th:text="'Hello1, ' + ${openid} + '!'" />
+	<p th:text="'Hello2, ' + *{openid} + '!'" />
+</body>
+</html>

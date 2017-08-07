@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_officialAccountMapper">
+  
+  
+  
+  <select id="getAllwxOfficialAccount" resultType="cn.didano.weichat.model.Hand_officialAccount">
+  	SELECT
+	  
+	  wo.id AS officialAccountId,
+	  wo.accountType AS accountType,
+	  wo.wx_type AS wxType, 
+	  wo.wx_openid AS originalId,
+	  wo.nickName AS wxName,
+	  wo.appid          AS appId,
+	  wo.appSecret AS secret,
+	  wo.token AS token,
+	  wo.encodingAesKey AS aesKey,
+	  wo.messageUrl AS messageUrl,
+	  wo.created AS createTime,
+	  wo.updated AS updateTime,
+	  wo.deleted AS deleteTage
+	FROM 
+	  wx_official_account wo
+  </select>
+  
+</mapper>

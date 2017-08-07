@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_userMapper">
+  
+  
+  <sql id="Base_Column_List">
+    id, openid, officialAccountId, nickname, mobile, station, create_date, update_date, 
+    type, delete_flag, school_parent_id, staff_id, description
+  </sql>
+  
+  <select id="selectUserByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_user">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+ 
+  <update id="enableRoleStatusById" parameterType="cn.didano.weichat.model.Hand_userRoleRel">
+  	UPDATE tb_user_role_rel SET STATUS = 0 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR};
+  </update>
+  
+  <update id="disableRoleStatusById" parameterType="cn.didano.weichat.model.Hand_userRoleRel">
+  	UPDATE tb_user_role_rel SET STATUS = 1 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR};
+  </update>
+  
+  <select id="findAllUsers" resultType="cn.didano.weichat.model.Tb_user">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user
+  </select>
+  
+  <select id="getMobileByOpenId" parameterType="java.lang.String" resultType="java.lang.String">
+    SELECT DISTINCT
+      wb.phone
+    FROM tb_weichat_bind wb,
+      tb_weichat w
+    WHERE w.id = wb.weichat_id
+        AND w.openid = #{openId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getStudentListByMobile" resultType="cn.didano.weichat.json.Out_Student_Search">
+	SELECT
+	  tb_student.*,tb_student_parent.*,tb_class.title AS classtitle,tb_school.title AS schooltitle
+	FROM tb_student
+	  LEFT JOIN (SELECT
+	               tb_student_parent.*
+	             FROM tb_student_parent,
+	               tb_school_parent
+	             WHERE tb_school_parent.phone = #{parentPhone,jdbcType=VARCHAR}
+	                 AND tb_student_parent.parent_id = tb_school_parent.id) AS tb_student_parent
+	    ON tb_student_parent.student_id = tb_student.id
+	  LEFT JOIN tb_school_parent
+	    ON tb_school_parent.id = tb_student_parent.parent_id
+	      AND tb_school_parent.deleted = 0
+	  LEFT JOIN tb_school
+	    ON tb_school.id = tb_student.school_id
+	  LEFT JOIN tb_class
+	    ON tb_class.id = tb_student.class_id
+	WHERE tb_student.deleted = 0
+	    AND tb_student_parent.deleted = 0
+	    AND tb_class.deleted = 0
+	    AND tb_school_parent.deleted = 0
+	    AND tb_school.deleted = 0
+	ORDER BY tb_student.created DESC
+  </select>
+  
+  <select id="getSchoolListByMobile" resultType="cn.didano.weichat.model.Tb_school">
+	SELECT
+	  DISTINCT
+	    'true' AS QUERYID,sc.*
+	FROM tb_staff st,
+	  tb_school sc
+	WHERE st.phone = #{mobile,jdbcType=VARCHAR}
+    AND st.type = 31
+    AND st.school_id = sc.id
+    ORDER BY id
+  </select>
+  
+  <select id="getTeacherByMobile" resultType="cn.didano.weichat.model.Hand_teacher">
+	SELECT
+		  s.id AS staff_id,
+		  s.*,
+		  sc.*
+		FROM tb_staff s,
+		  tb_school sc
+		WHERE s.type = 32
+		    AND s.phone = #{mobile,jdbcType=VARCHAR}
+		    AND s.school_id = sc.id;
+  </select>
+  
+  <select id="getRelationByRelationId" parameterType="java.lang.Integer" resultType="java.lang.String">
+  	SELECT * FROM tb_relation WHERE id = #{relation_id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getUserListFromOthers" resultType="cn.didano.weichat.model.Tb_user">
+  	SELECT DISTINCT
+	  tw.openid            AS openid,
+	  tw.officialAccountId AS officialaccountId,
+	  tw.nickname          AS nickname,
+	  twb.phone            AS mobile,
+	  tw.created           AS createDate,
+	  tw.updated           AS updateDate,
+	  tw.deleted           AS deleteFlag
+	FROM tb_weichat tw,
+	  tb_weichat_bind twb
+	WHERE tw.id = twb.weichat_id;
+  </select>
+  
+  <select id="getParentListByMobile" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_schoolParent">
+  	SELECT DISTINCT
+	  *
+	FROM tb_school_parent
+	WHERE phone =  #{mobile,jdbcType=VARCHAR};
+  </select>
+  
+  <select id="getStaffByMobileFromOthers" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_staff">
+  	SELECT DISTINCT
+	  *
+	FROM tb_staff
+	WHERE phone = #{mobile,jdbcType=VARCHAR};
+  </select>
+  
+  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_user">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_user (openid, officialAccountId, username, 
+      nickname, real_name, mobile, 
+      station, create_date, update_date, 
+      type, delete_flag, parent_id, 
+      staff_id, description)
+    values (#{openid,jdbcType=VARCHAR}, #{officialaccountid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{nickname,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{station,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{updateDate,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{deleteFlag,jdbcType=BIT}, #{parentId,jdbcType=INTEGER}, 
+      #{staffId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  
+  
+</mapper>
