@@ -152,32 +152,63 @@ public class NoticeController {
 			 boxs = new ArrayList<Hand_homeMailBox>();
 			data = new Hand_noticeList();
 			notices = noticeService.findNoticeByUserId(user_id, user_type);
+			if(notices.size()!=0){
 			// 获取头像地址
 			for (int i = 0; i < notices.size(); i++) {
 				notice = notices.get(i);
+				if(notice.getNoticeType()!=4){
 				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
 				notice.setHeadUrl(head.getAddress());
+				}else{
+					String title =notice.getAddresserName();
+					if(title.length()!=0){
+					String name = title.substring(title.length()-2, title.length());
+					if("园长".equals(name)){
+						head = noticeService.selectHeadByNoticeType((byte)9).get(0);
+						notices.get(i).setHeadUrl(head.getAddress());
+					}else if("爸爸".equals(name)){
+						head = noticeService.selectHeadByNoticeType((byte)5).get(0);
+						notices.get(i).setHeadUrl(head.getAddress());
+					}else if("妈妈".equals(name)){
+						head = noticeService.selectHeadByNoticeType((byte)6).get(0);
+						notices.get(i).setHeadUrl(head.getAddress());
+					}else if("爷爷".equals(name)){
+						head = noticeService.selectHeadByNoticeType((byte)7).get(0);
+						notices.get(i).setHeadUrl(head.getAddress());
+					}else if("奶奶".equals(name)){
+						head = noticeService.selectHeadByNoticeType((byte)8).get(0);
+						notices.get(i).setHeadUrl(head.getAddress());
+					}
+					}
+				}
 			}
 			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
+			List<Integer> removeId= new ArrayList<Integer>();
 			for (int i = 0; i < notices.size(); i++) {
 				date = sdf.format(notices.get(i).getCreated());
 				notices.get(i).setDate(date);
 				//挑出园长信箱的通知消息单独为一个集合
 				if(notices.get(i).getNoticeType()==4){
 					box = new Hand_homeMailBox();
-					box.setName(notices.get(i).getAddresserName().split("的")[0]+"小朋友家");
+					box.setName(notices.get(i).getAddresserName().split("的")[0]+"小朋友的家庭");
+					head = noticeService.selectHeadByNoticeType((byte)10).get(0);
+					box.setHead(head.getAddress());
 					box.getMailBox().add(notices.get(i));
 					boxs.add(box);
-					notices.remove(i);
+					removeId.add(i);
 				}
+			}
+			for (int i = 0; i < removeId.size(); i++) {
+				notices.remove(removeId.get(i));
 			}
 			//设置园长信箱数据
 			data.setMailBox(boxs);
 			//设置消息列表数据
 			data.setNotices(notices);
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());

@@ -21,9 +21,18 @@ public class Tb_notice_reply {
     
     //手写
     private String date;
+    private String head;
     
 
-    public String getDate() {
+    public String getHead() {
+		return head;
+	}
+
+	public void setHead(String head) {
+		this.head = head;
+	}
+
+	public String getDate() {
 		return date;
 	}
 

@@ -6,6 +6,7 @@ import java.util.List;
 public class Hand_homeMailBox {
 
 	private String name;
+	private String head;
 	private List<Tb_notice> mailBox = new ArrayList<Tb_notice>();
 	public String getName() {
 		return name;
@@ -18,6 +19,12 @@ public class Hand_homeMailBox {
 	}
 	public void setMailBox(List<Tb_notice> mailBox) {
 		this.mailBox = mailBox;
+	}
+	public String getHead() {
+		return head;
+	}
+	public void setHead(String head) {
+		this.head = head;
 	}
     
 }

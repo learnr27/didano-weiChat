@@ -23,11 +23,11 @@ import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_MailBox_Reply;
-import cn.didano.weichat.json.In_MailBox_Write;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_UserAndStudent;
 import cn.didano.weichat.model.Hand_addressName;
+import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_notice_reply;
@@ -142,7 +142,7 @@ public class MailBoxController {
 				noticeReply.setNoticeid(mail_write.getNoticeId());
 				// 插入回信表
 				int rowNum = mailBoxService.replyMail(noticeReply);
-				//刷新其他接收者的时间，好让别人回复时，其他人收到新消息后再消息列表会排在前面
+				//刷新其他接收者的时间，并且设置为未读状态，好让别人回复时，其他人收到新消息后再消息列表会排在前面
 				int row = noticeService.refreshTime(mail_write.getNoticeId());
 				if (rowNum > 0) {
 					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum+",row=" + row);
@@ -176,6 +176,7 @@ public class MailBoxController {
 		logger.info("访问  MailBoxController:findReply_ByNoticeId,noticeId=" + noticeId);
 		List<Tb_notice_reply> notices = null;
 		OutList<Tb_notice_reply> outList = null;
+		Tb_head_sculpture head = null;
 		Out<OutList<Tb_notice_reply>> back = new Out<OutList<Tb_notice_reply>>();
 		try {
 			notices = mailBoxService.selectReplyByNoticeId(noticeId);
@@ -189,6 +190,27 @@ public class MailBoxController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
 			for (int i = 0; i < notices.size(); i++) {
 				notices.get(i).setDate(sdf.format(notices.get(i).getCreated()));
+				String title = notices.get(i).getAddressername();
+				String name = title.substring(title.length()-2, title.length());
+				System.out.println(name);
+				//设置头像
+				if("园长".equals(name)){
+					head = noticeService.selectHeadByNoticeType((byte)9).get(0);
+					notices.get(i).setHead(head.getAddress());
+				}else if("爸爸".equals(name)){
+					head = noticeService.selectHeadByNoticeType((byte)5).get(0);
+					notices.get(i).setHead(head.getAddress());
+				}else if("妈妈".equals(name)){
+					head = noticeService.selectHeadByNoticeType((byte)6).get(0);
+					notices.get(i).setHead(head.getAddress());
+				}else if("爷爷".equals(name)){
+					head = noticeService.selectHeadByNoticeType((byte)7).get(0);
+					notices.get(i).setHead(head.getAddress());
+				}else if("奶奶".equals(name)){
+					head = noticeService.selectHeadByNoticeType((byte)8).get(0);
+					notices.get(i).setHead(head.getAddress());
+				}
+				
 			}
 			outList = new OutList<Tb_notice_reply>(notices.size(), notices);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);

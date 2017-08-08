@@ -1,6 +1,5 @@
 package cn.didano.weichat.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Hand_noticeList {

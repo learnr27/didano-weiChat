@@ -63,7 +63,9 @@ public class NoticeService {
 	public int refreshTime(Integer noticeId){
 		
 		Tb_notice notice = noticeMapper.selectByPrimaryKey(noticeId);
-		notice.setCreated(new Date());					
+		notice.setCreated(new Date());
+		//设置为未读状态
+		notice.setIs_read((byte)0);
 		return noticeMapper.updateByPrimaryKeySelective(notice);
 	}
 	/**
