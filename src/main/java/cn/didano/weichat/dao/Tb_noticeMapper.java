@@ -32,7 +32,7 @@ public interface Tb_noticeMapper {
     int updateByPrimaryKeySelective(Tb_notice record);
 
     int updateByPrimaryKey(Tb_notice record);
-    //手写
+  //手写
     List<Tb_staff> selectBossByParentId(Integer userId);
     Hand_addressName selectAddressName(Hand_UserAndStudent record);
 }

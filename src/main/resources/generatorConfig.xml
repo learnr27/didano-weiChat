@@ -216,7 +216,7 @@
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
 		</table> -->
-		<table tableName="tb_student_parent" domainObjectName="Tb_student_parent"
+		<table tableName="tb_notice" domainObjectName="Tb_notice"
 			enableCountByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  

@@ -73,22 +73,29 @@ public class NoticeController {
 			notice = new Tb_notice();
 			BeanUtils.copyProperties(notice, notice_edit);
 			// 设置发送者身份
-			notice.setAddresserId(notice_edit.getOnlineId());
+			notice.setSenderId(notice_edit.getOnlineId());
 			if (staff.getType() == 31) {
-				notice.setAddresserName(staff.getName() + "园长");
+				notice.setSenderName(staff.getName() + "园长");
 			} else if (staff.getType() == 32) {
-				notice.setAddresserName(staff.getName() + "老师");
+				notice.setSenderName(staff.getName() + "老师");
 			}
 			int num = notice_edit.getUserId().size();
-			// 判断用户类型
-			if (num == 1) {
-				// 单个用户
-				notice.setPersonType((byte) 1);
-			} else {
-				// 多个用户
-				notice.setPersonType((byte) 2);
-			}
+//			// 判断用户类型
+//			if (num == 1) {
+//				// 单个用户
+//				notice.setPersonType((byte) 1);
+//			} else {
+//				// 多个用户
+//				notice.setPersonType((byte) 2);
+//			}
 			notice.setCreated(new Date());
+			notice.setNoticeModel(notice_edit.getNoticeModel());
+			notice.setNoticeType(notice_edit.getNoticeType());
+			if(notice_edit.getNoticeModel()==1){
+				
+			}else if(notice_edit.getNoticeModel()==2){
+				notice.setRedictUrl(notice_edit.getUrl());
+			}
 			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
 			int rowNum = 0;
@@ -160,7 +167,7 @@ public class NoticeController {
 				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
 				notice.setHeadUrl(head.getAddress());
 				}else{
-					String title =notice.getAddresserName();
+					String title =notice.getSenderName();
 					if(title.length()!=0){
 					String name = title.substring(title.length()-2, title.length());
 					if("园长".equals(name)){
@@ -192,7 +199,7 @@ public class NoticeController {
 				//挑出园长信箱的通知消息单独为一个集合
 				if(notices.get(i).getNoticeType()==4){
 					box = new Hand_homeMailBox();
-					box.setName(notices.get(i).getAddresserName().split("的")[0]+"小朋友的家庭");
+					box.setName(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");
 					head = noticeService.selectHeadByNoticeType((byte)10).get(0);
 					box.setHead(head.getAddress());
 					box.getMailBox().add(notices.get(i));
@@ -249,7 +256,7 @@ public class NoticeController {
 	}
 
 	/**
-	 *
+	 *0
 	 * 用户删除自己的消息
 	 *
 	 * @param teacher_id

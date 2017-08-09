@@ -20,6 +20,7 @@ import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_head_sculptureExample;
 import cn.didano.weichat.model.Tb_notice;
+import cn.didano.weichat.model.Tb_noticeExample;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_noticeUserExample;
 
@@ -56,6 +57,19 @@ public class NoticeService {
 		return;
 	}
 
+	/**
+	 * 根据来源id，来源类型查找通知
+	 */
+	public List<Tb_notice> findNoticeBySourceId(Integer id, byte type) {
+		Tb_noticeExample condition = new Tb_noticeExample();
+		Tb_noticeExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andSourceIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
+		criteria.andNoticeTypeEqualTo(type);
+		
+		return noticeMapper.selectByExample(condition);
+	}
 
 	/**
 	 * 根据通知id更新用户表的时间
@@ -80,6 +94,25 @@ public class NoticeService {
 		return headMapper.selectByExample(condition);
 	}
 
+	
+	/**
+	 * 插入tb_notice
+	 */
+	public int insertNoticeSelective(String title, Byte priority,String content,Integer senderId,String senderName,Byte noticeModel,String redirectUrl,
+			Byte noticeType, int sourceId) {	
+		Tb_notice record = new Tb_notice();
+		record.setTitle(title);
+		record.setContent(content);
+		record.setCreated(new Date());
+		record.setNoticeModel(noticeModel);
+		record.setNoticeType(noticeType);
+		record.setPriority(priority);
+		record.setRedirectUrl(redirectUrl);
+		record.setSenderId(senderId);
+		record.setSenderName(senderName);
+		record.setSourceId(sourceId);
+		return noticeMapper.insertSelective(record);
+	}
 	/**
 	 * 插入tb_notice
 	 */

@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.didano.weichat.dao.Tb_noticeMapper">
-  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_notice">
+<mapper namespace="cn.didano.weichat.dao.Tb_mail_replyMapper">
+  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_mail_reply">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="title" jdbcType="VARCHAR" property="title" />
     <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="priority" jdbcType="TINYINT" property="priority" />
+    <result column="mail_id" jdbcType="INTEGER" property="mailId" />
     <result column="sender_id" jdbcType="INTEGER" property="senderId" />
     <result column="sender_name" jdbcType="VARCHAR" property="senderName" />
-    <result column="notice_model" jdbcType="TINYINT" property="noticeModel" />
-    <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl" />
-    <result column="source_id" jdbcType="INTEGER" property="sourceId" />
-    <result column="notice_type" jdbcType="TINYINT" property="noticeType" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
@@ -75,17 +70,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, title, content, priority, sender_id, sender_name, notice_model, redirect_url, 
-    source_id, notice_type, created, updated, deleted
+    id, content, mail_id, sender_id, sender_name, created, updated, deleted
   </sql>
-  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_noticeExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_mail_replyExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tb_notice
+    from tb_mail_reply
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -96,66 +90,47 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from tb_notice
+    from tb_mail_reply
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_notice
+    delete from tb_mail_reply
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_noticeExample">
-    delete from tb_notice
+  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_mail_replyExample">
+    delete from tb_mail_reply
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_notice">
+  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_mail_reply">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_notice (title, content, priority, 
-      sender_id, sender_name, notice_model, 
-      redirect_url, source_id, notice_type, 
-      created, updated, deleted
-      )
-    values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{priority,jdbcType=TINYINT}, 
-      #{senderId,jdbcType=INTEGER}, #{senderName,jdbcType=VARCHAR}, #{noticeModel,jdbcType=TINYINT}, 
-      #{redirectUrl,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, #{noticeType,jdbcType=TINYINT}, 
-      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
-      )
+    insert into tb_mail_reply (content, mail_id, sender_id, 
+      sender_name, created, updated, 
+      deleted)
+    values (#{content,jdbcType=VARCHAR}, #{mailId,jdbcType=INTEGER}, #{senderId,jdbcType=INTEGER}, 
+      #{senderName,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=BIT})
   </insert>
-  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_notice">
+  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_mail_reply">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_notice
+    insert into tb_mail_reply
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="title != null">
-        title,
-      </if>
       <if test="content != null">
         content,
       </if>
-      <if test="priority != null">
-        priority,
+      <if test="mailId != null">
+        mail_id,
       </if>
       <if test="senderId != null">
         sender_id,
       </if>
       <if test="senderName != null">
         sender_name,
-      </if>
-      <if test="noticeModel != null">
-        notice_model,
-      </if>
-      <if test="redirectUrl != null">
-        redirect_url,
-      </if>
-      <if test="sourceId != null">
-        source_id,
-      </if>
-      <if test="noticeType != null">
-        notice_type,
       </if>
       <if test="created != null">
         created,
@@ -168,32 +143,17 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="title != null">
-        #{title,jdbcType=VARCHAR},
-      </if>
       <if test="content != null">
         #{content,jdbcType=VARCHAR},
       </if>
-      <if test="priority != null">
-        #{priority,jdbcType=TINYINT},
+      <if test="mailId != null">
+        #{mailId,jdbcType=INTEGER},
       </if>
       <if test="senderId != null">
         #{senderId,jdbcType=INTEGER},
       </if>
       <if test="senderName != null">
         #{senderName,jdbcType=VARCHAR},
-      </if>
-      <if test="noticeModel != null">
-        #{noticeModel,jdbcType=TINYINT},
-      </if>
-      <if test="redirectUrl != null">
-        #{redirectUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="sourceId != null">
-        #{sourceId,jdbcType=INTEGER},
-      </if>
-      <if test="noticeType != null">
-        #{noticeType,jdbcType=TINYINT},
       </if>
       <if test="created != null">
         #{created,jdbcType=TIMESTAMP},
@@ -206,44 +166,29 @@
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_noticeExample" resultType="java.lang.Long">
-    select count(*) from tb_notice
+  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_mail_replyExample" resultType="java.lang.Long">
+    select count(*) from tb_mail_reply
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tb_notice
+    update tb_mail_reply
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
       </if>
-      <if test="record.title != null">
-        title = #{record.title,jdbcType=VARCHAR},
-      </if>
       <if test="record.content != null">
         content = #{record.content,jdbcType=VARCHAR},
       </if>
-      <if test="record.priority != null">
-        priority = #{record.priority,jdbcType=TINYINT},
+      <if test="record.mailId != null">
+        mail_id = #{record.mailId,jdbcType=INTEGER},
       </if>
       <if test="record.senderId != null">
         sender_id = #{record.senderId,jdbcType=INTEGER},
       </if>
       <if test="record.senderName != null">
         sender_name = #{record.senderName,jdbcType=VARCHAR},
-      </if>
-      <if test="record.noticeModel != null">
-        notice_model = #{record.noticeModel,jdbcType=TINYINT},
-      </if>
-      <if test="record.redirectUrl != null">
-        redirect_url = #{record.redirectUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="record.sourceId != null">
-        source_id = #{record.sourceId,jdbcType=INTEGER},
-      </if>
-      <if test="record.noticeType != null">
-        notice_type = #{record.noticeType,jdbcType=TINYINT},
       </if>
       <if test="record.created != null">
         created = #{record.created,jdbcType=TIMESTAMP},
@@ -260,17 +205,12 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tb_notice
+    update tb_mail_reply
     set id = #{record.id,jdbcType=INTEGER},
-      title = #{record.title,jdbcType=VARCHAR},
       content = #{record.content,jdbcType=VARCHAR},
-      priority = #{record.priority,jdbcType=TINYINT},
+      mail_id = #{record.mailId,jdbcType=INTEGER},
       sender_id = #{record.senderId,jdbcType=INTEGER},
       sender_name = #{record.senderName,jdbcType=VARCHAR},
-      notice_model = #{record.noticeModel,jdbcType=TINYINT},
-      redirect_url = #{record.redirectUrl,jdbcType=VARCHAR},
-      source_id = #{record.sourceId,jdbcType=INTEGER},
-      notice_type = #{record.noticeType,jdbcType=TINYINT},
       created = #{record.created,jdbcType=TIMESTAMP},
       updated = #{record.updated,jdbcType=TIMESTAMP},
       deleted = #{record.deleted,jdbcType=BIT}
@@ -278,35 +218,20 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_notice">
-    update tb_notice
+  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_mail_reply">
+    update tb_mail_reply
     <set>
-      <if test="title != null">
-        title = #{title,jdbcType=VARCHAR},
-      </if>
       <if test="content != null">
         content = #{content,jdbcType=VARCHAR},
       </if>
-      <if test="priority != null">
-        priority = #{priority,jdbcType=TINYINT},
+      <if test="mailId != null">
+        mail_id = #{mailId,jdbcType=INTEGER},
       </if>
       <if test="senderId != null">
         sender_id = #{senderId,jdbcType=INTEGER},
       </if>
       <if test="senderName != null">
         sender_name = #{senderName,jdbcType=VARCHAR},
-      </if>
-      <if test="noticeModel != null">
-        notice_model = #{noticeModel,jdbcType=TINYINT},
-      </if>
-      <if test="redirectUrl != null">
-        redirect_url = #{redirectUrl,jdbcType=VARCHAR},
-      </if>
-      <if test="sourceId != null">
-        source_id = #{sourceId,jdbcType=INTEGER},
-      </if>
-      <if test="noticeType != null">
-        notice_type = #{noticeType,jdbcType=TINYINT},
       </if>
       <if test="created != null">
         created = #{created,jdbcType=TIMESTAMP},
@@ -320,28 +245,15 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_notice">
-    update tb_notice
-    set title = #{title,jdbcType=VARCHAR},
-      content = #{content,jdbcType=VARCHAR},
-      priority = #{priority,jdbcType=TINYINT},
+  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_mail_reply">
+    update tb_mail_reply
+    set content = #{content,jdbcType=VARCHAR},
+      mail_id = #{mailId,jdbcType=INTEGER},
       sender_id = #{senderId,jdbcType=INTEGER},
       sender_name = #{senderName,jdbcType=VARCHAR},
-      notice_model = #{noticeModel,jdbcType=TINYINT},
-      redirect_url = #{redirectUrl,jdbcType=VARCHAR},
-      source_id = #{sourceId,jdbcType=INTEGER},
-      notice_type = #{noticeType,jdbcType=TINYINT},
       created = #{created,jdbcType=TIMESTAMP},
       updated = #{updated,jdbcType=TIMESTAMP},
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <select id="selectBossByParentId" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
-  SELECT * FROM tb_staff WHERE school_id=(SELECT school_id FROM tb_school_parent WHERE id =#{userId}) and type=31
-  </select>
-  <select id="selectAddressName" parameterType="cn.didano.weichat.model.Hand_UserAndStudent" resultType="cn.didano.weichat.model.Hand_addressName">
-   SELECT temp.student_id,temp.parent_id,temp.relation_title,b.name FROM (SELECT a.student_id,a.relation_title,a.parent_id FROM tb_student_parent a 
-WHERE a.parent_id=(SELECT id FROM tb_school_parent WHERE id =#{userId}) and a.student_id=#{studentId}) as temp
-LEFT JOIN tb_student b ON temp.student_id = b.id
-  </select>
 </mapper>

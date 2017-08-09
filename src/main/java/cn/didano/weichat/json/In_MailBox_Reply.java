@@ -17,7 +17,7 @@ public class In_MailBox_Reply {
 	@ApiModelProperty(value = "登录者类型 30家长 31园长，当通知id为0时使用",required=true)
 	private byte userType;
 	@ApiModelProperty(value = "通知id,仅回复时使用",required=true)
-	private Integer noticeId;
+	private Integer mailId;
 	
 	
 	
@@ -33,11 +33,12 @@ public class In_MailBox_Reply {
 	public void setUserType(byte userType) {
 		this.userType = userType;
 	}
-	public Integer getNoticeId() {
-		return noticeId;
+	
+	public Integer getMailId() {
+		return mailId;
 	}
-	public void setNoticeId(Integer noticeId) {
-		this.noticeId = noticeId;
+	public void setMailId(Integer mailId) {
+		this.mailId = mailId;
 	}
 	public Integer getUserId() {
 		return userId;

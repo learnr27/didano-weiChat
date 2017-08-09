@@ -5,12 +5,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.didano.weichat.dao.Tb_mailMapper;
+import cn.didano.weichat.dao.Tb_mail_replyMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
 import cn.didano.weichat.dao.Tb_notice_replyMapper;
 import cn.didano.weichat.dao.Tb_staffMapper;
 import cn.didano.weichat.dao.Tb_student_parentMapper;
+import cn.didano.weichat.exception.DBExceptionEnums;
+import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.model.Hand_UserAndStudent;
 import cn.didano.weichat.model.Hand_addressName;
+import cn.didano.weichat.model.Tb_mail;
+import cn.didano.weichat.model.Tb_mail_reply;
+import cn.didano.weichat.model.Tb_mail_replyExample;
 import cn.didano.weichat.model.Tb_notice_reply;
 import cn.didano.weichat.model.Tb_notice_replyExample;
 import cn.didano.weichat.model.Tb_staff;
@@ -28,6 +35,19 @@ public class MailBoxService {
 	private Tb_notice_replyMapper noticeReplyMapper;
 	@Autowired
 	private Tb_student_parentMapper parentMapper;
+	@Autowired
+	private Tb_mailMapper mailMapper;
+	@Autowired
+	private Tb_mail_replyMapper mailReplyMapper;
+	
+	/**
+	 * 插入信箱表
+	 */
+	public int insertMailSelective(Tb_mail record) {	
+		if (record == null)
+			throw new ServiceException(DBExceptionEnums.ERROR_DB_CONTENT_NULL);
+		return mailMapper.insertSelective(record);
+	}
 	
 	/**
 	 * 根据学生id查找家长
@@ -43,8 +63,8 @@ public class MailBoxService {
 	/**
 	 * 插入回复表
 	 */
-	public int replyMail(Tb_notice_reply record){
-		return noticeReplyMapper.insertSelective(record);
+	public int replyMail(Tb_mail_reply record){
+		return mailReplyMapper.insertSelective(record);
 	}
 	/**
 	 * 查找园长
@@ -75,5 +95,16 @@ public class MailBoxService {
  		criteria.andNoticeidEqualTo(noticeId);
  		criteria.andDeletedEqualTo(false);
  		return noticeReplyMapper.selectByExample(condition);
+	}
+	/**
+	 * 根据通知id查找该通知的回复
+	 */
+	public List<Tb_mail_reply> selectMailReplyByNoticeId(Integer mailId){
+		Tb_mail_replyExample condition = new Tb_mail_replyExample();
+		Tb_mail_replyExample.Criteria criteria = condition.createCriteria();
+         //对于已经deleted=1的不显示 禁用不显示
+ 		criteria.andMailIdEqualTo(mailId);
+ 		criteria.andDeletedEqualTo(false);
+ 		return mailReplyMapper.selectByExample(condition);
 	}
 }
