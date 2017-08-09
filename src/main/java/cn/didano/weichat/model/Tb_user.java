@@ -26,11 +26,13 @@ public class Tb_user {
 
 	private Integer schoolParentId;
 
+	private Integer studentId;
+
 	private Integer staffId;
 
-	private Set<Tb_role> roles = new HashSet<>(0);
-
 	private String description;
+
+	private Set<Tb_role> roles = new HashSet<>(0);
 
 	public Set<Tb_role> getRoles() {
 		return roles;
@@ -126,6 +128,14 @@ public class Tb_user {
 
 	public void setSchoolParentId(Integer schoolParentId) {
 		this.schoolParentId = schoolParentId;
+	}
+
+	public Integer getStudentId() {
+		return studentId;
+	}
+
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 
 	public Integer getStaffId() {

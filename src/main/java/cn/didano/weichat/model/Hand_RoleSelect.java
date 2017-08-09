@@ -3,6 +3,7 @@ package cn.didano.weichat.model;
 import java.util.ArrayList;
 
 public class Hand_RoleSelect {
+	
 	//角色名称
 	private String roleName;
 	//角色 数量

@@ -1,4 +1,4 @@
-package cn.didano.weichat.model;
+package cn.didano.weichat.json;
 
 public class Hand_userRoleRel {
 

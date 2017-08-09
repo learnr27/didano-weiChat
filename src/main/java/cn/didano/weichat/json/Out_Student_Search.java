@@ -4,30 +4,36 @@ import cn.didano.weichat.model.Tb_student;
 
 public class Out_Student_Search extends Tb_student {
 
-	private Integer relation_id;
+	private Integer id;				//用户id;
 	
-	private String relation_title;
-	
-	private String classtitle;
+	private Integer studentId;		//学生id;
 	
 	private String schooltitle;
-	
-	private String parent_id;
-	
-	public String getParent_id() {
-		return parent_id;
+
+	private Integer parentId;
+
+	public Integer getId() {
+		return id;
 	}
 
-	public void setParent_id(String parent_id) {
-		this.parent_id = parent_id;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
-	public String getClasstitle() {
-		return classtitle;
+	public Integer getStudentId() {
+		return studentId;
 	}
 
-	public void setClasstitle(String classtitle) {
-		this.classtitle = classtitle;
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
 	}
 
 	public String getSchooltitle() {
@@ -38,20 +44,6 @@ public class Out_Student_Search extends Tb_student {
 		this.schooltitle = schooltitle;
 	}
 
-	public Integer getRelation_id() {
-		return relation_id;
-	}
 
-	public void setRelation_id(Integer relation_id) {
-		this.relation_id = relation_id;
-	}
-
-	public String getRelation_title() {
-		return relation_title;
-	}
-
-	public void setRelation_title(String relation_title) {
-		this.relation_title = relation_title;
-	}
 
 }

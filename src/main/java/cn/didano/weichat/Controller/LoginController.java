@@ -26,15 +26,13 @@ import cn.didano.weichat.Service.UserService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.RoleType;
 import cn.didano.weichat.exception.ServiceException;
+import cn.didano.weichat.json.Hand_userRoleRel;
 import cn.didano.weichat.json.In_User_Login;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_RoleSelect;
 import cn.didano.weichat.model.Hand_Role_Weichat;
-import cn.didano.weichat.model.Hand_SNSUserInfo;
-import cn.didano.weichat.model.Hand_teacher;
-import cn.didano.weichat.model.Hand_userRoleRel;
-import cn.didano.weichat.model.RoleSelect;
+import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_role;
 import cn.didano.weichat.model.Tb_school;
 import cn.didano.weichat.model.Tb_user;
@@ -53,29 +51,30 @@ public class LoginController {
 	private RoleService roleService;
 	@Autowired
 	private UserService userService;
-	
+
 	/*
-	 * 获取登录用户的信息,如果有获取失败返回,获取成功返回角色的多个列表;
+	 * 获取登录用户的信息,获取成功返回当前用户的角色列表;
 	 */
 	@ApiOperation(value = "用户登录,加载当前用户的角色列表", notes = "用户登录,加载当前用户的角色列表")
 	@PostMapping(value = "getRoleSelect")
 	@ResponseBody
 	public Out<ArrayList<Hand_RoleSelect>> getRoleSelect(
-			@ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser) {
+			@ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser,HttpServletRequest request) {
 		logger.info("访问 LoginControler: getRoleSelect");
 		Out<ArrayList<Hand_RoleSelect>> back = new Out<ArrayList<Hand_RoleSelect>>();
 		ArrayList<Hand_RoleSelect> hand_RoleSelects = new ArrayList<Hand_RoleSelect>();
 		Tb_user user = null;
-		List<Tb_role> roleList = null;
-		List<Tb_school> schoolList = null;
-		List<Out_Student_Search> studentList = null;
 		try {
 			// 获取账号信息
 			user = new Tb_user();
 			BeanUtils.copyProperties(user, inUser);
-			String openId = user.getOpenid();
-			logger.info("openId数据为:  "+openId);
-//			String mobile = user.getMobile();
+//			String openId = user.getOpenid();
+			String openId = null;
+			openId = request.getParameter("openid");
+			if (openId == null ) {
+				openId = user.getOpenid();
+			}
+			logger.info("openId数据为:  " + openId);
 			String mobile = userService.getMobileByOpenId(openId);
 			logger.info("mobile数据为:  " + mobile);
 			boolean rememberMe = false;
@@ -83,159 +82,97 @@ public class LoginController {
 			Subject subject = SecurityUtils.getSubject();
 			subject.login(token);
 			user = (Tb_user) subject.getPrincipal();
-			// 根据用户id查询用户拥有的角色集合;
-			System.out.println(user);
-			System.out.println(user.getId());
-			System.out.println(user.getMobile());
-			// 取数据
-			roleList = roleService.findAllRolesByUserId(user.getId());
 
-			// 组织数据
+			Hand_RoleSelect hand_RoleSelect1 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect2 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect3 = new Hand_RoleSelect();
+			/*
+			 * Hand_RoleSelect hand_RoleSelect4 = new Hand_RoleSelect(); Hand_RoleSelect
+			 * hand_RoleSelect5 = new Hand_RoleSelect(); Hand_RoleSelect hand_RoleSelect6 =
+			 * new Hand_RoleSelect();
+			 */
+			hand_RoleSelect1.setRoleType(RoleType.PARENT);
+			hand_RoleSelect1.setRoleName(RoleType.PARENT_NAME);
 
-			// switch 将所有的角色类型考虑到;
-			for (Tb_role role : roleList) {
-				switch (role.getType()) {
-				case RoleType.PARENT: { 	// 家长类型;
-					studentList = userService.getStudentListByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(studentList.size());
-					hand_RoleSelect.setRoleType(role.getType());
-					for (Out_Student_Search student : studentList) {
-						Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-						if (student.getClassId() != null) {
-							hand_Role_Weichat.setClassId(student.getClassId());
-						}
-						if (student.getName() != null) {
-							hand_Role_Weichat.setStudentName(student.getName());
-						}
-						if (student.getClasstitle() != null) {
-							hand_Role_Weichat.setClassName(student.getClasstitle());
-						}
-						if (student.getSchooltitle() != null) {
-							hand_Role_Weichat.setSchoolName(student.getSchooltitle());
-						}
-						if (student.getSchoolId() != null) {
-							hand_Role_Weichat.setSchoolId(student.getSchoolId());
-						}
-						String relation = student.getRelation_title();
-						// 当relation有值，取值，如果为null，取id对应的值;
-						if (relation == null || "".equals(relation.trim())) {
-							relation = userService.getRelationByRelationId(student.getRelation_id());
-						}
-						if (relation != null) {
-							hand_Role_Weichat.setRelation(relation);
-						}
-						if (student.getParent_id() != null) {
-							hand_Role_Weichat.setParentId(student.getParent_id());
-						}
-						if (student.getClassId() != null) {
-							hand_Role_Weichat.setClassId(student.getClassId());
-						}
-						if (student.getId() != null) {
-							hand_Role_Weichat.setStudentId(student.getId());
-						}
-						// 添加到集合
-						hand_RoleSelect.getList().add(hand_Role_Weichat);
-					}
-					hand_RoleSelects.add(hand_RoleSelect);
-					
-				}
-				break;
-				// 单个角色数据
-				// 角色数据：手动填入
-				// 学生数据：找到学生ID所对应数据学生数据
+			hand_RoleSelect2.setRoleType(RoleType.PRINCIPAL);
+			hand_RoleSelect2.setRoleName(RoleType.PRINCIPAL_NAME);
 
-				case RoleType.TEACHER:{
-					Hand_teacher teacher = userService.getTeacherByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(1);
-					hand_RoleSelect.setRoleType(role.getType());
-					Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-					if (teacher.getStaff_id() != null) {
-						hand_Role_Weichat.setStaffId(teacher.getStaff_id());
-					}
-					if (teacher.getSchool_id() != null) {
-						hand_Role_Weichat.setSchoolId(teacher.getSchool_id());;
-					}
-					if (teacher.getTitle() != null) {
-						hand_Role_Weichat.setSchoolName(teacher.getTitle());
-					}
-					hand_RoleSelect.getList().add(hand_Role_Weichat);
-					hand_RoleSelects.add(hand_RoleSelect);
-				}
-					break;
-				case RoleType.PRINCIPAL:{ 	// 园长类型;
-					schoolList = userService.getSchoolListByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(schoolList.size());
-					hand_RoleSelect.setRoleType(role.getType());
-					for (Tb_school school : schoolList) {
-						Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-						/*if (student.getClass_id() != null) {
-							hand_Role_Weichat.setClassId(student.getClass_id());
-						}*/
-						/*if (student.getName() != null) {
-							hand_Role_Weichat.setStudentName(student.getName());
-						}*/
-						/*if (student.getClasstitle() != null) {
-							hand_Role_Weichat.setClassName(student.getClasstitle());
-						}*/
-						if (school.getTitle() != null) {
-							hand_Role_Weichat.setSchoolName(school.getTitle());
-						}
-						/*String relation = student.getRelation_title();
-						// 当rel有值，取值，如果为null，取id对应的值;
-						if (relation == null || "".equals(relation)) {
-							relation = userService.getRelationByRelationId(student.getRelation_id());
-						}
-						if (relation != null) {
-							hand_Role_Weichat.setRelation(relation);
-						}*/
-						if (school.getId() != null) {
-							hand_Role_Weichat.setSchoolId(school.getId());
-						}
-						// 添加到集合
-						hand_RoleSelect.getList().add(hand_Role_Weichat);
-					}
-					hand_RoleSelects.add(hand_RoleSelect);
-				}
-				break;
-				case RoleType.ASSISTANT:
-					break;
-				case RoleType.DOCTOR:
-					break;
-				case RoleType.SERVICE:
-					break;
-				default:
-					logger.info("没有当前角色..");
-				}
-			}
-			// 家长
-			// 单个角色数据
-			// 角色数据：手动填入
-			// 学生数据：找到学生ID所对应数据学生数据
-
-			// 老师
-
-			// 园长
-			// 行政
-			// 医生
-			// 后勤
-
-			back.setBackTypeWithLog(hand_RoleSelects, BackType.SUCCESS_SEARCH_NORMAL);
+			hand_RoleSelect3.setRoleType(RoleType.TEACHER);
+			hand_RoleSelect3.setRoleName(RoleType.TEACHER_NAME);
 
 			/*
-			 * //取数据 //根据后面的组织数据要求取
+			 * hand_RoleSelect4.setRoleType(RoleType.DOCTOR);
+			 * hand_RoleSelect4.setRoleName(RoleType.DOCTOR_NAME);
 			 * 
-			 * //组织数据 //switch 将所有的角色类型考虑到 //家长 //单个角色数据 //角色数据：手动填入 //学生数据：找到学生ID所对应数据学生数据
+			 * hand_RoleSelect5.setRoleType(RoleType.SERVICE);
+			 * hand_RoleSelect5.setRoleName(RoleType.SERVICE_NAME);
 			 * 
-			 * //老师
-			 * 
-			 * //园长 //行政 //医生 //后勤
+			 * hand_RoleSelect6.setRoleType(RoleType.ASSISTANT);
+			 * hand_RoleSelect6.setRoleName(RoleType.ASSISTANT_NAME);
 			 */
+
+			// 家长
+			List<Out_Student_Search> studenList = userService.getStudentListByOpenid(openId);
+			for (Out_Student_Search student : studenList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setId(student.getId());
+				hand_Role_Weichat.setParentId(student.getParentId());
+				hand_Role_Weichat.setSchoolId(student.getSchoolId());
+				hand_Role_Weichat.setSchoolName(student.getSchooltitle());
+				hand_Role_Weichat.setStudentId(student.getStudentId());
+				hand_Role_Weichat.setStudentName(student.getName());
+				hand_RoleSelect1.getList().add(hand_Role_Weichat);
+			}
+			// 园长
+			List<Hand_staff> schoolList = userService.getSchoolListByOpenid(openId);
+			for (Hand_staff school : schoolList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setId(school.getId());
+				hand_Role_Weichat.setStaffId(school.getStaffId());
+				
+				hand_Role_Weichat.setSchoolId(school.getSchoolId());
+				hand_Role_Weichat.setSchoolName(school.getSchoolName());
+				hand_RoleSelect2.getList().add(hand_Role_Weichat);
+			}
+			// 老师
+			List<Hand_staff> teacherList = userService.getTeacherByOpenid(openId);
+			for (Hand_staff staff : teacherList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setId(staff.getId());
+				hand_Role_Weichat.setStaffId(staff.getStaffId());
+				hand_Role_Weichat.setClassId(staff.getClassId());
+				hand_Role_Weichat.setClassName(staff.getClassName());
+				hand_Role_Weichat.setSchoolId(staff.getSchoolId());
+				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
+				hand_RoleSelect3.getList().add(hand_Role_Weichat);
+			}
+			// 医生,后勤,行政暂时没有做
+			hand_RoleSelect1.setNum(hand_RoleSelect1.getList().size());
+			hand_RoleSelect2.setNum(hand_RoleSelect2.getList().size());
+			hand_RoleSelect3.setNum(hand_RoleSelect3.getList().size());
+			/*
+			 * hand_RoleSelect4.setNum(hand_RoleSelect4.getList().size());
+			 * hand_RoleSelect5.setNum(hand_RoleSelect5.getList().size());
+			 * hand_RoleSelect6.setNum(hand_RoleSelect6.getList().size());
+			 */
+
+			if (hand_RoleSelect1.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect1);
+			}
+			if (hand_RoleSelect2.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect2);
+			}
+			if (hand_RoleSelect3.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect3);
+			}
+			/*
+			 * if (hand_RoleSelect4.getNum() > 0) { hand_RoleSelects.add(hand_RoleSelect4);
+			 * } if (hand_RoleSelect5.getNum() > 0) {
+			 * hand_RoleSelects.add(hand_RoleSelect5); } if (hand_RoleSelect6.getNum() > 0)
+			 * { hand_RoleSelects.add(hand_RoleSelect6); }
+			 */
+
+			back.setBackTypeWithLog(hand_RoleSelects, BackType.SUCCESS_SEARCH_NORMAL);
 
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
@@ -257,214 +194,134 @@ public class LoginController {
 		return back;
 	}
 
-	
 	/*
 	 * 获取登录用户的信息,如果有获取失败返回,获取成功返回角色的多个列表;
 	 */
-	/*@ApiOperation(value = "用户登录,加载当前用户的角色列表", notes = "用户登录,加载当前用户的角色列表")
-	@PostMapping(value = "getRoleSelect")
-	@ResponseBody
-	public Out<ArrayList<Hand_RoleSelect>> getRoleSelect(
-			
-			 * @ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser,
-			 HttpServletRequest request, HttpServletResponse response) {
-		logger.info("访问 LoginControler: getRoleSelect");
-		Out<ArrayList<Hand_RoleSelect>> back = new Out<ArrayList<Hand_RoleSelect>>();
-		ArrayList<Hand_RoleSelect> hand_RoleSelects = new ArrayList<Hand_RoleSelect>();
-		Tb_user user = null;
-		List<Tb_role> roleList = null;
-		List<Tb_school> schoolList = null;
-		List<Out_Student_Search> studentList = null;
-		try {
-			// 获取账号信息
-			user = new Tb_user();
-			String oriId = "gh_c0a5d7478a57";
-			AuthUtil authUtil = new AuthUtil();
-			
-			ExecutorService executorService = Executors.newFixedThreadPool(1);
-		    Runnable runnable = new Runnable() {
-		      @Override
-		      public void run() {
-		        try {
-		          System.out.println("=====================1");
-		          System.out.println(Thread.currentThread().getName() + ": testRetry");
-		          authUtil.initAuth(oriId);
-		          System.out.println("=====================2");
-		        } catch (Exception e) {
-		          e.printStackTrace();
-		        } 
-		      }
-		    };
-		    Future<?> submit1 = executorService.submit(runnable);
-		    submit1.get();
-
-			WxMpOAuth2Servlet wxMpOAuth2Servlet = new WxMpOAuth2Servlet();
-			wxMpOAuth2Servlet.service(request, response);
-			WxMpUser wxMpUser = (WxMpUser) request.getSession().getAttribute("wxMpUser");
-			// BeanUtils.copyProperties(user, inUser);
-			user.setOpenid(wxMpUser.getOpenId());
-			logger.info("openid数据为:" + wxMpUser.getOpenId());
-			user.setMobile("13592780692");
-			String openId = user.getOpenid();
-			String mobile = user.getMobile();
-			logger.info("openid验证数据为:" + wxMpUser.getOpenId());
-			logger.info("mobile验证数据为:" + mobile);
-			boolean rememberMe = false;
-			UsernamePasswordToken token = new UsernamePasswordToken(openId, mobile, rememberMe);
-			Subject subject = SecurityUtils.getSubject();
-			subject.login(token);
-			user = (Tb_user) subject.getPrincipal();
-			// 根据用户id查询用户拥有的角色集合;
-			System.out.println(user);
-			System.out.println(user.getId());
-			System.out.println(user.getMobile());
-			// 取数据
-			roleList = roleService.findAllRolesByUserId(user.getId());
-
-			// 组织数据
-
-			// switch 将所有的角色类型考虑到;
-			for (Tb_role role : roleList) {
-				switch (role.getType()) {
-				case RoleType.PARENT: { // 家长类型;
-					studentList = userService.getStudentListByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(studentList.size());
-					hand_RoleSelect.setRoleType(role.getType());
-					for (Out_Student_Search student : studentList) {
-						Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-						if (student.getClass_id() != null) {
-							hand_Role_Weichat.setClassId(student.getClass_id());
-						}
-						if (student.getName() != null) {
-							hand_Role_Weichat.setStudentName(student.getName());
-						}
-						if (student.getClasstitle() != null) {
-							hand_Role_Weichat.setClassName(student.getClasstitle());
-						}
-						if (student.getSchooltitle() != null) {
-							hand_Role_Weichat.setSchoolName(student.getSchooltitle());
-						}
-						if (student.getSchool_id() != null) {
-							hand_Role_Weichat.setSchoolId(student.getSchool_id());
-						}
-						String relation = student.getRelation_title();
-						// 当relation有值，取值，如果为null，取id对应的值;
-						if (relation == null || "".equals(relation)) {
-							relation = userService.getRelationByRelationId(student.getRelation_id());
-						}
-						if (relation != null) {
-							hand_Role_Weichat.setRelation(relation);
-						}
-						if (student.getParent_id() != null) {
-							hand_Role_Weichat.setParentId(student.getParent_id());
-						}
-						if (student.getClass_id() != null) {
-							hand_Role_Weichat.setClassId(student.getClass_id());
-						}
-						if (student.getId() != null) {
-							hand_Role_Weichat.setStudentId(student.getId());
-						}
-						// 添加到集合
-						hand_RoleSelect.getList().add(hand_Role_Weichat);
-					}
-					hand_RoleSelects.add(hand_RoleSelect);
-
-				}
-					break;
-				// 单个角色数据
-				// 角色数据：手动填入
-				// 学生数据：找到学生ID所对应数据学生数据
-
-				case RoleType.TEACHER: {
-					Hand_teacher teacher = userService.getTeacherByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(1);
-					hand_RoleSelect.setRoleType(role.getType());
-					Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-					if (teacher.getStaff_id() != null) {
-						hand_Role_Weichat.setStaffId(teacher.getStaff_id());
-					}
-					if (teacher.getSchool_id() != null) {
-						hand_Role_Weichat.setSchoolId(teacher.getSchool_id());
-						;
-					}
-					if (teacher.getTitle() != null) {
-						hand_Role_Weichat.setSchoolName(teacher.getTitle());
-					}
-					hand_RoleSelect.getList().add(hand_Role_Weichat);
-					hand_RoleSelects.add(hand_RoleSelect);
-				}
-					break;
-				case RoleType.PRINCIPAL: { // 园长类型;
-					schoolList = userService.getSchoolListByMobile(mobile);
-					Hand_RoleSelect hand_RoleSelect = new Hand_RoleSelect();
-					hand_RoleSelect.setRoleName(role.getName());
-					hand_RoleSelect.setNum(schoolList.size());
-					hand_RoleSelect.setRoleType(role.getType());
-					for (Tb_school school : schoolList) {
-						Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
-						
-						if (school.getTitle() != null) {
-							hand_Role_Weichat.setSchoolName(school.getTitle());
-						}
-						
-						if (school.getId() != null) {
-							hand_Role_Weichat.setSchoolId(school.getId());
-						}
-						// 添加到集合
-						hand_RoleSelect.getList().add(hand_Role_Weichat);
-					}
-					hand_RoleSelects.add(hand_RoleSelect);
-				}
-					break;
-				case RoleType.ASSISTANT:
-					break;
-				case RoleType.DOCTOR:
-					break;
-				case RoleType.SERVICE:
-					break;
-				default:
-					logger.info("没有当前角色..");
-				}
-			}
-			// 家长
-			// 单个角色数据
-			// 角色数据：手动填入
-			// 学生数据：找到学生ID所对应数据学生数据
-
-			// 老师
-
-			// 园长
-			// 行政
-			// 医生
-			// 后勤
-
-			back.setBackTypeWithLog(hand_RoleSelects, BackType.SUCCESS_SEARCH_NORMAL);
-
-			
-
-		} catch (ServiceException e) {
-			// 服务层错误，包括 内部service 和 对外service
-			logger.warn(e.getMessage());
-			back.setServiceExceptionWithLog(e.getExceptionEnums());
-		} catch (UnknownAccountException e) {
-			// 帐号不存在异常;
-			logger.warn(e.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_UNKNOWN_USER, e.getMessage());
-		} catch (IncorrectCredentialsException e) {
-			// 帐号或密码错误异常;
-			logger.warn(e.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_INCORRECT_USER, e.getMessage());
-		} catch (Exception ex) {
-			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
-		}
-
-		return back;
-	}*/
+	/*
+	 * @ApiOperation(value = "用户登录,加载当前用户的角色列表", notes = "用户登录,加载当前用户的角色列表")
+	 * 
+	 * @PostMapping(value = "getRoleSelect")
+	 * 
+	 * @ResponseBody public Out<ArrayList<Hand_RoleSelect>> getRoleSelect(
+	 * 
+	 * @ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser,
+	 * HttpServletRequest request, HttpServletResponse response) {
+	 * logger.info("访问 LoginControler: getRoleSelect");
+	 * Out<ArrayList<Hand_RoleSelect>> back = new Out<ArrayList<Hand_RoleSelect>>();
+	 * ArrayList<Hand_RoleSelect> hand_RoleSelects = new
+	 * ArrayList<Hand_RoleSelect>(); Tb_user user = null; List<Tb_role> roleList =
+	 * null; List<Tb_school> schoolList = null; List<Out_Student_Search> studentList
+	 * = null; try { // 获取账号信息 user = new Tb_user(); String oriId =
+	 * "gh_c0a5d7478a57"; AuthUtil authUtil = new AuthUtil();
+	 * 
+	 * ExecutorService executorService = Executors.newFixedThreadPool(1); Runnable
+	 * runnable = new Runnable() {
+	 * 
+	 * @Override public void run() { try {
+	 * System.out.println("=====================1");
+	 * System.out.println(Thread.currentThread().getName() + ": testRetry");
+	 * authUtil.initAuth(oriId); System.out.println("=====================2"); }
+	 * catch (Exception e) { e.printStackTrace(); } } }; Future<?> submit1 =
+	 * executorService.submit(runnable); submit1.get();
+	 * 
+	 * WxMpOAuth2Servlet wxMpOAuth2Servlet = new WxMpOAuth2Servlet();
+	 * wxMpOAuth2Servlet.service(request, response); WxMpUser wxMpUser = (WxMpUser)
+	 * request.getSession().getAttribute("wxMpUser"); //
+	 * BeanUtils.copyProperties(user, inUser); user.setOpenid(wxMpUser.getOpenId());
+	 * logger.info("openid数据为:" + wxMpUser.getOpenId());
+	 * user.setMobile("13592780692"); String openId = user.getOpenid(); String
+	 * mobile = user.getMobile(); logger.info("openid验证数据为:" +
+	 * wxMpUser.getOpenId()); logger.info("mobile验证数据为:" + mobile); boolean
+	 * rememberMe = false; UsernamePasswordToken token = new
+	 * UsernamePasswordToken(openId, mobile, rememberMe); Subject subject =
+	 * SecurityUtils.getSubject(); subject.login(token); user = (Tb_user)
+	 * subject.getPrincipal(); // 根据用户id查询用户拥有的角色集合; System.out.println(user);
+	 * System.out.println(user.getId()); System.out.println(user.getMobile()); //
+	 * 取数据 roleList = roleService.findAllRolesByUserId(user.getId());
+	 * 
+	 * // 组织数据
+	 * 
+	 * // switch 将所有的角色类型考虑到; for (Tb_role role : roleList) { switch
+	 * (role.getType()) { case RoleType.PARENT: { // 家长类型; studentList =
+	 * userService.getStudentListByMobile(mobile); Hand_RoleSelect hand_RoleSelect =
+	 * new Hand_RoleSelect(); hand_RoleSelect.setRoleName(role.getName());
+	 * hand_RoleSelect.setNum(studentList.size());
+	 * hand_RoleSelect.setRoleType(role.getType()); for (Out_Student_Search student
+	 * : studentList) { Hand_Role_Weichat hand_Role_Weichat = new
+	 * Hand_Role_Weichat(); if (student.getClass_id() != null) {
+	 * hand_Role_Weichat.setClassId(student.getClass_id()); } if (student.getName()
+	 * != null) { hand_Role_Weichat.setStudentName(student.getName()); } if
+	 * (student.getClasstitle() != null) {
+	 * hand_Role_Weichat.setClassName(student.getClasstitle()); } if
+	 * (student.getSchooltitle() != null) {
+	 * hand_Role_Weichat.setSchoolName(student.getSchooltitle()); } if
+	 * (student.getSchool_id() != null) {
+	 * hand_Role_Weichat.setSchoolId(student.getSchool_id()); } String relation =
+	 * student.getRelation_title(); // 当relation有值，取值，如果为null，取id对应的值; if (relation
+	 * == null || "".equals(relation)) { relation =
+	 * userService.getRelationByRelationId(student.getRelation_id()); } if (relation
+	 * != null) { hand_Role_Weichat.setRelation(relation); } if
+	 * (student.getParent_id() != null) {
+	 * hand_Role_Weichat.setParentId(student.getParent_id()); } if
+	 * (student.getClass_id() != null) {
+	 * hand_Role_Weichat.setClassId(student.getClass_id()); } if (student.getId() !=
+	 * null) { hand_Role_Weichat.setStudentId(student.getId()); } // 添加到集合
+	 * hand_RoleSelect.getList().add(hand_Role_Weichat); }
+	 * hand_RoleSelects.add(hand_RoleSelect);
+	 * 
+	 * } break; // 单个角色数据 // 角色数据：手动填入 // 学生数据：找到学生ID所对应数据学生数据
+	 * 
+	 * case RoleType.TEACHER: { Hand_teacher teacher =
+	 * userService.getTeacherByMobile(mobile); Hand_RoleSelect hand_RoleSelect = new
+	 * Hand_RoleSelect(); hand_RoleSelect.setRoleName(role.getName());
+	 * hand_RoleSelect.setNum(1); hand_RoleSelect.setRoleType(role.getType());
+	 * Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat(); if
+	 * (teacher.getStaff_id() != null) {
+	 * hand_Role_Weichat.setStaffId(teacher.getStaff_id()); } if
+	 * (teacher.getSchool_id() != null) {
+	 * hand_Role_Weichat.setSchoolId(teacher.getSchool_id()); ; } if
+	 * (teacher.getTitle() != null) {
+	 * hand_Role_Weichat.setSchoolName(teacher.getTitle()); }
+	 * hand_RoleSelect.getList().add(hand_Role_Weichat);
+	 * hand_RoleSelects.add(hand_RoleSelect); } break; case RoleType.PRINCIPAL: { //
+	 * 园长类型; schoolList = userService.getSchoolListByMobile(mobile); Hand_RoleSelect
+	 * hand_RoleSelect = new Hand_RoleSelect();
+	 * hand_RoleSelect.setRoleName(role.getName());
+	 * hand_RoleSelect.setNum(schoolList.size());
+	 * hand_RoleSelect.setRoleType(role.getType()); for (Tb_school school :
+	 * schoolList) { Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+	 * 
+	 * if (school.getTitle() != null) {
+	 * hand_Role_Weichat.setSchoolName(school.getTitle()); }
+	 * 
+	 * if (school.getId() != null) { hand_Role_Weichat.setSchoolId(school.getId());
+	 * } // 添加到集合 hand_RoleSelect.getList().add(hand_Role_Weichat); }
+	 * hand_RoleSelects.add(hand_RoleSelect); } break; case RoleType.ASSISTANT:
+	 * break; case RoleType.DOCTOR: break; case RoleType.SERVICE: break; default:
+	 * logger.info("没有当前角色.."); } } // 家长 // 单个角色数据 // 角色数据：手动填入 //
+	 * 学生数据：找到学生ID所对应数据学生数据
+	 * 
+	 * // 老师
+	 * 
+	 * // 园长 // 行政 // 医生 // 后勤
+	 * 
+	 * back.setBackTypeWithLog(hand_RoleSelects, BackType.SUCCESS_SEARCH_NORMAL);
+	 * 
+	 * 
+	 * 
+	 * } catch (ServiceException e) { // 服务层错误，包括 内部service 和 对外service
+	 * logger.warn(e.getMessage());
+	 * back.setServiceExceptionWithLog(e.getExceptionEnums()); } catch
+	 * (UnknownAccountException e) { // 帐号不存在异常; logger.warn(e.getMessage());
+	 * back.setBackTypeWithLog(BackType.FAIL_SEARCH_UNKNOWN_USER, e.getMessage()); }
+	 * catch (IncorrectCredentialsException e) { // 帐号或密码错误异常;
+	 * logger.warn(e.getMessage());
+	 * back.setBackTypeWithLog(BackType.FAIL_SEARCH_INCORRECT_USER, e.getMessage());
+	 * } catch (Exception ex) { logger.warn(ex.getMessage());
+	 * back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage()); }
+	 * 
+	 * return back; }
+	 */
 
 	/*
 	 * @RequestMapping("/login") public String login(){ return "login"; }
@@ -558,76 +415,6 @@ public class LoginController {
 	 */
 
 	/*
-	 * 获取登录用户的信息,如果有获取失败返回,获取成功返回角色的多个列表;
-	 */
-	@ApiOperation(value = "用户登录,加载当前用户的角色列表", notes = "用户登录,加载当前用户的角色列表")
-	@PostMapping(value = "getRoleSelect2")
-	@ResponseBody
-	public Out<RoleSelect> getRoleSelect2(@ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser,
-			HttpServletRequest request) {
-		logger.info("访问 LoginControler: getRoleSelect");
-
-		Tb_user user = null;
-		List<Tb_role> roleList = null;
-		List<Tb_school> schoolList = null;
-		List<Out_Student_Search> studentList = null;
-		RoleSelect roleSelect = new RoleSelect();
-		Out<RoleSelect> back = new Out<>();
-		Hand_SNSUserInfo userInfo = (Hand_SNSUserInfo) request.getSession().getAttribute("snsUserInfo");
-		if (userInfo != null) {
-			logger.info("userInfo的信息:" + userInfo);
-		}
-		try {
-			user = new Tb_user();
-			BeanUtils.copyProperties(user, inUser);
-			String openId = user.getOpenid();
-			String mobile = user.getMobile();
-			boolean rememberMe = false;
-			UsernamePasswordToken token = new UsernamePasswordToken(openId, mobile, rememberMe);
-			Subject subject = SecurityUtils.getSubject();
-			subject.login(token);
-			user = (Tb_user) subject.getPrincipal();
-			// 根据用户id查询用户拥有的角色集合;
-			System.out.println(user);
-			System.out.println(user.getId());
-			System.out.println(user.getMobile());
-			roleList = roleService.findAllRolesByUserId(user.getId());
-			schoolList = userService.getSchoolListByMobile(mobile);
-			studentList = userService.getStudentListByMobile(mobile);
-			roleSelect.setRoleList(roleList);
-			roleSelect.setSchoolList(schoolList);
-			roleSelect.setStudentList(studentList);
-			back.setBackTypeWithLog(roleSelect, BackType.SUCCESS_SEARCH_NORMAL);
-
-			/*
-			 * //取数据 //根据后面的组织数据要求取
-			 * 
-			 * //组织数据 //switch 将所有的角色类型考虑到 //家长 //单个角色数据 //角色数据：手动填入 //学生数据：找到学生ID所对应数据学生数据
-			 * 
-			 * //老师
-			 * 
-			 * //园长 //行政 //医生 //后勤
-			 */
-
-		} catch (ServiceException e) {
-			// 服务层错误，包括 内部service 和 对外service
-			logger.warn(e.getMessage());
-			back.setServiceExceptionWithLog(e.getExceptionEnums());
-		} catch (UnknownAccountException e) {
-			// 帐号或密码错误异常;
-			logger.warn(e.getMessage());
-			back.setMessage("未知帐号");
-		} catch (Exception ex) {
-			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
-		}
-
-		return back;
-	}
-
-	
-
-	/*
 	 * 根据当前用户选择的角色选择相应的权限;
 	 */
 	@ApiOperation(value = "根据用户角色id选择角色", notes = "选择一个角色后,禁用其它的角色")
@@ -687,7 +474,5 @@ public class LoginController {
 
 		return back;
 	}
-	
-	
 
 }

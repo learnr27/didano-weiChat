@@ -10,18 +10,31 @@ import java.util.List;
  */
 public class Hand_Role_Weichat {
 
-	/*private String roleName;
-	private int roleType;*/
-	
-	private String relation;			// 与学生关系名称，如:奶奶;
-	private String parentId;
-	private Integer staffId;			//员工id;
+	private Integer id; // 用户id
+	private Integer parentId;
+	private Integer staffId; // 员工id;
+	private Integer studentId;
 	private String studentName;
-	private int studentId;
+	private Integer classId;
 	private String className;
-	private int classId;
-	private String schoolName;
 	private int schoolId;
+	private String schoolName;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(Integer parentId) {
+		this.parentId = parentId;
+	}
 
 	public Integer getStaffId() {
 		return staffId;
@@ -31,20 +44,12 @@ public class Hand_Role_Weichat {
 		this.staffId = staffId;
 	}
 
-	public String getParentId() {
-		return parentId;
+	public Integer getStudentId() {
+		return studentId;
 	}
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
-	}
-
-	public String getRelation() {
-		return relation;
-	}
-
-	public void setRelation(String relation) {
-		this.relation = relation;
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
 	}
 
 	public String getStudentName() {
@@ -55,12 +60,12 @@ public class Hand_Role_Weichat {
 		this.studentName = studentName;
 	}
 
-	public int getStudentId() {
-		return studentId;
+	public Integer getClassId() {
+		return classId;
 	}
 
-	public void setStudentId(int studentId) {
-		this.studentId = studentId;
+	public void setClassId(Integer classId) {
+		this.classId = classId;
 	}
 
 	public String getClassName() {
@@ -71,12 +76,12 @@ public class Hand_Role_Weichat {
 		this.className = className;
 	}
 
-	public int getClassId() {
-		return classId;
+	public int getSchoolId() {
+		return schoolId;
 	}
 
-	public void setClassId(int classId) {
-		this.classId = classId;
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
 	}
 
 	public String getSchoolName() {
@@ -85,14 +90,6 @@ public class Hand_Role_Weichat {
 
 	public void setSchoolName(String schoolName) {
 		this.schoolName = schoolName;
-	}
-
-	public int getSchoolId() {
-		return schoolId;
-	}
-
-	public void setSchoolId(int schoolId) {
-		this.schoolId = schoolId;
 	}
 
 }

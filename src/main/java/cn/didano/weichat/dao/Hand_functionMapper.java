@@ -10,7 +10,7 @@ public interface Hand_functionMapper {
 
 	List<Tb_function> findFunctionsByUserId(Integer id);
 
-	List<Tb_function> findAreaItems(String parentId);
+	List<Tb_function> findAreaItems(Integer parentId);
 
 	
 	
