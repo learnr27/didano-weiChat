@@ -12,6 +12,7 @@ public class Hand_Role_Weichat {
 
 	/*private String roleName;
 	private int roleType;*/
+	
 	private String relation;			// 与学生关系名称，如:奶奶;
 	private String parentId;
 	private Integer staffId;			//员工id;
