@@ -58,6 +58,16 @@ public class NoticeService {
 	}
 
 	/**
+	 * 查找所有头像
+	 */
+	public List<Tb_head_sculpture> findAllHead(){
+		Tb_head_sculptureExample condition = new Tb_head_sculptureExample();
+		Tb_head_sculptureExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andDeletedEqualTo(false);
+		return headMapper.selectByExample(condition);
+	}
+	/**
 	 * 根据来源id，来源类型查找通知
 	 */
 	public List<Tb_notice> findNoticeBySourceId(Integer id, byte type) {

@@ -39,6 +39,7 @@ import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_student_parent;
+import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -84,7 +85,7 @@ public class MailBoxController {
 					notice = notices.get(i);
 					if (notice.getNoticeType() == 4) {
 						notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
-						head = noticeService.selectHeadByNoticeType((byte) 10).get(0);
+						head = HeadMemoryConfigStorageContainer.findByOriId(10);
 						notice.setHeadUrl(head.getAddress());
 						date = sdf.format(notices.get(i).getCreated());
 						notice.setDate(date);
@@ -248,16 +249,16 @@ public class MailBoxController {
 			String mailTitle = mail.getSenderName();
 			String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
 			if ("爸爸".equals(senderName)) {
-				head = noticeService.selectHeadByNoticeType((byte) 5).get(0);
+				head = HeadMemoryConfigStorageContainer.findByOriId(9);
 				mail.setHead(head.getAddress());
 			} else if ("妈妈".equals(senderName)) {
-				head = noticeService.selectHeadByNoticeType((byte) 6).get(0);
+				head = HeadMemoryConfigStorageContainer.findByOriId(6);
 				mail.setHead(head.getAddress());
 			} else if ("爷爷".equals(senderName)) {
-				head = noticeService.selectHeadByNoticeType((byte) 7).get(0);
+				head = HeadMemoryConfigStorageContainer.findByOriId(7);
 				mail.setHead(head.getAddress());
 			} else if ("奶奶".equals(senderName)) {
-				head = noticeService.selectHeadByNoticeType((byte) 8).get(0);
+				head = HeadMemoryConfigStorageContainer.findByOriId(8);
 				mail.setHead(head.getAddress());
 			}
 			data = new Hand_mailRecord();
@@ -279,19 +280,19 @@ public class MailBoxController {
 				System.out.println(name);
 				// 设置头像
 				if ("园长".equals(name)) {
-					head = noticeService.selectHeadByNoticeType((byte) 9).get(0);
+					head = HeadMemoryConfigStorageContainer.findByOriId(9);
 					mails.get(i).setHead(head.getAddress());
 				} else if ("爸爸".equals(name)) {
-					head = noticeService.selectHeadByNoticeType((byte) 5).get(0);
+					head = HeadMemoryConfigStorageContainer.findByOriId(5);
 					mails.get(i).setHead(head.getAddress());
 				} else if ("妈妈".equals(name)) {
-					head = noticeService.selectHeadByNoticeType((byte) 6).get(0);
+					head = HeadMemoryConfigStorageContainer.findByOriId(6);
 					mails.get(i).setHead(head.getAddress());
 				} else if ("爷爷".equals(name)) {
-					head = noticeService.selectHeadByNoticeType((byte) 7).get(0);
+					head = HeadMemoryConfigStorageContainer.findByOriId(7);
 					mails.get(i).setHead(head.getAddress());
 				} else if ("奶奶".equals(name)) {
-					head = noticeService.selectHeadByNoticeType((byte) 8).get(0);
+					head = HeadMemoryConfigStorageContainer.findByOriId(8);
 					mails.get(i).setHead(head.getAddress());
 				}
 

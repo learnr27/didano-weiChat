@@ -35,6 +35,7 @@ import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_websocket_channel;
+import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -167,12 +168,12 @@ public class NoticeController {
 				for (int i = 0; i < notices.size(); i++) {
 					notice = notices.get(i);
 					if (notice.getNoticeType() != 4) {
-						head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
+						head =HeadMemoryConfigStorageContainer.findByOriId(notice.getNoticeType()& 0xFF);
 						notice.setHeadUrl(head.getAddress());
 					} else {
 						// 给园长信箱设置标题和头像
 						notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
-						head = noticeService.selectHeadByNoticeType((byte) 10).get(0);
+						head = HeadMemoryConfigStorageContainer.findByOriId(4);
 						notice.setHeadUrl(head.getAddress());
 
 					}
