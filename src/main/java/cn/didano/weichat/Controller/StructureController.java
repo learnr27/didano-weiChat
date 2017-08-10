@@ -52,8 +52,6 @@ public class StructureController {
 			//WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
 			//wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
 			
-			logger.info("getAuthWxMpUser session:" + request.getSession().getId());
-			
 			modelAndView.addObject("openid",wxMpOAuth2AccessToken.getOpenId());
 			
 			logger.info("openid数据是: " + wxMpOAuth2AccessToken.getOpenId());
