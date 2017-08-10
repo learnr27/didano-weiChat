@@ -115,8 +115,9 @@ public class MailBoxService {
 	/**
 	 * 删除邮件回复
 	 */
-	public int deleteMailReplyByNoticeId(Integer mailId){
-		Tb_mail_reply reply = mailReplyMapper.selectByPrimaryKey(mailId);
+	public int deleteMailReplyByNoticeId(Integer mailReplyId){
+		
+		Tb_mail_reply reply = mailReplyMapper.selectByPrimaryKey(mailReplyId);
 		reply.setDeleted(true);
  		return mailReplyMapper.updateByPrimaryKeySelective(reply);
 	}

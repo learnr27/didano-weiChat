@@ -84,23 +84,23 @@ public class NoticeController {
 			}
 			int num = notice_edit.getUserId().size();
 			notice.setCreated(new Date());
-			//设置通知模型
+			// 设置通知模型
 			notice.setNoticeModel(notice_edit.getNoticeModel());
-			//设置通知类型
+			// 设置通知类型
 			notice.setNoticeType(notice_edit.getNoticeType());
-			//设置内部url或者外部url
-			if(notice_edit.getNoticeModel()==1){
-				//设置转向地址
-				if(notice_edit.getNoticeType()==0){
+			// 设置内部url或者外部url
+			if (notice_edit.getNoticeModel() == 1) {
+				// 设置转向地址
+				if (notice_edit.getNoticeType() == 0) {
 					notice.setRedirectUrl(ModulePathType.MORNING_REPORT.getUrl());
-				}else if(notice_edit.getNoticeType()==1){
+				} else if (notice_edit.getNoticeType() == 1) {
 					notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl());
-				}else if(notice_edit.getNoticeType()==2){
+				} else if (notice_edit.getNoticeType() == 2) {
 					notice.setRedirectUrl(ModulePathType.SHUTTLE_REPORT.getUrl());
-				}else if(notice_edit.getNoticeType()==3){
+				} else if (notice_edit.getNoticeType() == 3) {
 					notice.setRedirectUrl(ModulePathType.PUBLIC_SIGNAL.getUrl());
 				}
-			}else if(notice_edit.getNoticeModel()==2){
+			} else if (notice_edit.getNoticeModel() == 2) {
 				notice.setRedirectUrl(notice_edit.getUrl());
 			}
 			// 插入通知表
@@ -118,9 +118,10 @@ public class NoticeController {
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
-//			List<Tb_websocket_channel> noticeChannel = websocketService.selcetChannelByType((byte)0);			
-//			// 广播通知 websocket
-//			noticeService.broadcast(noticeChannel.get(0).getChannel());
+			// List<Tb_websocket_channel> noticeChannel =
+			// websocketService.selcetChannelByType((byte)0);
+			// // 广播通知 websocket
+			// noticeService.broadcast(noticeChannel.get(0).getChannel());
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
 
@@ -156,63 +157,37 @@ public class NoticeController {
 		logger.info("访问  NoticeController:notice_findtByUserid,own_id=" + own_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
-		List<Tb_notice> notices = null;	
+		List<Tb_notice> notices = null;
 		OutList<Tb_notice> outList = null;
-		Out<OutList<Tb_notice> > back = new Out<OutList<Tb_notice>>();
+		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			notices = noticeService.findNoticeByUserId(own_id, user_type);
-			if(notices.size()!=0){
-			// 获取头像地址
-			for (int i = 0; i < notices.size(); i++) {
-				notice = notices.get(i);
-				if(notice.getNoticeType()!=4){
-				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
-				notice.setHeadUrl(head.getAddress());
-				}else{
-//					String title =notice.getSenderName();
-//					if(title.length()!=0){
-//					String name = title.substring(title.length()-2, title.length());
-//					if("园长".equals(name)){
-//						head = noticeService.selectHeadByNoticeType((byte)9).get(0);
-//						notices.get(i).setHeadUrl(head.getAddress());
-//					}else if("爸爸".equals(name)){
-//						head = noticeService.selectHeadByNoticeType((byte)5).get(0);
-//						notices.get(i).setHeadUrl(head.getAddress());
-//					}else if("妈妈".equals(name)){
-//						head = noticeService.selectHeadByNoticeType((byte)6).get(0);
-//						notices.get(i).setHeadUrl(head.getAddress());
-//					}else if("爷爷".equals(name)){
-//						head = noticeService.selectHeadByNoticeType((byte)7).get(0);
-//						notices.get(i).setHeadUrl(head.getAddress());
-//					}else if("奶奶".equals(name)){
-//						head = noticeService.selectHeadByNoticeType((byte)8).get(0);
-//						notices.get(i).setHeadUrl(head.getAddress());
-//					}
-//					}
-					//给园长信箱设置标题和头像					
-						notice.setTitle(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");;
-						head = noticeService.selectHeadByNoticeType((byte)10).get(0);
-						notice.setHeadUrl(head.getAddress());;
-					
+			if (notices.size() != 0) {
+				// 获取头像地址
+				for (int i = 0; i < notices.size(); i++) {
+					notice = notices.get(i);
+					if (notice.getNoticeType() != 4) {
+						head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
+						notice.setHeadUrl(head.getAddress());
+					} else {
+						// 给园长信箱设置标题和头像
+						notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
+						head = noticeService.selectHeadByNoticeType((byte) 10).get(0);
+						notice.setHeadUrl(head.getAddress());
+
+					}
 				}
-			}
-			// 转换时间格式
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			String date = null;
-			for (int i = 0; i < notices.size(); i++) {
-				date = sdf.format(notices.get(i).getCreated());
-				notices.get(i).setDate(date);
-				//给园长信箱设置标题和头像
-//				if(notices.get(i).getNoticeType()==4){
-//					notices.get(i).setTitle(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");;
-//					head = noticeService.selectHeadByNoticeType((byte)10).get(0);
-//					notices.get(i).setHeadUrl(head.getAddress());;
-//				}
-			}
+				// 转换时间格式
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				String date = null;
+				for (int i = 0; i < notices.size(); i++) {
+					date = sdf.format(notices.get(i).getCreated());
+					notices.get(i).setDate(date);
 
+				}
 
-			outList = new OutList<Tb_notice>(notices.size(), notices);
-			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+				outList = new OutList<Tb_notice>(notices.size(), notices);
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
@@ -254,8 +229,7 @@ public class NoticeController {
 	}
 
 	/**
-	 *0
-	 * 用户删除自己的消息
+	 * 0 用户删除自己的消息
 	 *
 	 * @param teacher_id
 	 * @return

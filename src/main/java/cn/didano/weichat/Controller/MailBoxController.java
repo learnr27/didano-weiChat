@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.constant.BackType;
+import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.constant.NoticeModel;
 import cn.didano.weichat.constant.NoticeTop;
 import cn.didano.weichat.constant.NoticeType;
@@ -53,7 +54,7 @@ public class MailBoxController {
 	private NoticeService noticeService;
 
 	/**
-	 * 根据园长id,查看园长信箱列表
+	 * 根据园长id,查看园长信箱列表,园长信箱模块
 	 *
 	 * @throws ParseException
 	 * @throws InvocationTargetException
@@ -155,7 +156,7 @@ public class MailBoxController {
 				notice.setNoticeModel(NoticeModel.INSIDE_URL.getIndex());
 				notice.setNoticeType(NoticeType.PRINCIPAL_MAIL.getIndex());
 				notice.setPriority(NoticeTop.NOT_TOP.getIndex());
-				notice.setRedirectUrl("/base/mailbox/post/findReply_ByNoticeId/" + "{" + mail.getId() + "}");
+				notice.setRedirectUrl(ModulePathType.PRINCIPAL_MAIL.getUrl() + "{" + mail.getId() + "}");
 				notice.setSenderName(addressName.getName() + "的" + addressName.getRelation_title());
 				notice.setSenderId(mail_write.getUserId());
 				notice.setSourceId(mail.getId());
@@ -226,14 +227,14 @@ public class MailBoxController {
 	}
 
 	/**
-	 * 根据邮件id查找关于该条信息的回复
+	 * 根据邮件id查找关于该条信息及其回复
 	 *
 	 * @throws ParseException
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
 	@PostMapping(value = "findReply_ByNoticeId/{mailId}")
-	@ApiOperation(value = "根据邮件id查找关于该条信息的回复", notes = "根据邮件id查找关于该条信息的回复")
+	@ApiOperation(value = "根据邮件id查找关于该条信息及其回复", notes = "根据邮件id查找关于该条信息及其回复")
 	@ResponseBody
 	public Out<Hand_mailRecord> findReply_ByNoticeId(@PathVariable("mailId") Integer mailId) {
 		logger.info("访问  MailBoxController:findReply_ByNoticeId,mailId=" + mailId);
@@ -314,14 +315,14 @@ public class MailBoxController {
 	 * @param teacher_id
 	 * @return
 	 */
-	@PostMapping(value = "deleteMailByBoss/{mailId}")
+	@PostMapping(value = "deleteMailByBoss/{mailReplyId}")
 	@ApiOperation(value = "园长删除消息", notes = "园长删除消息")
 	@ResponseBody
-	public Out<String> deleteMailByBoss(@PathVariable("mailId") Integer mailId) {
-		logger.info("访问  MailBoxController:deleteMailByBoss,mailId=" + mailId);
+	public Out<String> deleteMailByBoss(@PathVariable("mailReplyId") Integer mailReplyId) {
+		logger.info("访问  MailBoxController:deleteMailByBoss,mailReplyId=" + mailReplyId);
 		Out<String> back = new Out<String>();
 		try {
-			int rowNum = mailBoxService.deleteMailReplyByNoticeId(mailId);
+			int rowNum = mailBoxService.deleteMailReplyByNoticeId(mailReplyId);
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_UPDATE, "rowNum=" + rowNum);
 			} else {
@@ -333,60 +334,6 @@ public class MailBoxController {
 		}
 		return back;
 	}
-	// /**
-	// * 回复邮件
-	// *
-	// * @param c_channel
-	// * @return
-	// */
-	// @ApiOperation(value = "回复邮件", notes = "回复邮件")
-	// @PostMapping(value = "reply_mail")
-	// @ResponseBody
-	// public Out<String> reply_mail(@ApiParam(value = "回复邮件", required = true)
-	// @RequestBody In_MailBox_Reply mail_reply) {
-	// logger.info("MailBoxController:reply_maill,mail_edit=" + mail_reply);
-	// Tb_mail_reply noticeReply = null;
-	// Hand_UserAndStudent data = null;
-	// Out<String> back = new Out<String>();
-	// try {
-	//
-	// noticeReply = new Tb_mail_reply();
-	// data = new Hand_UserAndStudent();
-	// data.setStudentId(mail_reply.getStudentId());
-	// data.setUserId(mail_reply.getUserId());
-	// // 根据登录者的身份设置发送者称呼
-	// if (mail_reply.getUserType() == 31) {
-	// Tb_staff boss = mailBoxService.selectBossById(mail_reply.getUserId());
-	// noticeReply.setAddressername(boss.getName() + "园长");
-	// } else {
-	// Hand_addressName parent = mailBoxService.selectAddressName(data);
-	// noticeReply.setAddressername(parent.getName() + "的" +
-	// parent.getRelation_title());
-	// }
-	// noticeReply.setAddresserid(mail_reply.getUserId());
-	// noticeReply.setContent(mail_reply.getContent());
-	// noticeReply.setCreated(new Date());
-	// noticeReply.setNoticeid(mail_reply.getNoticeId());
-	// // 插入回信表
-	// int rowNum = mailBoxService.replyMail(noticeReply);
-	// if (rowNum > 0) {
-	// back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
-	//
-	// } else {
-	// // 更新有问题
-	// back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
-	// }
-	// // end else
-	//
-	// } catch (ServiceException e) {
-	// // 服务层错误，包括 内部service 和 对外service
-	// logger.warn(e.getMessage());
-	// back.setServiceExceptionWithLog(e.getExceptionEnums());
-	// } catch (Exception ex) {
-	// logger.warn(ex.getMessage());
-	// back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
-	// }
-	// return back;
-	// }
+	
 
 }
