@@ -12,9 +12,17 @@ public class In_MailBox_Write {
 	private String content;
 	@ApiModelProperty(value = "登录者id",required=true)
 	private Integer userId;
+	@ApiModelProperty(value = "学生id",required=true)
+	private Integer studentId;
 
 	
 	
+	public Integer getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(Integer studentId) {
+		this.studentId = studentId;
+	}
 	public Integer getUserId() {
 		return userId;
 	}

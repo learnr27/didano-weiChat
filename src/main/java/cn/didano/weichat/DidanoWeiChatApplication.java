@@ -14,8 +14,11 @@ import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.OfficialAccountService;
 import cn.didano.weichat.model.Hand_officialAccount;
+import cn.didano.weichat.model.Tb_head_sculpture;
+import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import cn.didano.weichat.repository.WxMpInMemoryConfigStorageContainer;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 
@@ -34,7 +37,8 @@ public class DidanoWeiChatApplication extends SpringBootServletInitializer {
 	 */
 	@Autowired
 	private OfficialAccountService officialAccountService;
-
+    @Autowired
+    private NoticeService noticeService;
 	@Override
     protected SpringApplicationBuilder configure(
             SpringApplicationBuilder application) {
@@ -63,6 +67,16 @@ public class DidanoWeiChatApplication extends SpringBootServletInitializer {
 		}
 		log.info("加载所有公众号信息");
 	}
+	
+	private void initializeHeadData(List<Tb_head_sculpture> heads) {
+		// 清空
+		// wxMpInfoRepository.deleteAll();
+		for (Tb_head_sculpture one : heads) {
+			
+			HeadMemoryConfigStorageContainer.save(one.getNoticeType()& 0xFF, one);
+		}
+		log.info("加载头像信息");
+	}
 
 	@Bean
 	public CommandLineRunner init() {
@@ -70,6 +84,15 @@ public class DidanoWeiChatApplication extends SpringBootServletInitializer {
 			List<Hand_officialAccount> Hand_officialAccounts = officialAccountService.getAllwxOfficialAccount();
 			// 灌入数据
 			initializeOfficialAccountData(Hand_officialAccounts);
+		};
+	}
+	
+	@Bean
+	public CommandLineRunner initHead() {
+		return (args) -> {
+			List<Tb_head_sculpture> heads = noticeService.findAllHead();
+			// 灌入数据
+			initializeHeadData(heads);
 		};
 	}
 }

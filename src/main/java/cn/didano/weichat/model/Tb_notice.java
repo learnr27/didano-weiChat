@@ -11,11 +11,15 @@ public class Tb_notice {
 
     private Byte priority;
 
-    private Integer addresserId;
+    private Integer senderId;
 
-    private String addresserName;
+    private String senderName;
 
-    private Byte personType;
+    private Byte noticeModel;
+
+    private String redirectUrl;
+
+    private Integer sourceId;
 
     private Byte noticeType;
 
@@ -24,7 +28,6 @@ public class Tb_notice {
     private Date updated;
 
     private Boolean deleted;
-
   //手写加入
     private byte is_read;
     
@@ -55,6 +58,7 @@ public class Tb_notice {
 	public void setDate(String date) {
 		this.date = date;
 	}
+
 
 	public Integer getId() {
         return id;
@@ -88,28 +92,44 @@ public class Tb_notice {
         this.priority = priority;
     }
 
-    public Integer getAddresserId() {
-        return addresserId;
+    public Integer getSenderId() {
+        return senderId;
     }
 
-    public void setAddresserId(Integer addresserId) {
-        this.addresserId = addresserId;
+    public void setSenderId(Integer senderId) {
+        this.senderId = senderId;
     }
 
-    public String getAddresserName() {
-        return addresserName;
+    public String getSenderName() {
+        return senderName;
     }
 
-    public void setAddresserName(String addresserName) {
-        this.addresserName = addresserName == null ? null : addresserName.trim();
+    public void setSenderName(String senderName) {
+        this.senderName = senderName == null ? null : senderName.trim();
     }
 
-    public Byte getPersonType() {
-        return personType;
+    public Byte getNoticeModel() {
+        return noticeModel;
     }
 
-    public void setPersonType(Byte personType) {
-        this.personType = personType;
+    public void setNoticeModel(Byte noticeModel) {
+        this.noticeModel = noticeModel;
+    }
+
+    public String getRedirectUrl() {
+        return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+        this.redirectUrl = redirectUrl == null ? null : redirectUrl.trim();
+    }
+
+    public Integer getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(Integer sourceId) {
+        this.sourceId = sourceId;
     }
 
     public Byte getNoticeType() {
@@ -143,7 +163,4 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
-
-	
-    
 }

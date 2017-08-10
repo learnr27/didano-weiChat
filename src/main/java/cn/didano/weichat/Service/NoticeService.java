@@ -3,16 +3,13 @@ package cn.didano.weichat.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.didano.weichat.dao.Tb_head_sculptureMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
@@ -23,6 +20,7 @@ import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_head_sculptureExample;
 import cn.didano.weichat.model.Tb_notice;
+import cn.didano.weichat.model.Tb_noticeExample;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_noticeUserExample;
 
@@ -59,7 +57,41 @@ public class NoticeService {
 		return;
 	}
 
+	/**
+	 * 查找所有头像
+	 */
+	public List<Tb_head_sculpture> findAllHead(){
+		Tb_head_sculptureExample condition = new Tb_head_sculptureExample();
+		Tb_head_sculptureExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andDeletedEqualTo(false);
+		return headMapper.selectByExample(condition);
+	}
+	/**
+	 * 根据来源id，来源类型查找通知
+	 */
+	public List<Tb_notice> findNoticeBySourceId(Integer id, byte type) {
+		Tb_noticeExample condition = new Tb_noticeExample();
+		Tb_noticeExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andSourceIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
+		criteria.andNoticeTypeEqualTo(type);
+		
+		return noticeMapper.selectByExample(condition);
+	}
 
+	/**
+	 * 根据通知id更新用户表的时间
+	 */
+	public int refreshTime(Integer noticeId){
+		
+		Tb_notice notice = noticeMapper.selectByPrimaryKey(noticeId);
+		notice.setCreated(new Date());
+		//设置为未读状态
+		notice.setIs_read((byte)0);
+		return noticeMapper.updateByPrimaryKeySelective(notice);
+	}
 	/**
 	 * 根据通知类型查找头像
 	 */
@@ -72,6 +104,25 @@ public class NoticeService {
 		return headMapper.selectByExample(condition);
 	}
 
+	
+	/**
+	 * 插入tb_notice
+	 */
+	public int insertNoticeSelective(String title, Byte priority,String content,Integer senderId,String senderName,Byte noticeModel,String redirectUrl,
+			Byte noticeType, int sourceId) {	
+		Tb_notice record = new Tb_notice();
+		record.setTitle(title);
+		record.setContent(content);
+		record.setCreated(new Date());
+		record.setNoticeModel(noticeModel);
+		record.setNoticeType(noticeType);
+		record.setPriority(priority);
+		record.setRedirectUrl(redirectUrl);
+		record.setSenderId(senderId);
+		record.setSenderName(senderName);
+		record.setSourceId(sourceId);
+		return noticeMapper.insertSelective(record);
+	}
 	/**
 	 * 插入tb_notice
 	 */

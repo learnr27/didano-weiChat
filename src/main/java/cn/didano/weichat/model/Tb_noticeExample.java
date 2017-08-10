@@ -365,193 +365,323 @@ public class Tb_noticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdIsNull() {
-            addCriterion("addresser_id is null");
+        public Criteria andSenderIdIsNull() {
+            addCriterion("sender_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdIsNotNull() {
-            addCriterion("addresser_id is not null");
+        public Criteria andSenderIdIsNotNull() {
+            addCriterion("sender_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdEqualTo(Integer value) {
-            addCriterion("addresser_id =", value, "addresserId");
+        public Criteria andSenderIdEqualTo(Integer value) {
+            addCriterion("sender_id =", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdNotEqualTo(Integer value) {
-            addCriterion("addresser_id <>", value, "addresserId");
+        public Criteria andSenderIdNotEqualTo(Integer value) {
+            addCriterion("sender_id <>", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdGreaterThan(Integer value) {
-            addCriterion("addresser_id >", value, "addresserId");
+        public Criteria andSenderIdGreaterThan(Integer value) {
+            addCriterion("sender_id >", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("addresser_id >=", value, "addresserId");
+        public Criteria andSenderIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("sender_id >=", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdLessThan(Integer value) {
-            addCriterion("addresser_id <", value, "addresserId");
+        public Criteria andSenderIdLessThan(Integer value) {
+            addCriterion("sender_id <", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdLessThanOrEqualTo(Integer value) {
-            addCriterion("addresser_id <=", value, "addresserId");
+        public Criteria andSenderIdLessThanOrEqualTo(Integer value) {
+            addCriterion("sender_id <=", value, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdIn(List<Integer> values) {
-            addCriterion("addresser_id in", values, "addresserId");
+        public Criteria andSenderIdIn(List<Integer> values) {
+            addCriterion("sender_id in", values, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdNotIn(List<Integer> values) {
-            addCriterion("addresser_id not in", values, "addresserId");
+        public Criteria andSenderIdNotIn(List<Integer> values) {
+            addCriterion("sender_id not in", values, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdBetween(Integer value1, Integer value2) {
-            addCriterion("addresser_id between", value1, value2, "addresserId");
+        public Criteria andSenderIdBetween(Integer value1, Integer value2) {
+            addCriterion("sender_id between", value1, value2, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("addresser_id not between", value1, value2, "addresserId");
+        public Criteria andSenderIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("sender_id not between", value1, value2, "senderId");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameIsNull() {
-            addCriterion("addresser_name is null");
+        public Criteria andSenderNameIsNull() {
+            addCriterion("sender_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameIsNotNull() {
-            addCriterion("addresser_name is not null");
+        public Criteria andSenderNameIsNotNull() {
+            addCriterion("sender_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameEqualTo(String value) {
-            addCriterion("addresser_name =", value, "addresserName");
+        public Criteria andSenderNameEqualTo(String value) {
+            addCriterion("sender_name =", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameNotEqualTo(String value) {
-            addCriterion("addresser_name <>", value, "addresserName");
+        public Criteria andSenderNameNotEqualTo(String value) {
+            addCriterion("sender_name <>", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameGreaterThan(String value) {
-            addCriterion("addresser_name >", value, "addresserName");
+        public Criteria andSenderNameGreaterThan(String value) {
+            addCriterion("sender_name >", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameGreaterThanOrEqualTo(String value) {
-            addCriterion("addresser_name >=", value, "addresserName");
+        public Criteria andSenderNameGreaterThanOrEqualTo(String value) {
+            addCriterion("sender_name >=", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameLessThan(String value) {
-            addCriterion("addresser_name <", value, "addresserName");
+        public Criteria andSenderNameLessThan(String value) {
+            addCriterion("sender_name <", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameLessThanOrEqualTo(String value) {
-            addCriterion("addresser_name <=", value, "addresserName");
+        public Criteria andSenderNameLessThanOrEqualTo(String value) {
+            addCriterion("sender_name <=", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameLike(String value) {
-            addCriterion("addresser_name like", value, "addresserName");
+        public Criteria andSenderNameLike(String value) {
+            addCriterion("sender_name like", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameNotLike(String value) {
-            addCriterion("addresser_name not like", value, "addresserName");
+        public Criteria andSenderNameNotLike(String value) {
+            addCriterion("sender_name not like", value, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameIn(List<String> values) {
-            addCriterion("addresser_name in", values, "addresserName");
+        public Criteria andSenderNameIn(List<String> values) {
+            addCriterion("sender_name in", values, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameNotIn(List<String> values) {
-            addCriterion("addresser_name not in", values, "addresserName");
+        public Criteria andSenderNameNotIn(List<String> values) {
+            addCriterion("sender_name not in", values, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameBetween(String value1, String value2) {
-            addCriterion("addresser_name between", value1, value2, "addresserName");
+        public Criteria andSenderNameBetween(String value1, String value2) {
+            addCriterion("sender_name between", value1, value2, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andAddresserNameNotBetween(String value1, String value2) {
-            addCriterion("addresser_name not between", value1, value2, "addresserName");
+        public Criteria andSenderNameNotBetween(String value1, String value2) {
+            addCriterion("sender_name not between", value1, value2, "senderName");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIsNull() {
-            addCriterion("person_type is null");
+        public Criteria andNoticeModelIsNull() {
+            addCriterion("notice_model is null");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIsNotNull() {
-            addCriterion("person_type is not null");
+        public Criteria andNoticeModelIsNotNull() {
+            addCriterion("notice_model is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeEqualTo(Byte value) {
-            addCriterion("person_type =", value, "personType");
+        public Criteria andNoticeModelEqualTo(Byte value) {
+            addCriterion("notice_model =", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotEqualTo(Byte value) {
-            addCriterion("person_type <>", value, "personType");
+        public Criteria andNoticeModelNotEqualTo(Byte value) {
+            addCriterion("notice_model <>", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeGreaterThan(Byte value) {
-            addCriterion("person_type >", value, "personType");
+        public Criteria andNoticeModelGreaterThan(Byte value) {
+            addCriterion("notice_model >", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeGreaterThanOrEqualTo(Byte value) {
-            addCriterion("person_type >=", value, "personType");
+        public Criteria andNoticeModelGreaterThanOrEqualTo(Byte value) {
+            addCriterion("notice_model >=", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeLessThan(Byte value) {
-            addCriterion("person_type <", value, "personType");
+        public Criteria andNoticeModelLessThan(Byte value) {
+            addCriterion("notice_model <", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeLessThanOrEqualTo(Byte value) {
-            addCriterion("person_type <=", value, "personType");
+        public Criteria andNoticeModelLessThanOrEqualTo(Byte value) {
+            addCriterion("notice_model <=", value, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeIn(List<Byte> values) {
-            addCriterion("person_type in", values, "personType");
+        public Criteria andNoticeModelIn(List<Byte> values) {
+            addCriterion("notice_model in", values, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotIn(List<Byte> values) {
-            addCriterion("person_type not in", values, "personType");
+        public Criteria andNoticeModelNotIn(List<Byte> values) {
+            addCriterion("notice_model not in", values, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeBetween(Byte value1, Byte value2) {
-            addCriterion("person_type between", value1, value2, "personType");
+        public Criteria andNoticeModelBetween(Byte value1, Byte value2) {
+            addCriterion("notice_model between", value1, value2, "noticeModel");
             return (Criteria) this;
         }
 
-        public Criteria andPersonTypeNotBetween(Byte value1, Byte value2) {
-            addCriterion("person_type not between", value1, value2, "personType");
+        public Criteria andNoticeModelNotBetween(Byte value1, Byte value2) {
+            addCriterion("notice_model not between", value1, value2, "noticeModel");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlIsNull() {
+            addCriterion("redirect_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlIsNotNull() {
+            addCriterion("redirect_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlEqualTo(String value) {
+            addCriterion("redirect_url =", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlNotEqualTo(String value) {
+            addCriterion("redirect_url <>", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlGreaterThan(String value) {
+            addCriterion("redirect_url >", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("redirect_url >=", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlLessThan(String value) {
+            addCriterion("redirect_url <", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlLessThanOrEqualTo(String value) {
+            addCriterion("redirect_url <=", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlLike(String value) {
+            addCriterion("redirect_url like", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlNotLike(String value) {
+            addCriterion("redirect_url not like", value, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlIn(List<String> values) {
+            addCriterion("redirect_url in", values, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlNotIn(List<String> values) {
+            addCriterion("redirect_url not in", values, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlBetween(String value1, String value2) {
+            addCriterion("redirect_url between", value1, value2, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andRedirectUrlNotBetween(String value1, String value2) {
+            addCriterion("redirect_url not between", value1, value2, "redirectUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIsNull() {
+            addCriterion("source_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIsNotNull() {
+            addCriterion("source_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdEqualTo(Integer value) {
+            addCriterion("source_id =", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotEqualTo(Integer value) {
+            addCriterion("source_id <>", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdGreaterThan(Integer value) {
+            addCriterion("source_id >", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("source_id >=", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdLessThan(Integer value) {
+            addCriterion("source_id <", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdLessThanOrEqualTo(Integer value) {
+            addCriterion("source_id <=", value, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdIn(List<Integer> values) {
+            addCriterion("source_id in", values, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotIn(List<Integer> values) {
+            addCriterion("source_id not in", values, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdBetween(Integer value1, Integer value2) {
+            addCriterion("source_id between", value1, value2, "sourceId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSourceIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("source_id not between", value1, value2, "sourceId");
             return (Criteria) this;
         }
 
