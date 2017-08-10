@@ -31,7 +31,7 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(value = "功能服务", tags = "功能服务")
 @RestController
-@RequestMapping(value = "/base/function/post/")
+@RequestMapping(value = "/base/function")
 public class FunctionController {
 	
 	static Logger logger = Logger.getLogger(FunctionController.class);
@@ -45,7 +45,7 @@ public class FunctionController {
 	 * 获取欢迎页面区域功能项目;
 	 */
 	@ApiOperation(value = "功能项目查询", notes = "欢迎页面按分区进行功能项目查询")
-	@GetMapping(value = "getAreaItems/{roletype}")
+	@GetMapping(value = "/getAreaItems/{roletype}")
 	@ResponseBody
 	public Out<List<Tb_function>> addFunctionsToRole(@PathVariable Integer roletype) {
 		Out<List<Tb_function>> back = new Out<>();
@@ -136,7 +136,7 @@ public class FunctionController {
 	 * 获取欢迎页面区域功能项目;
 	 */
 	@ApiOperation(value = "功能项目查询", notes = "欢迎页面按分区进行功能项目查询")
-	@PostMapping(value = "getAreaItems/{parentId}")
+	@PostMapping(value = "/getAreaItems/{parentId}")
 	@ResponseBody
 	public Out<OutList<Tb_function>> getAreaItems(@PathVariable("parentId")Integer parentId) {
 		

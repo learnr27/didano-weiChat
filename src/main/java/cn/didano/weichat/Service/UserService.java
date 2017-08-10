@@ -1,5 +1,6 @@
 package cn.didano.weichat.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -10,6 +11,8 @@ import cn.didano.weichat.Controller.LoginController;
 import cn.didano.weichat.dao.Hand_userMapper;
 import cn.didano.weichat.dao.Tb_userMapper;
 import cn.didano.weichat.json.Hand_userRoleRel;
+import cn.didano.weichat.json.In_ParentSearchUserid;
+import cn.didano.weichat.json.In_StaffSearchUserid;
 import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_role;
@@ -183,7 +186,32 @@ public class UserService {
 	}
 
 
-	
+	public List<Tb_user> getUseridByStaffParam(List<In_StaffSearchUserid> inPara) {
+		List<Tb_user> userList = new ArrayList<>();
+		if (inPara.size() > 0 && inPara != null) {
+			for (In_StaffSearchUserid staff : inPara) {
+				if (staff.getOpenid() != null && staff.getStaffid() != null) {
+					Tb_user user = handUserMapper.getUseridByStaffid(staff);
+					userList.add(user);
+				}
+			}
+		}
+		return userList;
+	}
+
+
+	public List<Tb_user> getUseridByParentParam(List<In_ParentSearchUserid> inPara) {
+		List<Tb_user> userList = new ArrayList<>();
+		if (inPara.size() > 0 && inPara != null) {
+			for (In_ParentSearchUserid parent : inPara) {
+				if (parent.getOpenid() != null && parent.getParentid() != null) {
+					Tb_user user = handUserMapper.getUseridByParentid(parent);
+					userList.add(user);
+				}
+			}
+		}
+		return userList;
+	}
 
 	
 }

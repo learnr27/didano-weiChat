@@ -98,11 +98,11 @@
   </select>
  
   <update id="enableRoleStatusById" parameterType="cn.didano.weichat.json.Hand_userRoleRel">
-  	UPDATE tb_user_role_rel SET STATUS = 0 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR};
+  	UPDATE tb_user_role_rel SET STATUS = 0 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR}
   </update>
   
   <update id="disableRoleStatusById" parameterType="cn.didano.weichat.json.Hand_userRoleRel">
-  	UPDATE tb_user_role_rel SET STATUS = 1 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR};
+  	UPDATE tb_user_role_rel SET STATUS = 1 WHERE user_id = #{userId,jdbcType=VARCHAR} AND role_id = #{roleId,jdbcType=VARCHAR}
   </update>
   
   <select id="findAllUsers" resultType="cn.didano.weichat.model.Tb_user">
@@ -167,7 +167,7 @@
 		  tb_school sc
 		WHERE s.type = 32
 		    AND s.phone = #{mobile,jdbcType=VARCHAR}
-		    AND s.school_id = sc.id;
+		    AND s.school_id = sc.id
   </select>
   
   <select id="getRelationByRelationId" parameterType="java.lang.Integer" resultType="java.lang.String">
@@ -185,7 +185,7 @@
 	  tw.deleted           AS deleteFlag
 	FROM tb_weichat tw,
 	  tb_weichat_bind twb
-	WHERE tw.id = twb.weichat_id;
+	WHERE tw.id = twb.weichat_id
   </select>
   
   <select id="getStudentParentListByMobile" parameterType="java.lang.String" resultType="cn.didano.weichat.util.Hand_StudentParent">
@@ -199,7 +199,7 @@
 	WHERE phone =  #{mobile,jdbcType=VARCHAR} 
 	AND tsp1.id = tsp2.parent_id
 	AND tsp1.deleted = 0
-	AND tsp2.deleted = 0;
+	AND tsp2.deleted = 0
   </select>
   
   <delete id="deleteDatafrom" parameterType="java.lang.Integer">
@@ -211,7 +211,7 @@
   	SELECT DISTINCT
 	  *
 	FROM tb_staff
-	WHERE phone = #{mobile,jdbcType=VARCHAR};
+	WHERE phone = #{mobile,jdbcType=VARCHAR}
   </select>
   
   <insert id="insert" parameterType="cn.didano.weichat.model.Tb_user">
@@ -230,7 +230,21 @@
       #{staffId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
   </insert>
   
+  <select id="getUseridByStaffid" parameterType="cn.didano.weichat.json.In_StaffSearchUserid" resultType="cn.didano.weichat.model.Tb_user">
+  	SELECT DISTINCT
+	  *
+	FROM tb_user
+	WHERE openid = #{openid,jdbcType=VARCHAR}
+	AND staff_id = #{staffid,jdbcType=INTEGER}
+  </select>
   
+  <select id="getUseridByParentid" parameterType="cn.didano.weichat.json.In_ParentSearchUserid" resultType="cn.didano.weichat.model.Tb_user">
+  	SELECT DISTINCT
+	  *
+	FROM tb_user
+	WHERE openid = #{openid,jdbcType=VARCHAR}
+	AND staff_id = #{parentid,jdbcType=INTEGER}
+  </select>
   
   
 </mapper>

@@ -3,6 +3,8 @@ package cn.didano.weichat.dao;
 import java.util.List;
 
 import cn.didano.weichat.json.Hand_userRoleRel;
+import cn.didano.weichat.json.In_ParentSearchUserid;
+import cn.didano.weichat.json.In_StaffSearchUserid;
 import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_school;
@@ -48,5 +50,11 @@ public interface Hand_userMapper {
 	List<Hand_StudentParent> getStudentParentListByMobile(String mobile);
 
 	Integer deleteDatafrom(Integer row);
+
+	Tb_user getUseridByStaffid(In_StaffSearchUserid staff);
+
+	Tb_user getUseridByParentid(In_ParentSearchUserid parent);
+
+
 	
 }
