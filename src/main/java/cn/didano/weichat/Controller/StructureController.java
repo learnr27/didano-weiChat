@@ -28,24 +28,7 @@ import me.chanjar.weixin.mp.bean.result.WxMpUser;
 public class StructureController {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	/*
-	 * @GetMapping("/babycenter") public ModelAndView babycenter(@RequestParam(name
-	 * = "oriid", required = false) String oriid) { AuthUtil authUtil = new
-	 * AuthUtil();
-	 * 
-	 * try { ExecutorService executorService = Executors.newFixedThreadPool(1);
-	 * Runnable runnable = new Runnable() {
-	 * 
-	 * @Override public void run() { try {
-	 * System.out.println("=====================1");
-	 * System.out.println(Thread.currentThread().getName() + ": testRetry");
-	 * authUtil.initAuth(oriid); System.out.println("=====================2"); }
-	 * catch (Exception e) { e.printStackTrace(); } } }; Future<?> submit1 =
-	 * executorService.submit(runnable); submit1.get(); } catch (Exception e) { //
-	 * TODO: handle exception } return new ModelAndView("index"); }
-	 */
-
-	@ApiOperation(value = "获取当前用户", notes = "获取当前用户")
+	@ApiOperation(value = "通过微信后台获取当前用户", notes = "通过微信后台获取当前用户")
 	@GetMapping(value = "/babycenter")
 	public ModelAndView getAuthWxMpUser(HttpServletRequest request) {
 
@@ -57,29 +40,23 @@ public class StructureController {
 		logger.info("code:" + code);
 		ModelAndView modelAndView = new ModelAndView("babycenter");
 		if (oriId == null || code == null) {
-//			modelAndView.addObject("openid","123");
+			logger.warn("oriId数据为:"+oriId+" ,或code数据为:"+code);
 			return modelAndView;
 		}
 		try {
-			// response.getWriter().println("<h1>code</h1>");
-			// response.getWriter().println(code);
-			logger.info("-------------getCode-----------------");
-
 			WxMpService wxMpService = ContextUtil.act.getBean(WxMpService.class);
 			wxMpService.setWxMpConfigStorage(WxMpInMemoryConfigStorageContainer.findByOriId(oriId));
 
 			WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
-			WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-			wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
-			logger.info("-------------rtoken-----------------");
-			System.out.println("getAuthWxMpUser session:" + request.getSession().getId());
-			// request.getSession().setAttribute("wxMpUser", wxMpUser);
-			modelAndView.addObject("wxMpUser", wxMpUser);
-//			modelAndView.addObject("openid", wxMpUser.getOpenId());
 			
-			modelAndView.addObject("openid",wxMpUser.getOpenId());
+			//WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+			//wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
 			
-			logger.info("openid数据是: " + wxMpUser.getOpenId());
+			logger.info("getAuthWxMpUser session:" + request.getSession().getId());
+			
+			modelAndView.addObject("openid",wxMpOAuth2AccessToken.getOpenId());
+			
+			logger.info("openid数据是: " + wxMpOAuth2AccessToken.getOpenId());
 		} catch (WxErrorException e) {
 			e.printStackTrace();
 		}

@@ -18,7 +18,7 @@ public class OfficialAccountService {
 	
 	public List<Hand_officialAccount> getAllwxOfficialAccount() {
 		List<Hand_officialAccount> storage = hand_officialAccountMapper.getAllwxOfficialAccount();
-		log.info("OfficialAccountService 获取storage的data:"+storage.get(0).getOriginalId());
+		log.info("OfficialAccountService 获取storage的第一个data:"+storage.get(0).getOriginalId());
 		return storage;
 	}
 	

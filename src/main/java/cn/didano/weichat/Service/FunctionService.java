@@ -26,7 +26,7 @@ public class FunctionService {
 		return handFunctionMapper.findFunctionsByUserId(id);
 	}
 
-	public List<Tb_function> findAreaItems(String parentId) {
+	public List<Tb_function> findAreaItems(Integer parentId) {
 		List<Tb_function> list = handFunctionMapper.findAreaItems(parentId);
 		return list;
 	}
