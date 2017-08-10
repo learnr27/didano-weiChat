@@ -53,8 +53,13 @@ public class NoticeService {
 		}
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonInString = mapper.writeValueAsString(userId);
+		//jsonInString
+		jsonInString = "{\"content\":\"ghd\"}";
 		logger.info("jsonInString="+jsonInString);
-		this.messageTemplate.convertAndSend("/topic/message",jsonInString);
+		//this.messageTemplate.convertAndSend("/topic/message",jsonInString);
+		messageTemplate.convertAndSendToUser("hehe", "/reply", jsonInString);
+		messageTemplate.convertAndSendToUser("hehea", "/reply", jsonInString);
+		//messageTemplate.convertAndSendToUser("/queue/reply", jsonInString);
 		return;
 	}
 
