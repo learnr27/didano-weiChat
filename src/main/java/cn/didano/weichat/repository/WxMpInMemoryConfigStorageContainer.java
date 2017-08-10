@@ -12,7 +12,7 @@ public final class WxMpInMemoryConfigStorageContainer {
 	private static HashMap<String, WxMpInMemoryConfigStorage> container = new HashMap<String, WxMpInMemoryConfigStorage>();
 
 	public static WxMpInMemoryConfigStorage findByOriId(String OriId) {
-		logger.info("findByOriId...OriId数据为:" + OriId);
+		logger.info("findByOriId方法根据OriId查询公众号...OriId数据为:" + OriId);
 		WxMpInMemoryConfigStorage target = container.get(OriId);
 		return target;
 	}

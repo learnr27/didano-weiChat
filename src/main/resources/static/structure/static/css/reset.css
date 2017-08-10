@@ -30,6 +30,7 @@ footer, header, menu, nav, section {
 }
 
 body {
+    background-color: white !important;
     line-height: 1;
 }
 

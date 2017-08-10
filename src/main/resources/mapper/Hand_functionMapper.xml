@@ -25,8 +25,8 @@
   </select>
   
   
-  <select id="findAreaItems" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_function">
-    SELECT * FROM tb_function WHERE parent_id=#{parentId,jdbcType=VARCHAR} ORDER BY order_no;
+  <select id="findAreaItems" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_function">
+    SELECT * FROM tb_function WHERE parent_id=#{parentId,jdbcType=INTEGER} ORDER BY order_no;
   </select>
   
   

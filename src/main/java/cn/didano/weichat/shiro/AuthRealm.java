@@ -1,6 +1,7 @@
 package cn.didano.weichat.shiro;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -63,7 +64,8 @@ public class AuthRealm extends AuthorizingRealm {
         for (Tb_role tb_role : roles) {
 			if (tb_role.getName() != null) {
 				info.addRole(tb_role.getName());
-				Set<Tb_function> functions = tb_role.getFunctions();
+				Set<Tb_function> functions = null;
+				functions = tb_role.getFunctions();
 				if (functions != null && !functions.isEmpty()) {
 					for (Tb_function tb_function : functions) {
 						if (tb_function.getUrl() != null) {
@@ -92,23 +94,25 @@ public class AuthRealm extends AuthorizingRealm {
 		//根据用户名查询数据库中的密码,将密码交给安全管理器,由安全管理器负责比较数据库中的密码和页面中传入的密码是否一致;
 		System.out.println(1);
 		System.out.println(openid);
-		Tb_user user = userService.selectUserByOpenid(openid);
-		System.out.println(user);
-		System.out.println(user.getId());
-		//如果查出的用户为空,返回null;
-		if (user == null) {
+		Tb_user user = null;
+		List<Tb_user> users = userService.selectUserByOpenid(openid);
+		if (users != null && users.size() > 0) {
+			user = users.get(0);
+			System.out.println(user);
+			System.out.println(user.getId());
+			//创造AuthenticationInfo的子类实现类SimpleAuthenticationInfo,传入参数由安全管理器进行密码比较;
+			/*
+			 * 第一个参数principal:签名对象,可以为任意对象;此处因为userAction中要将user存入到session中,认证通过后，可以在程序的任意位置获取当前放入的对象,所入传入user;
+			 * 第二个参数credentials:数据库中查询出的密码;
+			 * 第三个参数realmName:当前realm的类名;
+			 */
+			SimpleAuthenticationInfo info = 
+					new SimpleAuthenticationInfo(user, user.getMobile(), this.getClass().getName());
+			//返回给安全管理器;
+			return info;
+		}else {//没取到
 			return null;
 		}
-		//创造AuthenticationInfo的子类实现类SimpleAuthenticationInfo,传入参数由安全管理器进行密码比较;
-		/*
-		 * 第一个参数principal:签名对象,可以为任意对象;此处因为userAction中要将user存入到session中,认证通过后，可以在程序的任意位置获取当前放入的对象,所入传入user;
-		 * 第二个参数credentials:数据库中查询出的密码;
-		 * 第三个参数realmName:当前realm的类名;
-		 */
-		SimpleAuthenticationInfo info = 
-				new SimpleAuthenticationInfo(user, user.getMobile(), this.getClass().getName());
-		//返回给安全管理器;
-		return info;
 	}
 	
 }

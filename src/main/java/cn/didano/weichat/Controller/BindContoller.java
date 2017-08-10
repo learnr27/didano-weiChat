@@ -7,7 +7,7 @@ import io.swagger.annotations.Api;
 
 @Api(value = "用户绑定服务", tags = "用户绑定服务")
 @RestController
-@RequestMapping(value = "/base/attendanc/post/")
+@RequestMapping(value = "/base/bind")
 public class BindContoller {
 	
 	

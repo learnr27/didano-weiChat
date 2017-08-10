@@ -14,7 +14,7 @@
 		<!--数据库链接地址账号密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
 			connectionURL="jdbc:mysql://localhost/xiaonuo" userId="root"
-			password="123456">
+			password="123">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
@@ -220,6 +220,83 @@
 			enableCountByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!-- <table tableName="tb_student_parent" domainObjectName="Tb_student_parent"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!-- <table tableName="tb_staff" domainObjectName="Tb_staff"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		
+		<!-- <table tableName="tb_student" domainObjectName="Tb_student"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!-- <table tableName="tb_student_parent" domainObjectName="Tb_studentparent"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!--<table tableName="tb_dream" domainObjectName="Tb_dream"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> 
+		<table tableName="tb_hobby" domainObjectName="Tb_hobby"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> 
+		<table tableName="tb_student" domainObjectName="Tb_student"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!-- <table tableName="tb_staff_signdate" domainObjectName="Tb_staff_signdate"
+			enableCountByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
+		</table> -->
+		<!-- <table tableName="tb_function" domainObjectName="Tb_function"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table> -->
+		<!-- <table tableName="tb_role" domainObjectName="Tb_role"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table> -->
+		<table tableName="tb_user" domainObjectName="Tb_user"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
 		</table>
+		<!-- <table tableName="tb_school_parent" domainObjectName="Tb_schoolParent"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table> -->
+		<!-- <table tableName="tb_school" domainObjectName="Tb_school"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table>
+		<table tableName="tb_staff" domainObjectName="Tb_staff"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table> -->
 	</context>
 </generatorConfiguration>

@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
@@ -17,11 +19,15 @@ import cn.didano.weichat.model.Hand_officialAccount;
 import cn.didano.weichat.repository.WxMpInMemoryConfigStorageContainer;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 
-@SpringBootApplication
-
+/*@Configuration
 @ComponentScan({ "cn.didano.weichat" })
 @ServletComponentScan
-public class DidanoWeiChatApplication {
+@EnableAutoConfiguration*/
+
+@SpringBootApplication
+@ComponentScan({ "cn.didano.weichat" })
+@ServletComponentScan
+public class DidanoWeiChatApplication extends SpringBootServletInitializer {
 	private static final Logger log = LoggerFactory.getLogger(DidanoWeiChatApplication.class);
 	/*
 	 * @Autowired WxMpInMemoryConfigStorageRepository wxMpInfoRepository;
@@ -29,6 +35,12 @@ public class DidanoWeiChatApplication {
 	@Autowired
 	private OfficialAccountService officialAccountService;
 
+	@Override
+    protected SpringApplicationBuilder configure(
+            SpringApplicationBuilder application) {
+        return application.sources(DidanoWeiChatApplication.class);
+    }
+	
 	public static void main(String[] args) {
 		SpringApplication.run(DidanoWeiChatApplication.class, args);
 	}
@@ -42,11 +54,11 @@ public class DidanoWeiChatApplication {
 			target.setSecret(one.getSecret());
 			target.setToken(one.getToken());
 			target.setAesKey(one.getAesKey());
-			log.info("DidanoWeiChatApplication init originalId"+ one.getOriginalId());
-			log.info("DidanoWeiChatApplication init appId"+ one.getAppId());
-			log.info("DidanoWeiChatApplication init secret"+ one.getSecret());
-			log.info("DidanoWeiChatApplication init token"+ one.getToken());
-			log.info("DidanoWeiChatApplication init aesKey"+ one.getAesKey());
+			log.info("DidanoWeiChatApplication init初始化 originalId: "+ one.getOriginalId());
+			log.info("DidanoWeiChatApplication init初始化 appId: "+ one.getAppId());
+			log.info("DidanoWeiChatApplication init初始化 secret: "+ one.getSecret());
+			log.info("DidanoWeiChatApplication init初始化 token: "+ one.getToken());
+			log.info("DidanoWeiChatApplication init初始化 aesKey: "+ one.getAesKey());
 			WxMpInMemoryConfigStorageContainer.save(one.getOriginalId(),target);
 		}
 		log.info("加载所有公众号信息");

@@ -4,11 +4,15 @@
   
   
   <select id="selectRolesByUserId" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_role">
+  	<!-- 
+  	根据用户关系表tb_user_role_rel进行查询;
   	SELECT r.*
 	FROM tb_role r,
 	  tb_user_role_rel ur
 	WHERE ur.role_id = r.id
-	  AND ur.user_id = #{id,jdbcType=INTEGER}
+	  AND ur.user_id = #{id,jdbcType=INTEGER} -->
+	  
+	  SELECT * FROM tb_user WHERE openid = #{id,jdbcType=INTEGER}
   </select>
   
   <select id="getActiveRoleByUserid" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_role">

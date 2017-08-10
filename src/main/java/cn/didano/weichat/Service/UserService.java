@@ -1,5 +1,6 @@
 package cn.didano.weichat.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -9,14 +10,17 @@ import org.springframework.stereotype.Service;
 import cn.didano.weichat.Controller.LoginController;
 import cn.didano.weichat.dao.Hand_userMapper;
 import cn.didano.weichat.dao.Tb_userMapper;
+import cn.didano.weichat.json.Hand_userRoleRel;
+import cn.didano.weichat.json.In_ParentSearchUserid;
+import cn.didano.weichat.json.In_StaffSearchUserid;
 import cn.didano.weichat.json.Out_Student_Search;
-import cn.didano.weichat.model.Hand_teacher;
-import cn.didano.weichat.model.Hand_userRoleRel;
+import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_role;
 import cn.didano.weichat.model.Tb_school;
 import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_user;
+import cn.didano.weichat.util.Hand_StudentParent;
 
 @Service
 public class UserService {
@@ -29,10 +33,11 @@ public class UserService {
 	private Tb_userMapper userMapper;
 	
 	
-	public Tb_user selectUserByOpenid(String openid) {
-		Tb_user user = handUserMapper.selectUserByOpenid(openid);
-		System.out.println(user);
-		return user;
+	public List<Tb_user> selectUserByOpenid(String openid) {
+		List<Tb_user> users = handUserMapper.selectUserByOpenid(openid);
+//		List<Tb_user> users = handUserMapper.selectUserByOpenid(openid);
+		System.out.println(users);
+		return users;
 		
 		/*UserExample condition = new UserExample();
 		UserExample.Criteria criteria = condition.createCriteria();
@@ -44,6 +49,21 @@ public class UserService {
 		return userMapper.selectByPrimaryKey(id);*/
 	}
 	
+	
+	/*public List<Tb_user> selectUserByOpenid(String openid,int type) {
+		List<Tb_user> users = handUserMapper.selectUserByOpenid(openid,type);
+		System.out.println(users);
+		return users;
+		
+		UserExample condition = new UserExample();
+		UserExample.Criteria criteria = condition.createCriteria();
+		   //对于已经deleted=1的不显示 禁用不显示
+		 	criteria.andUsernameEqualTo(username);
+		 	return userMapper.selectByExample(condition).get(0);
+		
+		String id = "4028821e5b7a6947015b7a6ebacf0000";
+		return userMapper.selectByPrimaryKey(id);
+	}*/
 	
 	public int enableRoleStatusById(Hand_userRoleRel data) {
 		int rowNum = handUserMapper.enableRoleStatusById(data);
@@ -87,8 +107,8 @@ public class UserService {
 	}
 
 
-	public Hand_teacher getTeacherByMobile(String mobile) {
-		Hand_teacher teacher = handUserMapper.getTeacherByMobile(mobile);
+	public Hand_staff getTeacherByMobile(String mobile) {
+		Hand_staff teacher = handUserMapper.getTeacherByMobile(mobile);
 		return teacher;
 	}
 
@@ -134,7 +154,64 @@ public class UserService {
 		List<Tb_schoolParent> parentList = handUserMapper.getParentListByMobile(mobile);
 		return parentList;
 	}
-	
+
+
+	public List<Out_Student_Search> getStudentListByOpenid(String openId) {
+		List<Out_Student_Search> list = handUserMapper.getStudentListByOpenid(openId);
+		return list;
+	}
+
+
+	public List<Hand_staff> getSchoolListByOpenid(String openId) {
+		List<Hand_staff> list = handUserMapper.getSchoolListByOpenid(openId);
+		return list;
+	}
+
+
+	public List<Hand_staff> getTeacherByOpenid(String openId) {
+		List<Hand_staff> teacherList = handUserMapper.getTeacherByOpenid(openId);
+		return teacherList;
+	}
+
+
+	public List<Hand_StudentParent> getStudentParentListByMobile(String mobile) {
+		List<Hand_StudentParent> list = handUserMapper.getStudentParentListByMobile(mobile);
+		return list;
+	}
+
+
+	public Integer deleteDatafrom(Integer row) {
+		Integer rowNum = handUserMapper.deleteDatafrom(row);
+		return rowNum;
+	}
+
+
+	public List<Tb_user> getUseridByStaffParam(List<In_StaffSearchUserid> inPara) {
+		List<Tb_user> userList = new ArrayList<>();
+		if (inPara.size() > 0 && inPara != null) {
+			for (In_StaffSearchUserid staff : inPara) {
+				if (staff.getOpenid() != null && staff.getStaffid() != null) {
+					Tb_user user = handUserMapper.getUseridByStaffid(staff);
+					userList.add(user);
+				}
+			}
+		}
+		return userList;
+	}
+
+
+	public List<Tb_user> getUseridByParentParam(List<In_ParentSearchUserid> inPara) {
+		List<Tb_user> userList = new ArrayList<>();
+		if (inPara.size() > 0 && inPara != null) {
+			for (In_ParentSearchUserid parent : inPara) {
+				if (parent.getOpenid() != null && parent.getParentid() != null) {
+					Tb_user user = handUserMapper.getUseridByParentid(parent);
+					userList.add(user);
+				}
+			}
+		}
+		return userList;
+	}
 
 	
 }
