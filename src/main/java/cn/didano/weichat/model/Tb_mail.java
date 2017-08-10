@@ -16,12 +16,31 @@ public class Tb_mail {
     private Date updated;
 
     private Boolean deleted;
+//手写
+    private String head;
+    private String date;
+    
+    public String getDate() {
+		return date;
+	}
 
-    public Integer getId() {
+	public void setDate(String date) {
+		this.date = date;
+	}
+
+	public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public String getHead() {
+		return head;
+	}
+
+	public void setHead(String head) {
+		this.head = head;
+	}
+
+	public void setId(Integer id) {
         this.id = id;
     }
 

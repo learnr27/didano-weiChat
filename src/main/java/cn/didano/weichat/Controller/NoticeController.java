@@ -21,13 +21,16 @@ import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.WebSocketService;
 import cn.didano.weichat.constant.BackType;
+import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_homeMailBox;
 import cn.didano.weichat.model.Hand_noticeList;
 import cn.didano.weichat.model.Tb_head_sculpture;
+import cn.didano.weichat.model.Tb_mail_reply;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_staff;
@@ -80,21 +83,25 @@ public class NoticeController {
 				notice.setSenderName(staff.getName() + "老师");
 			}
 			int num = notice_edit.getUserId().size();
-//			// 判断用户类型
-//			if (num == 1) {
-//				// 单个用户
-//				notice.setPersonType((byte) 1);
-//			} else {
-//				// 多个用户
-//				notice.setPersonType((byte) 2);
-//			}
 			notice.setCreated(new Date());
+			//设置通知模型
 			notice.setNoticeModel(notice_edit.getNoticeModel());
+			//设置通知类型
 			notice.setNoticeType(notice_edit.getNoticeType());
+			//设置内部url或者外部url
 			if(notice_edit.getNoticeModel()==1){
-				
+				//设置转向地址
+				if(notice_edit.getNoticeType()==0){
+					notice.setRedirectUrl(ModulePathType.MORNING_REPORT.getUrl());
+				}else if(notice_edit.getNoticeType()==1){
+					notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl());
+				}else if(notice_edit.getNoticeType()==2){
+					notice.setRedirectUrl(ModulePathType.SHUTTLE_REPORT.getUrl());
+				}else if(notice_edit.getNoticeType()==3){
+					notice.setRedirectUrl(ModulePathType.PUBLIC_SIGNAL.getUrl());
+				}
 			}else if(notice_edit.getNoticeModel()==2){
-				notice.setRedictUrl(notice_edit.getUrl());
+				notice.setRedirectUrl(notice_edit.getUrl());
 			}
 			// 插入通知表
 			noticeService.insertNoticeSelective(notice);
@@ -105,16 +112,15 @@ public class NoticeController {
 				// 默认未读
 				noticeUser.setIsRead((byte) 0);
 				noticeUser.setNoticeId(notice.getId());
-				noticeUser.setUserId(notice_edit.getUserId().get(i));
-				noticeUser.setUserType(notice_edit.getUser_type());
+				noticeUser.setUserId(notice_edit.getUserId().get(i).getUserId());
+				noticeUser.setUserType(notice_edit.getUserId().get(i).getUserType());
 				noticeUser.setCreated(new Date());
 				noticeService.insertNoticeUserSelective(noticeUser);
 				rowNum++;
 			}
-			List<Tb_websocket_channel> noticeChannel = websocketService.selcetChannelByType((byte)0);
-			
-			// 广播通知 websocket
-			noticeService.broadcast(noticeChannel.get(0).getChannel());
+//			List<Tb_websocket_channel> noticeChannel = websocketService.selcetChannelByType((byte)0);			
+//			// 广播通知 websocket
+//			noticeService.broadcast(noticeChannel.get(0).getChannel());
 			if (rowNum > 0) {
 				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
 
@@ -142,23 +148,19 @@ public class NoticeController {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	@PostMapping(value = "notice_findtByUserid/{user_id}/{user_type}")
+	@PostMapping(value = "notice_findtByUserid/{own_id}/{user_type}")
 	@ApiOperation(value = "根据用户id,用户类型查找消息列表", notes = "根据用户id,用户类型查找消息列表")
 	@ResponseBody
-	public Out<Hand_noticeList> notice_findtByUserid(@PathVariable("user_id") Integer user_id,
+	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("own_id") Integer own_id,
 			@PathVariable("user_type") byte user_type) {
-		logger.info("访问  NoticeController:notice_findtByUserid,user_id=" + user_id);
+		logger.info("访问  NoticeController:notice_findtByUserid,own_id=" + own_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
-		List<Tb_notice> notices = null;
-		Hand_noticeList data = null;
-		List<Hand_homeMailBox> boxs = null;
-		Hand_homeMailBox box = null;
-		Out<Hand_noticeList> back = new Out<Hand_noticeList>();
+		List<Tb_notice> notices = null;	
+		OutList<Tb_notice> outList = null;
+		Out<OutList<Tb_notice> > back = new Out<OutList<Tb_notice>>();
 		try {
-			 boxs = new ArrayList<Hand_homeMailBox>();
-			data = new Hand_noticeList();
-			notices = noticeService.findNoticeByUserId(user_id, user_type);
+			notices = noticeService.findNoticeByUserId(own_id, user_type);
 			if(notices.size()!=0){
 			// 获取头像地址
 			for (int i = 0; i < notices.size(); i++) {
@@ -167,54 +169,50 @@ public class NoticeController {
 				head = noticeService.selectHeadByNoticeType(notice.getNoticeType()).get(0);
 				notice.setHeadUrl(head.getAddress());
 				}else{
-					String title =notice.getSenderName();
-					if(title.length()!=0){
-					String name = title.substring(title.length()-2, title.length());
-					if("园长".equals(name)){
-						head = noticeService.selectHeadByNoticeType((byte)9).get(0);
-						notices.get(i).setHeadUrl(head.getAddress());
-					}else if("爸爸".equals(name)){
-						head = noticeService.selectHeadByNoticeType((byte)5).get(0);
-						notices.get(i).setHeadUrl(head.getAddress());
-					}else if("妈妈".equals(name)){
-						head = noticeService.selectHeadByNoticeType((byte)6).get(0);
-						notices.get(i).setHeadUrl(head.getAddress());
-					}else if("爷爷".equals(name)){
-						head = noticeService.selectHeadByNoticeType((byte)7).get(0);
-						notices.get(i).setHeadUrl(head.getAddress());
-					}else if("奶奶".equals(name)){
-						head = noticeService.selectHeadByNoticeType((byte)8).get(0);
-						notices.get(i).setHeadUrl(head.getAddress());
-					}
-					}
+//					String title =notice.getSenderName();
+//					if(title.length()!=0){
+//					String name = title.substring(title.length()-2, title.length());
+//					if("园长".equals(name)){
+//						head = noticeService.selectHeadByNoticeType((byte)9).get(0);
+//						notices.get(i).setHeadUrl(head.getAddress());
+//					}else if("爸爸".equals(name)){
+//						head = noticeService.selectHeadByNoticeType((byte)5).get(0);
+//						notices.get(i).setHeadUrl(head.getAddress());
+//					}else if("妈妈".equals(name)){
+//						head = noticeService.selectHeadByNoticeType((byte)6).get(0);
+//						notices.get(i).setHeadUrl(head.getAddress());
+//					}else if("爷爷".equals(name)){
+//						head = noticeService.selectHeadByNoticeType((byte)7).get(0);
+//						notices.get(i).setHeadUrl(head.getAddress());
+//					}else if("奶奶".equals(name)){
+//						head = noticeService.selectHeadByNoticeType((byte)8).get(0);
+//						notices.get(i).setHeadUrl(head.getAddress());
+//					}
+//					}
+					//给园长信箱设置标题和头像					
+						notice.setTitle(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");;
+						head = noticeService.selectHeadByNoticeType((byte)10).get(0);
+						notice.setHeadUrl(head.getAddress());;
+					
 				}
 			}
 			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
-			List<Integer> removeId= new ArrayList<Integer>();
 			for (int i = 0; i < notices.size(); i++) {
 				date = sdf.format(notices.get(i).getCreated());
 				notices.get(i).setDate(date);
-				//挑出园长信箱的通知消息单独为一个集合
-				if(notices.get(i).getNoticeType()==4){
-					box = new Hand_homeMailBox();
-					box.setName(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");
-					head = noticeService.selectHeadByNoticeType((byte)10).get(0);
-					box.setHead(head.getAddress());
-					box.getMailBox().add(notices.get(i));
-					boxs.add(box);
-					removeId.add(i);
-				}
+				//给园长信箱设置标题和头像
+//				if(notices.get(i).getNoticeType()==4){
+//					notices.get(i).setTitle(notices.get(i).getSenderName().split("的")[0]+"小朋友的家庭");;
+//					head = noticeService.selectHeadByNoticeType((byte)10).get(0);
+//					notices.get(i).setHeadUrl(head.getAddress());;
+//				}
 			}
-			for (int i = 0; i < removeId.size(); i++) {
-				notices.remove(removeId.get(i));
-			}
-			//设置园长信箱数据
-			data.setMailBox(boxs);
-			//设置消息列表数据
-			data.setNotices(notices);
-			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+
+
+			outList = new OutList<Tb_notice>(notices.size(), notices);
+			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service

@@ -35,7 +35,6 @@ public class Tb_notice {
     
     private String date;
     
-    private String redictUrl;
     public byte getIs_read() {
 		return is_read;
 	}
@@ -60,13 +59,6 @@ public class Tb_notice {
 		this.date = date;
 	}
 
-	public String getRedictUrl() {
-		return redictUrl;
-	}
-
-	public void setRedictUrl(String redictUrl) {
-		this.redictUrl = redictUrl;
-	}
 
 	public Integer getId() {
         return id;

@@ -48,7 +48,12 @@ public class MailBoxService {
 			throw new ServiceException(DBExceptionEnums.ERROR_DB_CONTENT_NULL);
 		return mailMapper.insertSelective(record);
 	}
-	
+	/**
+	 * 通过邮件id查找邮件
+	 */
+	public Tb_mail findMailById(Integer mailId){
+		return mailMapper.selectByPrimaryKey(mailId);
+	}
 	/**
 	 * 根据学生id查找家长
 	 */
@@ -106,5 +111,13 @@ public class MailBoxService {
  		criteria.andMailIdEqualTo(mailId);
  		criteria.andDeletedEqualTo(false);
  		return mailReplyMapper.selectByExample(condition);
+	}
+	/**
+	 * 删除邮件回复
+	 */
+	public int deleteMailReplyByNoticeId(Integer mailId){
+		Tb_mail_reply reply = mailReplyMapper.selectByPrimaryKey(mailId);
+		reply.setDeleted(true);
+ 		return mailReplyMapper.updateByPrimaryKeySelective(reply);
 	}
 }

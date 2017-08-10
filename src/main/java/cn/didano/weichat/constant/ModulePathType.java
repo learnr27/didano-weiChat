@@ -6,6 +6,10 @@ package cn.didano.weichat.constant;
  * @author stephen Created on 2016年12月20日 下午1:16:00
  */
 public enum ModulePathType {
+	MORNING_REPORT("晨检报告", "/base/mailbox/post/findReply_ByNoticeId/"),
+	PRINCIPAL_NOTICE("园长通知", "/base/mailbox/post/findReply_ByNoticeId/"),
+	SHUTTLE_REPORT("接送报告", "/base/mailbox/post/findReply_ByNoticeId/"),
+	PUBLIC_SIGNAL("公众号", "/base/mailbox/post/findReply_ByNoticeId/"),
 	PRINCIPAL_MAIL("园长信箱", "/base/mailbox/post/findReply_ByNoticeId/");
 
 	
