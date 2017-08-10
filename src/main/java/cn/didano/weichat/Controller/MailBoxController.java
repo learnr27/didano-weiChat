@@ -277,7 +277,6 @@ public class MailBoxController {
 				mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));
 				String title = mails.get(i).getSenderName();
 				String name = title.substring(title.length() - 2, title.length());
-				System.out.println(name);
 				// 设置头像
 				if ("园长".equals(name)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(9);

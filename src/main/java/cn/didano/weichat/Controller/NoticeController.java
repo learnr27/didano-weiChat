@@ -189,6 +189,9 @@ public class NoticeController {
 
 				outList = new OutList<Tb_notice>(notices.size(), notices);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			}else{
+				outList = new OutList<Tb_notice>(notices.size(), notices);
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
