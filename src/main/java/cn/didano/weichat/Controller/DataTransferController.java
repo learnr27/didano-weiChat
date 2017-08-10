@@ -114,6 +114,7 @@ public class DataTransferController {
 					for (Tb_staff tb_staff : staffList) {
 						logger.info("进入插入staff方法");
 						tb_user.setSchoolParentId(null);
+						tb_user.setStudentId(null);
 						tb_user.setStaffId(tb_staff.getId());
 						int type = tb_staff.getType();
 						tb_user.setType(type);

@@ -78,6 +78,7 @@ public class LoginController {
 			logger.info("openId数据为:  " + openId);
 			String mobile = userService.getMobileByOpenId(openId);
 			logger.info("mobile数据为:  " + mobile);
+			logger.info("getRoleSelect session:" + request.getSession().getId());
 			boolean rememberMe = false;
 			UsernamePasswordToken token = new UsernamePasswordToken(openId, mobile, rememberMe);
 			Subject subject = SecurityUtils.getSubject();
