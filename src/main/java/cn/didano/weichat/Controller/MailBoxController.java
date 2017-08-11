@@ -130,7 +130,6 @@ public class MailBoxController {
 		Hand_addressName addressName = null;
 		List<Tb_staff> boss = null;
 		List<Tb_student_parent> parents = null;
-		List<Integer> receiveId = new ArrayList<Integer>();
 		Out<String> back = new Out<String>();
 		try {
 			// 通知id没有时就是写邮件
@@ -141,14 +140,7 @@ public class MailBoxController {
 				parents = mailBoxService.findParentByStudentId(mail_write.getStudentId());
 				boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 				addressName = mailBoxService.selectAddressName(data);
-				// 获取该学校所有园长id
-				for (int i = 0; i < boss.size(); i++) {
-					receiveId.add(boss.get(i).getId());
-				}
-				// 获取该学生其他家长id
-				for (int i = 0; i < parents.size(); i++) {
-					receiveId.add(parents.get(i).getId());
-				}
+			
 				// 插入邮件表
 				Tb_mail mail = new Tb_mail();
 				mail.setContent(mail_write.getContent());
@@ -168,15 +160,28 @@ public class MailBoxController {
 				notice.setSourceId(mail.getId());
 				noticeService.insertNoticeSelective(notice);
 				int rowNum = 0;
-				Tb_noticeUser noticeUser = new Tb_noticeUser();
+				Tb_noticeUser noticeUser = null;
 				// 设置用户标记表
-				for (int i = 0; i < receiveId.size(); i++) {
+				//插入园长接收
+				for (int i = 0; i < boss.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 默认未读
 					noticeUser.setIsRead((byte) 0);
 					noticeUser.setNoticeId(notice.getId());
-					noticeUser.setUserId(receiveId.get(i));
+					noticeUser.setUserId(boss.get(i).getId());
 					noticeUser.setUserType((byte) 31);
+					noticeUser.setCreated(new Date());
+					noticeService.insertNoticeUserSelective(noticeUser);
+					rowNum++;
+				}
+				//插入其他家长接收
+				for (int i = 0; i < parents.size(); i++) {
+					noticeUser = new Tb_noticeUser();
+					// 默认未读
+					noticeUser.setIsRead((byte) 0);
+					noticeUser.setNoticeId(notice.getId());
+					noticeUser.setUserId(parents.get(i).getId());
+					noticeUser.setUserType((byte) 30);
 					noticeUser.setCreated(new Date());
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
