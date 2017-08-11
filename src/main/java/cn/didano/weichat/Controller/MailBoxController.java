@@ -180,7 +180,7 @@ public class MailBoxController {
 					// 默认未读
 					noticeUser.setIsRead((byte) 0);
 					noticeUser.setNoticeId(notice.getId());
-					noticeUser.setUserId(parents.get(i).getId());
+					noticeUser.setUserId(parents.get(i).getParentId());
 					noticeUser.setUserType((byte) 30);
 					noticeUser.setCreated(new Date());
 					noticeService.insertNoticeUserSelective(noticeUser);
@@ -198,18 +198,16 @@ public class MailBoxController {
 				mailReply = new Tb_mail_reply();
 				data = new Hand_UserAndStudent();
 				data.setUserId(mail_write.getUserId());
+				data.setStudentId(mail_write.getStudentId());
 				// 根据登录者的身份设置发送者称呼
 				if (mail_write.getUserType() == 31) {
 					Tb_staff staff = mailBoxService.selectBossById(mail_write.getUserId());
 					mailReply.setSenderName(staff.getName() + "园长");
-					;
 				} else {
 					Hand_addressName parent = mailBoxService.selectAddressName(data);
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
-					;
 				}
 				mailReply.setSenderId(mail_write.getUserId());
-				;
 				mailReply.setContent(mail_write.getContent());
 				mailReply.setCreated(new Date());
 				mailReply.setMailId(mail_write.getMailId());
