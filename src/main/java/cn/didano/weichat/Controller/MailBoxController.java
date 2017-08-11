@@ -76,6 +76,7 @@ public class MailBoxController {
 		try {
 			mails = new ArrayList<Tb_notice>();
 			notices = noticeService.findNoticeByUserId(own_id, user_type);
+			if(notices.size()!=0){
 			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
@@ -93,6 +94,10 @@ public class MailBoxController {
 					}
 				}
 				
+				outList = new OutList<Tb_notice>(mails.size(), mails);
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			}
+			}else{
 				outList = new OutList<Tb_notice>(mails.size(), mails);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
