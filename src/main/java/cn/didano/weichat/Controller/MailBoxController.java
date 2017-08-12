@@ -225,7 +225,7 @@ public class MailBoxController {
 				for (int i = 0; i < parents.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 设置发送者家长为默认已读，其他家长默认未读
-					if(parents.get(i).getParentId()==mail_write.getUserId()){
+					if(parents.get(i).getParentId().equals(mail_write.getUserId())){
 					noticeUser.setIsRead((byte) 1);
 					}else{
 					noticeUser.setIsRead((byte) 0);
