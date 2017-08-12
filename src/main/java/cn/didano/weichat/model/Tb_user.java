@@ -30,6 +30,10 @@ public class Tb_user {
 
 	private Integer staffId;
 
+	private Integer adminId;
+
+	private Integer schoolAdminId;
+
 	private String description;
 
 	private Set<Tb_role> roles = new HashSet<>(0);
@@ -144,6 +148,22 @@ public class Tb_user {
 
 	public void setStaffId(Integer staffId) {
 		this.staffId = staffId;
+	}
+
+	public Integer getAdminId() {
+		return adminId;
+	}
+
+	public void setAdminId(Integer adminId) {
+		this.adminId = adminId;
+	}
+
+	public Integer getSchoolAdminId() {
+		return schoolAdminId;
+	}
+
+	public void setSchoolAdminId(Integer schoolAdminId) {
+		this.schoolAdminId = schoolAdminId;
 	}
 
 	public String getDescription() {

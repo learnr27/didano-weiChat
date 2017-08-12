@@ -15,6 +15,8 @@
     <result column="school_parent_id" jdbcType="INTEGER" property="schoolParentId" />
     <result column="student_id" jdbcType="INTEGER" property="studentId" />
     <result column="staff_id" jdbcType="INTEGER" property="staffId" />
+    <result column="admin_id" jdbcType="INTEGER" property="adminId" />
+    <result column="school_admin_id" jdbcType="INTEGER" property="schoolAdminId" />
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -77,7 +79,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, openid, officialAccountId, nickname, mobile, station, create_date, update_date, 
-    type, delete_flag, school_parent_id, student_id, staff_id, description
+    type, delete_flag, school_parent_id, student_id, staff_id, admin_id, school_admin_id, 
+    description
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_userExample" resultMap="BaseResultMap">
     select
@@ -118,12 +121,14 @@
       mobile, station, create_date, 
       update_date, type, delete_flag, 
       school_parent_id, student_id, staff_id, 
-      description)
+      admin_id, school_admin_id, description
+      )
     values (#{openid,jdbcType=VARCHAR}, #{officialaccountid,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{station,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, 
       #{updateDate,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{deleteFlag,jdbcType=BIT}, 
       #{schoolParentId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER}, 
-      #{description,jdbcType=VARCHAR})
+      #{adminId,jdbcType=INTEGER}, #{schoolAdminId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_user">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -167,6 +172,12 @@
       <if test="staffId != null">
         staff_id,
       </if>
+      <if test="adminId != null">
+        admin_id,
+      </if>
+      <if test="schoolAdminId != null">
+        school_admin_id,
+      </if>
       <if test="description != null">
         description,
       </if>
@@ -207,6 +218,12 @@
       </if>
       <if test="staffId != null">
         #{staffId,jdbcType=INTEGER},
+      </if>
+      <if test="adminId != null">
+        #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolAdminId != null">
+        #{schoolAdminId,jdbcType=INTEGER},
       </if>
       <if test="description != null">
         #{description,jdbcType=VARCHAR},
@@ -261,6 +278,12 @@
       <if test="record.staffId != null">
         staff_id = #{record.staffId,jdbcType=INTEGER},
       </if>
+      <if test="record.adminId != null">
+        admin_id = #{record.adminId,jdbcType=INTEGER},
+      </if>
+      <if test="record.schoolAdminId != null">
+        school_admin_id = #{record.schoolAdminId,jdbcType=INTEGER},
+      </if>
       <if test="record.description != null">
         description = #{record.description,jdbcType=VARCHAR},
       </if>
@@ -284,6 +307,8 @@
       school_parent_id = #{record.schoolParentId,jdbcType=INTEGER},
       student_id = #{record.studentId,jdbcType=INTEGER},
       staff_id = #{record.staffId,jdbcType=INTEGER},
+      admin_id = #{record.adminId,jdbcType=INTEGER},
+      school_admin_id = #{record.schoolAdminId,jdbcType=INTEGER},
       description = #{record.description,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -328,6 +353,12 @@
       <if test="staffId != null">
         staff_id = #{staffId,jdbcType=INTEGER},
       </if>
+      <if test="adminId != null">
+        admin_id = #{adminId,jdbcType=INTEGER},
+      </if>
+      <if test="schoolAdminId != null">
+        school_admin_id = #{schoolAdminId,jdbcType=INTEGER},
+      </if>
       <if test="description != null">
         description = #{description,jdbcType=VARCHAR},
       </if>
@@ -348,6 +379,8 @@
       school_parent_id = #{schoolParentId,jdbcType=INTEGER},
       student_id = #{studentId,jdbcType=INTEGER},
       staff_id = #{staffId,jdbcType=INTEGER},
+      admin_id = #{adminId,jdbcType=INTEGER},
+      school_admin_id = #{schoolAdminId,jdbcType=INTEGER},
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

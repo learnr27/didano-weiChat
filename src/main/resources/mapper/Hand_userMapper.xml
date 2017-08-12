@@ -5,7 +5,8 @@
   
   <sql id="Base_Column_List">
     id, openid, officialAccountId, nickname, mobile, station, create_date, update_date, 
-    type, delete_flag, school_parent_id, student_id, staff_id, description
+    type, delete_flag, school_parent_id, student_id, staff_id, admin_id, school_admin_id, 
+    description
   </sql>
   
   <select id="getUsersByopenId" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_user">
