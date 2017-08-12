@@ -6,14 +6,11 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +26,6 @@ import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.Hand_userRoleRel;
 import cn.didano.weichat.json.In_ParentSearchUserid;
 import cn.didano.weichat.json.In_StaffSearchUserid;
-import cn.didano.weichat.json.In_User_Login;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_RoleSelect;
@@ -57,10 +53,10 @@ public class LoginController {
 	 * 获取登录用户的信息,获取成功返回当前用户的角色列表;
 	 */
 	@ApiOperation(value = "用户登录,加载当前用户的角色列表", notes = "用户登录,加载当前用户的角色列表")
-	@PostMapping(value = "/getRoleSelect")
+	@GetMapping(value = "/getRoleSelect/{openid}")
 	@ResponseBody
 	public Out<ArrayList<Hand_RoleSelect>> getRoleSelect(
-			@ApiParam(value = "用户登录", required = true) @RequestBody String openid, HttpServletRequest request) {
+			@ApiParam(value = "用户登录", required = true) @PathVariable String openid, HttpServletRequest request) {
 		logger.info("访问 LoginControler: getRoleSelect");
 		Out<ArrayList<Hand_RoleSelect>> back = new Out<ArrayList<Hand_RoleSelect>>();
 		ArrayList<Hand_RoleSelect> hand_RoleSelects = new ArrayList<Hand_RoleSelect>();
