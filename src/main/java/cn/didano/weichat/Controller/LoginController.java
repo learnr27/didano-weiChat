@@ -127,6 +127,7 @@ public class LoginController {
 				hand_Role_Weichat.setSchoolName(school.getSchoolName());
 				hand_RoleSelect2.getList().add(hand_Role_Weichat);
 			}
+			
 			// 老师
 			List<Hand_staff> teacherList = userService.getTeacherByOpenid(openId);
 			for (Hand_staff staff : teacherList) {
