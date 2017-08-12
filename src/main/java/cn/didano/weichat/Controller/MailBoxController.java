@@ -25,6 +25,7 @@ import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.constant.NoticeModel;
 import cn.didano.weichat.constant.NoticeTop;
 import cn.didano.weichat.constant.NoticeType;
+import cn.didano.weichat.constant.RoleType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_MailBox_Reply;
 import cn.didano.weichat.json.Out;
@@ -55,6 +56,48 @@ public class MailBoxController {
 	private NoticeService noticeService;
 
 	/**
+	 * 通过家长id查询mailId
+	 *
+	 * @param c_channel
+	 * @return
+	 */
+	@ApiOperation(value = " 通过家长id查询mailId", notes = " 通过家长id查询mailId")
+	@PostMapping(value = "parentGetMailId/{own_id}")
+	@ResponseBody
+	public Out<Integer> parentGetMailId(
+			@ApiParam(value = "通过家长id查询mailId", required = true) @PathVariable("own_id") Integer own_id) {
+		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
+
+		List<Tb_notice> notices = null;
+		int mailId= 0;
+		Out<Integer> back = new Out<Integer>();
+		try {
+			   notices= noticeService.findNoticeByUserId(own_id, (byte)RoleType.PARENT);
+			   for (int i = 0; i < notices.size(); i++) {
+				if(notices.get(i).getNoticeType()==NoticeType.PRINCIPAL_MAIL.getIndex()){
+					mailId=notices.get(i).getSourceId();
+				}
+					
+			}
+				if (mailId > 0) {
+					back.setBackTypeWithLog(mailId,BackType.SUCCESS_SEARCH_NORMAL);
+				} else {
+					// 更新有问题
+					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+				}
+				// 回复邮件
+			
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+	/**
 	 * 根据园长id,查看园长信箱列表,园长信箱模块
 	 *
 	 * @throws ParseException
@@ -76,6 +119,7 @@ public class MailBoxController {
 		try {
 			mails = new ArrayList<Tb_notice>();
 			notices = noticeService.findNoticeByUserId(own_id, user_type);
+			if(notices.size()!=0){
 			// 转换时间格式
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			String date = null;
@@ -93,6 +137,10 @@ public class MailBoxController {
 					}
 				}
 				
+				outList = new OutList<Tb_notice>(mails.size(), mails);
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			}
+			}else{
 				outList = new OutList<Tb_notice>(mails.size(), mails);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
@@ -116,7 +164,7 @@ public class MailBoxController {
 	@ApiOperation(value = " 写邮件，回复邮件", notes = " 写邮件，回复邮件")
 	@PostMapping(value = "write_mail")
 	@ResponseBody
-	public Out<String> write_mail(
+	public Out<Integer> write_mail(
 			@ApiParam(value = "写邮件，回复邮件", required = true) @RequestBody In_MailBox_Reply mail_write) {
 		logger.info("MailBoxController:write_mail,mail_write=" + mail_write);
 
@@ -125,8 +173,7 @@ public class MailBoxController {
 		Hand_addressName addressName = null;
 		List<Tb_staff> boss = null;
 		List<Tb_student_parent> parents = null;
-		List<Integer> receiveId = new ArrayList<Integer>();
-		Out<String> back = new Out<String>();
+		Out<Integer> back = new Out<Integer>();
 		try {
 			// 通知id没有时就是写邮件
 			if (mail_write.getMailId() == 0) {
@@ -136,14 +183,7 @@ public class MailBoxController {
 				parents = mailBoxService.findParentByStudentId(mail_write.getStudentId());
 				boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 				addressName = mailBoxService.selectAddressName(data);
-				// 获取该学校所有园长id
-				for (int i = 0; i < boss.size(); i++) {
-					receiveId.add(boss.get(i).getId());
-				}
-				// 获取该学生其他家长id
-				for (int i = 0; i < parents.size(); i++) {
-					receiveId.add(parents.get(i).getId());
-				}
+			
 				// 插入邮件表
 				Tb_mail mail = new Tb_mail();
 				mail.setContent(mail_write.getContent());
@@ -163,22 +203,34 @@ public class MailBoxController {
 				notice.setSourceId(mail.getId());
 				noticeService.insertNoticeSelective(notice);
 				int rowNum = 0;
-				Tb_noticeUser noticeUser = new Tb_noticeUser();
+				Tb_noticeUser noticeUser = null;
 				// 设置用户标记表
-				for (int i = 0; i < receiveId.size(); i++) {
+				//插入园长接收
+				for (int i = 0; i < boss.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 默认未读
 					noticeUser.setIsRead((byte) 0);
 					noticeUser.setNoticeId(notice.getId());
-					noticeUser.setUserId(receiveId.get(i));
+					noticeUser.setUserId(boss.get(i).getId());
 					noticeUser.setUserType((byte) 31);
 					noticeUser.setCreated(new Date());
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
 				}
+				//插入其他家长接收
+				for (int i = 0; i < parents.size(); i++) {
+					noticeUser = new Tb_noticeUser();
+					// 默认未读
+					noticeUser.setIsRead((byte) 0);
+					noticeUser.setNoticeId(notice.getId());
+					noticeUser.setUserId(parents.get(i).getParentId());
+					noticeUser.setUserType((byte) 30);
+					noticeUser.setCreated(new Date());
+					noticeService.insertNoticeUserSelective(noticeUser);
+					rowNum++;
+				}			
 				if (rowNum > 0) {
-					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
-
+					back.setBackTypeWithLog(mail.getId(),BackType.SUCCESS_INSERT);
 				} else {
 					// 更新有问题
 					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
@@ -188,18 +240,16 @@ public class MailBoxController {
 				mailReply = new Tb_mail_reply();
 				data = new Hand_UserAndStudent();
 				data.setUserId(mail_write.getUserId());
+				data.setStudentId(mail_write.getStudentId());
 				// 根据登录者的身份设置发送者称呼
 				if (mail_write.getUserType() == 31) {
 					Tb_staff staff = mailBoxService.selectBossById(mail_write.getUserId());
 					mailReply.setSenderName(staff.getName() + "园长");
-					;
 				} else {
 					Hand_addressName parent = mailBoxService.selectAddressName(data);
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
-					;
 				}
 				mailReply.setSenderId(mail_write.getUserId());
-				;
 				mailReply.setContent(mail_write.getContent());
 				mailReply.setCreated(new Date());
 				mailReply.setMailId(mail_write.getMailId());
@@ -209,6 +259,7 @@ public class MailBoxController {
 				// 刷新其他接收者的时间，并且设置为未读，好让别人回复时，其他人收到新消息后再消息列表会排在前面
 				int row = noticeService.refreshTime(notice.getId());
 				if (rowNum > 0) {
+					
 					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum + ",row=" + row);
 
 				} else {
@@ -277,7 +328,6 @@ public class MailBoxController {
 				mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));
 				String title = mails.get(i).getSenderName();
 				String name = title.substring(title.length() - 2, title.length());
-				System.out.println(name);
 				// 设置头像
 				if ("园长".equals(name)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(9);
