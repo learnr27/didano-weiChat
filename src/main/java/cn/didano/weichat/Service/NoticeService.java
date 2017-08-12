@@ -85,12 +85,21 @@ public class NoticeService {
 	 * 根据通知id更新用户表的时间
 	 */
 	public int refreshTime(Integer noticeId){
-		
-		Tb_notice notice = noticeMapper.selectByPrimaryKey(noticeId);
-		notice.setCreated(new Date());
-		//设置为未读状态
-		notice.setIs_read((byte)0);
-		return noticeMapper.updateByPrimaryKeySelective(notice);
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andNoticeIdEqualTo(noticeId);
+		criteria.andDeletedEqualTo(false);
+		List<Tb_noticeUser> noticeUsers = noticeUserMapper.selectByExample(condition);
+		int row =0;
+		for (int i = 0; i < noticeUsers.size(); i++) {
+			noticeUsers.get(i).setCreated(new Date());
+			noticeUsers.get(i).setIsRead((byte)0);
+			noticeUserMapper.updateByPrimaryKeySelective(noticeUsers.get(i));
+			row++;
+		}
+
+		return row;
 	}
 	/**
 	 * 根据通知类型查找头像
@@ -154,6 +163,7 @@ public class NoticeService {
 		condition.setOrderByClause("created");
 		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByExample(condition);
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
+		if(noticeUser.size()!=0) {
 		Tb_notice notice = null;
 
 		// 查询出置顶的消息
@@ -181,7 +191,7 @@ public class NoticeService {
 			notice.setIs_read(noticeUser.get(i).getIsRead());
 			notices.add(notice);
 		}
-
+		}
 		return notices;
 	}
 
