@@ -25,6 +25,7 @@ import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.constant.NoticeModel;
 import cn.didano.weichat.constant.NoticeTop;
 import cn.didano.weichat.constant.NoticeType;
+import cn.didano.weichat.constant.RoleType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_MailBox_Reply;
 import cn.didano.weichat.json.Out;
@@ -54,6 +55,48 @@ public class MailBoxController {
 	@Autowired
 	private NoticeService noticeService;
 
+	/**
+	 * 通过家长id查询mailId
+	 *
+	 * @param c_channel
+	 * @return
+	 */
+	@ApiOperation(value = " 通过家长id查询mailId", notes = " 通过家长id查询mailId")
+	@PostMapping(value = "parentGetMailId/{own_id}")
+	@ResponseBody
+	public Out<Integer> parentGetMailId(
+			@ApiParam(value = "通过家长id查询mailId", required = true) @PathVariable("own_id") Integer own_id) {
+		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
+
+		List<Tb_notice> notices = null;
+		int mailId= 0;
+		Out<Integer> back = new Out<Integer>();
+		try {
+			   notices= noticeService.findNoticeByUserId(own_id, (byte)RoleType.PARENT);
+			   for (int i = 0; i < notices.size(); i++) {
+				if(notices.get(i).getNoticeType()==NoticeType.PRINCIPAL_MAIL.getIndex()){
+					mailId=notices.get(i).getSourceId();
+				}
+					
+			}
+				if (mailId > 0) {
+					back.setBackTypeWithLog(mailId,BackType.SUCCESS_SEARCH_NORMAL);
+				} else {
+					// 更新有问题
+					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+				}
+				// 回复邮件
+			
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
 	/**
 	 * 根据园长id,查看园长信箱列表,园长信箱模块
 	 *
@@ -121,7 +164,7 @@ public class MailBoxController {
 	@ApiOperation(value = " 写邮件，回复邮件", notes = " 写邮件，回复邮件")
 	@PostMapping(value = "write_mail")
 	@ResponseBody
-	public Out<String> write_mail(
+	public Out<Integer> write_mail(
 			@ApiParam(value = "写邮件，回复邮件", required = true) @RequestBody In_MailBox_Reply mail_write) {
 		logger.info("MailBoxController:write_mail,mail_write=" + mail_write);
 
@@ -130,7 +173,7 @@ public class MailBoxController {
 		Hand_addressName addressName = null;
 		List<Tb_staff> boss = null;
 		List<Tb_student_parent> parents = null;
-		Out<String> back = new Out<String>();
+		Out<Integer> back = new Out<Integer>();
 		try {
 			// 通知id没有时就是写邮件
 			if (mail_write.getMailId() == 0) {
@@ -185,10 +228,9 @@ public class MailBoxController {
 					noticeUser.setCreated(new Date());
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
-				}
+				}			
 				if (rowNum > 0) {
-					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum);
-
+					back.setBackTypeWithLog(mail.getId(),BackType.SUCCESS_INSERT);
 				} else {
 					// 更新有问题
 					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
@@ -217,6 +259,7 @@ public class MailBoxController {
 				// 刷新其他接收者的时间，并且设置为未读，好让别人回复时，其他人收到新消息后再消息列表会排在前面
 				int row = noticeService.refreshTime(notice.getId());
 				if (rowNum > 0) {
+					
 					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum + ",row=" + row);
 
 				} else {
