@@ -163,6 +163,7 @@ public class NoticeService {
 		condition.setOrderByClause("created");
 		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByExample(condition);
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
+		if(notices.size()!=0) {
 		Tb_notice notice = null;
 
 		// 查询出置顶的消息
@@ -190,7 +191,7 @@ public class NoticeService {
 			notice.setIs_read(noticeUser.get(i).getIsRead());
 			notices.add(notice);
 		}
-
+		}
 		return notices;
 	}
 
