@@ -42,9 +42,9 @@ public class FunctionController {
 	private UserService userService;
 	
 	/*
-	 * 获取欢迎页面区域功能项目;
+	 * 获取欢迎页面区域功能项目,查询tb_function表的数据后在方法中根据角色固定角色拥有的功能;
 	 */
-	@ApiOperation(value = "功能项目查询", notes = "欢迎页面按分区进行功能项目查询")
+	@ApiOperation(value = "角色功能项目查询", notes = "欢迎页面顶部根据角色来加载功能项目")
 	@GetMapping(value = "/getAreaItems/{roletype}")
 	@ResponseBody
 	public Out<List<Tb_function>> addFunctionsToRole(@PathVariable Integer roletype) {

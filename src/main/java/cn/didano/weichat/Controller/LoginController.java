@@ -76,13 +76,6 @@ public class LoginController {
 				openId = user.getOpenid();
 			}
 			logger.info("openId数据为:  " + openId);
-			String mobile = userService.getMobileByOpenId(openId);
-			logger.info("mobile数据为:  " + mobile);
-			boolean rememberMe = false;
-			UsernamePasswordToken token = new UsernamePasswordToken(openId, mobile, rememberMe);
-			Subject subject = SecurityUtils.getSubject();
-			subject.login(token);
-			user = (Tb_user) subject.getPrincipal();
 
 			Hand_RoleSelect hand_RoleSelect1 = new Hand_RoleSelect();
 			Hand_RoleSelect hand_RoleSelect2 = new Hand_RoleSelect();
@@ -116,6 +109,8 @@ public class LoginController {
 			List<Out_Student_Search> studenList = userService.getStudentListByOpenid(openId);
 			for (Out_Student_Search student : studenList) {
 				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.PARENT);
+				hand_Role_Weichat.setRoleName(RoleType.PARENT_NAME);
 				hand_Role_Weichat.setId(student.getId());
 				hand_Role_Weichat.setParentId(student.getParentId());
 				hand_Role_Weichat.setSchoolId(student.getSchoolId());
@@ -128,6 +123,8 @@ public class LoginController {
 			List<Hand_staff> schoolList = userService.getSchoolListByOpenid(openId);
 			for (Hand_staff school : schoolList) {
 				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.PRINCIPAL);
+				hand_Role_Weichat.setRoleName(RoleType.PRINCIPAL_NAME);
 				hand_Role_Weichat.setId(school.getId());
 				hand_Role_Weichat.setStaffId(school.getStaffId());
 
@@ -139,6 +136,8 @@ public class LoginController {
 			List<Hand_staff> teacherList = userService.getTeacherByOpenid(openId);
 			for (Hand_staff staff : teacherList) {
 				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.TEACHER);
+				hand_Role_Weichat.setRoleName(RoleType.TEACHER_NAME);
 				hand_Role_Weichat.setId(staff.getId());
 				hand_Role_Weichat.setStaffId(staff.getStaffId());
 				hand_Role_Weichat.setClassId(staff.getClassId());

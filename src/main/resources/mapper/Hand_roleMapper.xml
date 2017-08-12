@@ -23,5 +23,14 @@
 	  AND ur.user_id = #{id,jdbcType=INTEGER}
 	  AND ur.status = 0
   </select>
+  
+  <select id="getFunctionsByRoletype" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_role">
+  	SELECT r.*
+	FROM tb_role r,
+	  tb_user_role_rel ur
+	WHERE ur.role_id = r.id
+	  AND ur.user_id = #{id,jdbcType=INTEGER}
+	  AND ur.status = 0
+  </select>
  
 </mapper> 

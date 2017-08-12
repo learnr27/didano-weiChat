@@ -4,21 +4,20 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import cn.didano.weichat.repository.WxMpInMemoryConfigStorageContainer;
+import cn.didano.weichat.util.CommonUtil;
 import cn.didano.weichat.util.ContextUtil;
+import cn.didano.weichat.util.Oauth2Test;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.impl.WxMpServiceApacheHttpClientImpl;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
-import me.chanjar.weixin.mp.bean.result.WxMpUser;
 
 /**
  * @author Binary Wang(https://github.com/binarywang)
@@ -64,60 +63,47 @@ public class StructureController {
 		// return null;
 		return modelAndView;
 	}
+	
+	
+	@ApiOperation(value = "测试1", notes = "测试1")
+	@GetMapping(value = "/getAuthOpenidTest1")
+	public String getAuthOpenidTest1() {
+		String code = null;
+		try {
+			WxMpService wxMpService = ContextUtil.act.getBean(WxMpService.class);
+			wxMpService.setWxMpConfigStorage(WxMpInMemoryConfigStorageContainer.findByOriId("gh_c0a5d7478a57"));
 
-	/*
-	 * @Autowired private WxMpInMemoryConfigStorageContainer wxMpInfoRepository;
-	 */
+			String source = "www.didano.cn/wechat_v2/structure/babycenter?oriid=gh_c0a5d7478a57";
+			String redirectURI = CommonUtil.urlEncodeUTF8(source);
+			String scope = "snsapi_base"; 
+			String state = "state";
+			System.out.println(redirectURI);
+			 
+			 System.out.println("123456");
+			 String url = wxMpService.oauth2buildAuthorizationUrl(redirectURI, scope, state);
+			 
+			System.out.println("url地址值为:" + url);
+			
+			code = wxMpService.getOAuth2Code(url);
+			logger.info("获取code的数据为:"+code);
+			
+			//WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+			//wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
+			
+			
+			logger.info("code数据是: " + code);
+		} catch (WxErrorException e) {
+			e.printStackTrace();
+		}
+		return code;
+	}
+	
+	@ApiOperation(value = "测试2", notes = "测试2")
+	@GetMapping(value = "/getAuthOpenidTest2")
+	public void getAuthOpenidTest2() {
+		System.out.println("11");
+		Oauth2Test test2 = new Oauth2Test();
+		test2.oauth2GetCode2();
+	}
 
-	/*
-	 * @GetMapping(produces = "text/plain;charset=utf-8") public ModelAndView
-	 * authGet(
-	 * 
-	 * @RequestParam(name = "signature", required = false) String signature,
-	 * 
-	 * @RequestParam(name = "timestamp", required = false) String timestamp,
-	 * 
-	 * @RequestParam(name = "nonce", required = false) String nonce,
-	 * 
-	 * @RequestParam(name = "echostr", required = false) String echostr) {
-	 * 
-	 * this.logger.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature, timestamp,
-	 * nonce, echostr); ModelAndView view = new ModelAndView();
-	 * 
-	 * String redirectURI="http://www.didano.cn/wechat_v2/OAuthServlet"; String
-	 * scope = "snsapi_userinfo"; String state = "state"; WxMpServiceImpl
-	 * wxMpServiceImpl = ContextUtil.act.getBean(WxMpServiceImpl.class); String url
-	 * = wxMpServiceImpl.oauth2buildAuthorizationUrl(redirectURI,scope,state);
-	 * 
-	 * 
-	 * public WxMpUser getWxMpUser() { System.out.println(url);
-	 * 
-	 * 
-	 * return null; }
-	 * 
-	 * if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)) { throw new
-	 * IllegalArgumentException("请求参数非法，请核实!"); }
-	 * 
-	 * if (this.wxService.checkSignature(timestamp, nonce, signature)) { return
-	 * echostr; }
-	 * 
-	 * return ""; }
-	 */
-
-	/*
-	 * 确定是哪个微信公众号的方法;
-	 */
-	/*
-	 * public Hand_officialaccount ensureOfficialaccount(String originalId) {
-	 * List<Hand_officialaccount> storage = wxMpInfoRepository.init();
-	 * Hand_officialaccount hand_officialaccount = null; if (storage != null &&
-	 * storage.size() > 1) { for (Hand_officialaccount officialaccount : storage) {
-	 * if (originalId == officialaccount.getOriginalId()) { hand_officialaccount =
-	 * officialaccount; } } } return hand_officialaccount; }
-	 */
-
-	/*
-	 * @GetMapping("/babycenter") public ModelAndView LinuxEnvTemperatureInfoGraph()
-	 * { return new ModelAndView("babycenter"); }
-	 */
 }

@@ -112,12 +112,17 @@
   </select>
   
   <select id="getMobileByOpenId" parameterType="java.lang.String" resultType="java.lang.String">
-    SELECT DISTINCT
+  
+  SELECT DISTINCT
+	  mobile
+	FROM tb_user
+	WHERE openid = #{openId,jdbcType=VARCHAR}
+    <!-- SELECT DISTINCT
       wb.phone
     FROM tb_weichat_bind wb,
       tb_weichat w
     WHERE w.id = wb.weichat_id
-        AND w.openid = #{openId,jdbcType=VARCHAR}
+        AND w.openid = #{openId,jdbcType=VARCHAR} -->
   </select>
   
   <select id="getStudentListByMobile" resultType="cn.didano.weichat.json.Out_Student_Search">

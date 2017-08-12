@@ -11,6 +11,8 @@ import java.util.List;
 public class Hand_Role_Weichat {
 
 	private Integer id; // 用户id
+	private Integer roleType;// 用户类型id;
+	private String roleName;// 用户类型名称;
 	private Integer parentId;
 	private Integer staffId; // 员工id;
 	private Integer studentId;
@@ -19,6 +21,22 @@ public class Hand_Role_Weichat {
 	private String className;
 	private int schoolId;
 	private String schoolName;
+
+	public Integer getRoleType() {
+		return roleType;
+	}
+
+	public void setRoleType(Integer roleType) {
+		this.roleType = roleType;
+	}
+
+	public String getRoleName() {
+		return roleName;
+	}
+
+	public void setRoleName(String roleName) {
+		this.roleName = roleName;
+	}
 
 	public Integer getId() {
 		return id;

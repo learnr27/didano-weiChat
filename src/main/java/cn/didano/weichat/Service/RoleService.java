@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import cn.didano.weichat.dao.Hand_roleMapper;
 import cn.didano.weichat.dao.Tb_roleMapper;
+import cn.didano.weichat.model.Tb_function;
 import cn.didano.weichat.model.Tb_role;
 
 @Service
@@ -57,6 +58,11 @@ public class RoleService {
 	public Tb_role getActiveRoleByUserid(Integer userid) {
 		Tb_role role = handRoleMapper.getActiveRoleByUserid(userid);
 		return role;
+	}
+
+	public List<Tb_function> getFunctionsByRoletype(Integer roletype) {
+		List<Tb_function> functionList = handRoleMapper.getFunctionsByRoletype(roletype);
+		return functionList;
 	}
 
 	

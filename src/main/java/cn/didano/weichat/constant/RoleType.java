@@ -8,9 +8,11 @@ package cn.didano.weichat.constant;
 public class RoleType {
 	
 	
-	public final static int SUPER_ADMINISTRATOR = 27;		//超级管理员;
+	public final static int AGENT_ADMINISTRATOR = 25;		//代理商管理员;
+	public final static int PRODUCT_ADMINISTRATOR = 26;		//生产管理员;
+	public final static int SCHOOL_ADMINISTRATOR = 27;		//学校管理员;
 	public final static int ORG_ADMINISTRATOR = 28;			//组织管理员;
-	public final static int SCHOOL_ADMINISTRATOR = 29;		//学校管理员;
+	public final static int SUPER_ADMINISTRATOR = 29;		//超级管理员;
 	public final static int PARENT = 30;					//家长;
 	public final static int PRINCIPAL = 31;					//园长;
 	public final static int TEACHER = 32;					//老师;
@@ -20,9 +22,11 @@ public class RoleType {
 	
 	
 	
-	public final static String SUPER_ADMINISTRATOR_NAME = "超级管理员";		//超级管理员;
-	public final static String ORG_ADMINISTRATOR_NAME = "组织管理员";			//组织管理员;
+	public final static String AGENT_NAME = "代理商管理员";					//代理商管理员;
+	public final static String PRODUCT_NAME = "生产管理员";					//生产管理员;
 	public final static String SCHOOL_ADMINISTRATOR_NAME = "学校管理员";		//学校管理员;
+	public final static String ORG_ADMINISTRATOR_NAME = "组织管理员";			//组织管理员;
+	public final static String SUPER_ADMINISTRATOR_NAME = "超级管理员";		//超级管理员;
 	public final static String PARENT_NAME = "家长";							//家长;
 	public final static String PRINCIPAL_NAME = "园长";						//园长;
 	public final static String TEACHER_NAME = "老师";						//老师;
