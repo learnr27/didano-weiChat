@@ -267,12 +267,10 @@ public class MailBoxController {
 				// 刷新其他接收者的时间，并且设置为未读，好让别人回复时，其他人收到新消息后再消息列表会排在前面
 				int row = noticeService.refreshTime(notice.getId());
 				if (rowNum > 0) {
-
-					back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "rowNum=" + rowNum + ",row=" + row);
-
+					back.setBackTypeWithLog(mail_write.getMailId(), BackType.SUCCESS_INSERT);
 				} else {
 					// 更新有问题
-					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=");
+					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum="+row);
 				}
 			}
 		} catch (ServiceException e) {
