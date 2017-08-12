@@ -73,6 +73,7 @@ public class MailBoxController {
 		Out<Integer> back = new Out<Integer>();
 		try {
 			   notices= noticeService.findNoticeByUserId(own_id, (byte)RoleType.PARENT);
+			   //找出邮件的通知
 			   for (int i = 0; i < notices.size(); i++) {
 				if(notices.get(i).getNoticeType()==NoticeType.PRINCIPAL_MAIL.getIndex()){
 					mailId=notices.get(i).getSourceId();
