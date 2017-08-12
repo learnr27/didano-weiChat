@@ -60,20 +60,15 @@ public class LoginController {
 	@PostMapping(value = "/getRoleSelect")
 	@ResponseBody
 	public Out<ArrayList<Hand_RoleSelect>> getRoleSelect(
-			@ApiParam(value = "用户登录", required = true) @RequestBody In_User_Login inUser, HttpServletRequest request) {
+			@ApiParam(value = "用户登录", required = true) @RequestBody String openid, HttpServletRequest request) {
 		logger.info("访问 LoginControler: getRoleSelect");
 		Out<ArrayList<Hand_RoleSelect>> back = new Out<ArrayList<Hand_RoleSelect>>();
 		ArrayList<Hand_RoleSelect> hand_RoleSelects = new ArrayList<Hand_RoleSelect>();
-		Tb_user user = null;
 		try {
-			// 获取账号信息
-			user = new Tb_user();
-			BeanUtils.copyProperties(user, inUser);
-			// String openId = user.getOpenid();
 			String openId = null;
 			openId = request.getParameter("openid");
 			if (openId == null) {
-				openId = user.getOpenid();
+				openId = openid;
 			}
 			logger.info("openId数据为:  " + openId);
 
@@ -132,6 +127,7 @@ public class LoginController {
 				hand_Role_Weichat.setSchoolName(school.getSchoolName());
 				hand_RoleSelect2.getList().add(hand_Role_Weichat);
 			}
+			
 			// 老师
 			List<Hand_staff> teacherList = userService.getTeacherByOpenid(openId);
 			for (Hand_staff staff : teacherList) {
@@ -146,7 +142,7 @@ public class LoginController {
 				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
 				hand_RoleSelect3.getList().add(hand_Role_Weichat);
 			}
-			// 医生,后勤,行政暂时没有做
+			// 医生,后勤,行政暂时没有做;
 			hand_RoleSelect1.setNum(hand_RoleSelect1.getList().size());
 			hand_RoleSelect2.setNum(hand_RoleSelect2.getList().size());
 			hand_RoleSelect3.setNum(hand_RoleSelect3.getList().size());
@@ -178,17 +174,9 @@ public class LoginController {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());
 			back.setServiceExceptionWithLog(e.getExceptionEnums());
-		} catch (UnknownAccountException e) {
-			// 帐号不存在异常;
+		} catch (Exception e) {
 			logger.warn(e.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_UNKNOWN_USER, e.getMessage());
-		} catch (IncorrectCredentialsException e) {
-			// 帐号或密码错误异常;
-			logger.warn(e.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_INCORRECT_USER, e.getMessage());
-		} catch (Exception ex) {
-			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, e.getMessage());
 		}
 		return back;
 	}
