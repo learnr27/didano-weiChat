@@ -84,17 +84,23 @@ public class NoticeService {
 	/**
 	 * 根据通知id更新用户表的时间
 	 */
-	public int refreshTime(Integer noticeId){
+	public int refreshTime(Integer noticeId,Integer userId){
 		Tb_noticeUserExample condition = new Tb_noticeUserExample();
 		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
 		// 对于已经deleted=1的不显示 禁用不显示
 		criteria.andNoticeIdEqualTo(noticeId);
-		criteria.andDeletedEqualTo(false);
 		List<Tb_noticeUser> noticeUsers = noticeUserMapper.selectByExample(condition);
 		int row =0;
 		for (int i = 0; i < noticeUsers.size(); i++) {
 			noticeUsers.get(i).setCreated(new Date());
+			if(noticeUsers.get(i).getUserId().equals(userId)){
+			noticeUsers.get(i).setIsRead((byte)1);
+			}else{
 			noticeUsers.get(i).setIsRead((byte)0);
+			}
+			if(noticeUsers.get(i).getDeleted()==true){
+				noticeUsers.get(i).setDeleted(false);
+			}
 			noticeUserMapper.updateByPrimaryKeySelective(noticeUsers.get(i));
 			row++;
 		}

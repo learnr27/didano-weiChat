@@ -233,7 +233,7 @@ public class NoticeController {
 	}
 
 	/**
-	 * 0 用户删除自己的消息
+	 *  用户删除自己的消息
 	 *
 	 * @param teacher_id
 	 * @return

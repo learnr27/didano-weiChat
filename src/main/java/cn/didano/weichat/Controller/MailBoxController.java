@@ -265,7 +265,7 @@ public class MailBoxController {
 				int rowNum = mailBoxService.replyMail(mailReply);
 				Tb_notice notice = noticeService.findNoticeBySourceId(mail_write.getMailId(), (byte) 4).get(0);
 				// 刷新其他接收者的时间，并且设置为未读，好让别人回复时，其他人收到新消息后再消息列表会排在前面
-				int row = noticeService.refreshTime(notice.getId());
+				int row = noticeService.refreshTime(notice.getId(),mail_write.getUserId());
 				if (rowNum > 0) {
 					back.setBackTypeWithLog(mail_write.getMailId(), BackType.SUCCESS_INSERT);
 				} else {
