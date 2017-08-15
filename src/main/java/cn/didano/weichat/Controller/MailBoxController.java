@@ -64,27 +64,31 @@ public class MailBoxController {
 	@ApiOperation(value = " 通过家长id查询mailId", notes = " 通过家长id查询mailId")
 	@PostMapping(value = "parentGetMailId/{own_id}")
 	@ResponseBody
-	public Out<Tb_notice> parentGetMailId(
+	public Out<Integer> parentGetMailId(
 			@ApiParam(value = "通过家长id查询mailId", required = true) @PathVariable("own_id") Integer own_id) {
 		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
 
 		List<Tb_notice> notices = null;
-		Tb_notice notice = null;
 		int mailId = 0;
-		Out<Tb_notice> back = new Out<Tb_notice>();
+		Out<Integer> back = new Out<Integer>();
 		try {
 			notices = noticeService.findNoticeByUserId(own_id, (byte) RoleType.PARENT);
 			if (notices.size() != 0) {
 				// 找出邮件的通知
 				for (int i = 0; i < notices.size(); i++) {
 					if (notices.get(i).getNoticeType() == NoticeType.PRINCIPAL_MAIL.getIndex()) {
-						notice = notices.get(i);
+						mailId = notices.get(i).getSourceId();
 					}
 				}
-				back.setBackTypeWithLog(notice, BackType.SUCCESS_SEARCH_NORMAL);
+				if (mailId > 0) {
+					back.setBackTypeWithLog(mailId, BackType.SUCCESS_SEARCH_NORMAL);
+				} else {
+					// 更新有问题
+					back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, "rowNum=");
+				}
 
 			} else {	
-					back.setBackTypeWithLog(notice, BackType.SUCCESS_SEARCH_NORMAL);
+					back.setBackTypeWithLog(mailId, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
