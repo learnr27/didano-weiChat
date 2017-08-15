@@ -56,39 +56,44 @@ public class MailBoxController {
 	private NoticeService noticeService;
 
 	/**
-	 * 通过家长id查询mailId
+	 * 家长页面点击园长信箱
 	 *
 	 * @param c_channel
 	 * @return
 	 */
-	@ApiOperation(value = " 通过家长id查询mailId", notes = " 通过家长id查询mailId")
+	@ApiOperation(value = " 家长页面点击园长信箱", notes = " 家长页面点击园长信箱")
 	@PostMapping(value = "parentGetMailId/{own_id}")
 	@ResponseBody
-	public Out<Integer> parentGetMailId(
-			@ApiParam(value = "通过家长id查询mailId", required = true) @PathVariable("own_id") Integer own_id) {
+	public Out<Hand_mailRecord> parentGetMailId(
+			@ApiParam(value = "家长页面点击园长信箱", required = true) @PathVariable("own_id") Integer own_id) {
 		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
 
 		List<Tb_notice> notices = null;
 		int mailId = 0;
-		Out<Integer> back = new Out<Integer>();
+		Hand_mailRecord data = null;
+		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
 		try {
+			
 			notices = noticeService.findNoticeByUserId(own_id, (byte) RoleType.PARENT);
 			if (notices.size() != 0) {
 				// 找出邮件的通知
 				for (int i = 0; i < notices.size(); i++) {
 					if (notices.get(i).getNoticeType() == NoticeType.PRINCIPAL_MAIL.getIndex()) {
 						mailId = notices.get(i).getSourceId();
+						data = findReply_ByNoticeId(mailId).getData();
+						//设置为已读
+						noticeService.setNoticeRead(own_id, notices.get(i).getId());
 					}
 				}
 				if (mailId > 0) {
-					back.setBackTypeWithLog(mailId, BackType.SUCCESS_SEARCH_NORMAL);
+					back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 				} else {
 					// 更新有问题
-					back.setBackTypeWithLog(BackType.FAIL_SEARCH_NORMAL, "rowNum=");
+					back.setBackTypeWithLog(data,BackType.FAIL_SEARCH_NORMAL);
 				}
 
 			} else {	
-					back.setBackTypeWithLog(mailId, BackType.SUCCESS_SEARCH_NORMAL);
+					back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
@@ -328,7 +333,7 @@ public class MailBoxController {
 				}
 			});
 			// 转换时间格式
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 			mail.setDate(sdf.format(mail.getCreated()));
 			for (int i = 0; i < mails.size(); i++) {
 				mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));

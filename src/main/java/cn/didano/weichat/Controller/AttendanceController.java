@@ -285,7 +285,7 @@ public class AttendanceController {
 		Out<OutList<Hand_clasStudentArriveAndLeave>> back = new Out<OutList<Hand_clasStudentArriveAndLeave>>();
 		try {
 			attendanceData = new Hand_attendanceData();
-			info = new Hand_clasStudentArriveAndLeave();
+			
 			studentInfos = new ArrayList<Hand_clasStudentArriveAndLeave>();
 			attendanceData.setSchool_id(school_id);
 			attendanceData.setDate(date);
@@ -315,11 +315,13 @@ public class AttendanceController {
 					map.put(class_id, mapDate);
 				}
 			}
+			
 			// 循环map按班级分类学生
 			Set<Integer> keys = map.keySet();
 			Iterator<Integer> it = keys.iterator();
 			while (it.hasNext()) {
 				int key = it.next();
+				info = new Hand_clasStudentArriveAndLeave();
 				info.setClass_id(key);
 				info.setStudentDate(map.get(key));
 				info.setTitle(map.get(key).get(0).getTitle());
