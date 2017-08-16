@@ -311,7 +311,7 @@ public class MailBoxController {
 			String mailTitle = mail.getSenderName();
 			String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
 			if ("爸爸".equals(senderName)) {
-				head = HeadMemoryConfigStorageContainer.findByOriId(9);
+				head = HeadMemoryConfigStorageContainer.findByOriId(5);
 				mail.setHead(head.getAddress());
 			} else if ("妈妈".equals(senderName)) {
 				head = HeadMemoryConfigStorageContainer.findByOriId(6);
