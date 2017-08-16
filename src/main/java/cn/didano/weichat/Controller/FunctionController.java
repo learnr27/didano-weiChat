@@ -47,79 +47,24 @@ public class FunctionController {
 	@ApiOperation(value = "角色功能项目查询", notes = "欢迎页面顶部根据角色来加载功能项目")
 	@GetMapping(value = "/getAreaItems/{roletype}")
 	@ResponseBody
-	public Out<List<Tb_function>> addFunctionsToRole(@PathVariable Integer roletype) {
+	public Out<List<Tb_function>> addHeaderFunctionsToRole(@PathVariable Integer roletype) {
+		logger.info("访问FunctionController的addHeaderFunctionsToRole方法");
 		Out<List<Tb_function>> back = new Out<>();
-		List<Tb_function> parentFunctionList = new LinkedList<>();
-		List<Tb_function> principalFunctionList = new LinkedList<>();
-		List<Tb_function> teacherFunctionList = new LinkedList<>();
 		try {
-			List<Tb_function> functionList = functionService.findAreaItems(5);
-			for (Tb_function tb_function : functionList) {
-				switch(tb_function.getId()) {
-					case 6: { // 园长信箱;
-						principalFunctionList.add(tb_function);
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 7: { // 通知公告;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-					}
-					break;
-					case 8: { // 小红花;
-						teacherFunctionList.add(tb_function);
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 9: { // 校园风采;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-					}
-					break;
-					case 10: { // 看宝宝;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 11: { // 图文发布;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-					}
-					break;
-					case 12: { // 照片墙;
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 13: { // 健康查询;
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 14: { // 食谱;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					case 15: { // 班级相册;
-						principalFunctionList.add(tb_function);
-						teacherFunctionList.add(tb_function);
-					}
-					break;
-					case 16: { // 考勤;
-						parentFunctionList.add(tb_function);
-					}
-					break;
-					default:{
-						logger.info("当前角色没有这个的栏目功能!!");
-					}
-				}
-			}
 			if (roletype == RoleType.PRINCIPAL) {
+				List<Tb_function> principalFunctionList = new LinkedList<>();
+				//园长头部功能项目;
+				principalFunctionList = functionService.findAreaItems(7);
 				back.setBackTypeWithLog(principalFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
 			}else if (roletype == RoleType.TEACHER) {
+				List<Tb_function> teacherFunctionList = new LinkedList<>();
+				//老师头部功能项目;
+				teacherFunctionList = functionService.findAreaItems(9);
 				back.setBackTypeWithLog(teacherFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
 			}else if (roletype == RoleType.PARENT) {
+				//家长头部功能项目;
+				List<Tb_function> parentFunctionList = new LinkedList<>();
+				parentFunctionList = functionService.findAreaItems(8);
 				back.setBackTypeWithLog(parentFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
