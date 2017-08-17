@@ -180,6 +180,7 @@ public class NoticeService {
 		//将通告添加到消息列表
 		if(xiaonuo.size()!=0){
 		Tb_notice xiaonuoMessage = noticeMapper.selectByPrimaryKey(xiaonuo.get(0).getNoticeId());
+		xiaonuoMessage.setIs_read((byte)1);
 		notices.add(xiaonuoMessage);
 		}
 		
