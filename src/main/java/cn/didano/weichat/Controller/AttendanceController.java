@@ -80,10 +80,8 @@ public class AttendanceController {
 				// 当班级id与老师的班级id相同时，查看该班的已到人数
 				if (info.getClass_id().equals(staff.getClass_id())) {
 					data.setArriveNum(info.getNum());
-
 				}
 			}
-
 			// 设置未到人数
 			if (data.getArriveNum() != null) {
 				data.setNoArriveNum(data.getAllNum() - data.getArriveNum());
@@ -296,7 +294,6 @@ public class AttendanceController {
 				// 转换到校离校时间格式
 				if (studentDate.get(i).getArriveTime() != null) {
 					studentDate.get(i).setArrive(sdf.format(studentDate.get(i).getArriveTime()));
-					;
 				} else {
 					studentDate.get(i).setArrive("未到校");
 				}

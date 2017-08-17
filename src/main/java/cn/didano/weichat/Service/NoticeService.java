@@ -160,6 +160,7 @@ public class NoticeService {
 	 * 根据用户id查找消息列表
 	 */
 	public List<Tb_notice> findNoticeByUserId(Integer id, byte type) {
+		List<Tb_notice> notices = new ArrayList<Tb_notice>();
 		Tb_noticeUserExample condition = new Tb_noticeUserExample();
 		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
 		// 对于已经deleted=1的不显示 禁用不显示
@@ -168,7 +169,20 @@ public class NoticeService {
 		criteria.andUserTypeEqualTo(type);
 		condition.setOrderByClause("created");
 		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByExample(condition);
-		List<Tb_notice> notices = new ArrayList<Tb_notice>();
+		
+		//查询小诺通告
+		Tb_noticeUserExample xiaoNuo = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria xiaoNuoCriteria = xiaoNuo.createCriteria();
+		xiaoNuoCriteria.andUserIdEqualTo(0);
+		xiaoNuoCriteria.andDeletedEqualTo(false);
+		xiaoNuoCriteria.andUserTypeEqualTo((byte)0);
+		List<Tb_noticeUser> xiaonuo = noticeUserMapper.selectByExample(xiaoNuo);
+		//将通告添加到消息列表
+		if(xiaonuo.size()!=0){
+		Tb_notice xiaonuoMessage = noticeMapper.selectByPrimaryKey(xiaonuo.get(0).getNoticeId());
+		notices.add(xiaonuoMessage);
+		}
+		
 		if(noticeUser.size()!=0) {
 		Tb_notice notice = null;
 
@@ -185,7 +199,7 @@ public class NoticeService {
 			}
 		}
 		//倒序
-        Collections.reverse(notices);
+        //Collections.reverse(notices);
 		Collections.sort(noticeUser, new Comparator<Tb_noticeUser>() {
 			public int compare(Tb_noticeUser o1, Tb_noticeUser o2) {
 				return (int) (o1.getCreated().getTime() - o2.getCreated().getTime());
