@@ -131,7 +131,7 @@ SELECT tb_class.title,tb_staff_signdate.sign_status,
                 tb_staff.* 
                 FROM tb_staff
                 LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
-                AND tb_staff_signdate.sign_timestamp = #{sign_timestamp} 
+                AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m-%d') = #{date}
                 LEFT JOIN tb_staff_class ON tb_staff_class.staff_id = tb_staff.id
                 LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
                 WHERE tb_staff.deleted = 0
@@ -187,21 +187,21 @@ LEFT JOIN tb_class e ON temp1.class_id = e.id
                 ) AS temp
   </select>
   <select id="getSchoolArriveStaffNum" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="Integer">
-    SELECT COUNT(*) FROM(
+ SELECT COUNT(*) FROM(
                 SELECT tb_class.title,tb_staff_signdate.sign_status,
                 tb_staff_signdate.in_time,
                 tb_staff_signdate.out_time,
                 tb_staff.* 
                 FROM tb_staff
                 LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
-                AND tb_staff_signdate.sign_timestamp = #{sign_timestamp}
+                 AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m-%d') = #{date}
                 LEFT JOIN tb_staff_class ON tb_staff_class.staff_id = tb_staff.id
                 LEFT JOIN tb_class ON tb_class.id = tb_staff_class.class_id
                 WHERE tb_staff.deleted = 0
                 AND tb_staff.school_id = #{school_id}
                 AND tb_staff.type != 31
                 ORDER BY tb_staff.type DESC)aa
-                WHERE sign_status IS NOT null
+                WHERE sign_status IS NOT NULL
   </select>
   
    <select id="findStudentArriveAndLeaveBySchool" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">

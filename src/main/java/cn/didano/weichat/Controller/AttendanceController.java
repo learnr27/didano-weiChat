@@ -202,10 +202,7 @@ public class AttendanceController {
 			// 获取该学校员工总数
 			int allStaff = attendanceService.getSchoolAllStaffNum(school_id);
 			// 获取该学校当天到的员工数
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			// 获取unix时间戳
-			long sign_timestamp = sdf.parse(date).getTime() / 1000;
-			data.setSign_timestamp(sign_timestamp);
+			data.setDate(date);
 			int arriveStaff = attendanceService.getSchoolStaffArriveNum(data);
 			schoolDate.setAllTeacherNum(allStaff);
 			schoolDate.setTeacherArriveNum(arriveStaff);
@@ -243,10 +240,8 @@ public class AttendanceController {
 		try {
 			attendanceData = new Hand_attendanceData();
 			attendanceData.setSchool_id(school_id);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			// 转换为unix时间格式
-			long sign_timestamp = sdf.parse(date).getTime() / 1000;
-			attendanceData.setSign_timestamp(sign_timestamp);
+			attendanceData.setDate(date);
 			staffs = attendanceService.getDaySignStatisticList(attendanceData);
 			outList = new OutList<Tb_staff>(staffs.size(), staffs);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
