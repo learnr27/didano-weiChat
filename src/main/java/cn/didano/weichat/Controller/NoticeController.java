@@ -172,7 +172,11 @@ public class NoticeController {
 						notice.setHeadUrl(head.getAddress());
 					} else {
 						// 给园长信箱设置标题和头像
+						if(user_type!=30){
 						notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
+						}else{
+							notice.setTitle("园长信箱");
+						}
 						head = HeadMemoryConfigStorageContainer.findByOriId(4);
 						notice.setHeadUrl(head.getAddress());
 
