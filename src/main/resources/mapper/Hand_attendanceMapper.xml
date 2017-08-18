@@ -183,7 +183,7 @@ LEFT JOIN tb_class e ON temp1.class_id = e.id
   <select id="getSchoolAllStaffNum" parameterType="Integer" resultType="Integer">
  SELECT COUNT(id) AS num FROM (
                     SELECT * FROM tb_staff                   
-                    WHERE tb_staff.school_id=#{schoolId} and tb_staff.deleted=0 
+                    WHERE tb_staff.school_id=#{schoolId} and tb_staff.deleted=0 AND tb_staff.type != 31
                 ) AS temp
   </select>
   <select id="getSchoolArriveStaffNum" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="Integer">
