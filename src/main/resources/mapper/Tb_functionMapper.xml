@@ -5,14 +5,14 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
-    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="icon" jdbcType="VARCHAR" property="icon" />
     <result column="order_no" jdbcType="INTEGER" property="orderNo" />
-    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
+    <result column="deleted" jdbcType="VARCHAR" property="deleted" />
     <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="url" jdbcType="VARCHAR" property="url" />
-    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -73,8 +73,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, name, code, create_date, update_date, icon, order_no, delete_flag, type, url, 
-    parent_id
+    id, name, code, created, updated, icon, order_no, deleted, type, url, parent_id
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_functionExample" resultMap="BaseResultMap">
     select
@@ -111,14 +110,14 @@
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_function (name, code, create_date, 
-      update_date, icon, order_no, 
-      delete_flag, type, url, 
+    insert into tb_function (name, code, created, 
+      updated, icon, order_no, 
+      deleted, type, url, 
       parent_id)
-    values (#{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP}, #{icon,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER}, 
-      #{deleteFlag,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
-      #{parentId,jdbcType=VARCHAR})
+    values (#{name,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
+      #{updated,jdbcType=TIMESTAMP}, #{icon,jdbcType=VARCHAR}, #{orderNo,jdbcType=INTEGER}, 
+      #{deleted,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+      #{parentId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_function">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -132,11 +131,11 @@
       <if test="code != null">
         code,
       </if>
-      <if test="createDate != null">
-        create_date,
+      <if test="created != null">
+        created,
       </if>
-      <if test="updateDate != null">
-        update_date,
+      <if test="updated != null">
+        updated,
       </if>
       <if test="icon != null">
         icon,
@@ -144,8 +143,8 @@
       <if test="orderNo != null">
         order_no,
       </if>
-      <if test="deleteFlag != null">
-        delete_flag,
+      <if test="deleted != null">
+        deleted,
       </if>
       <if test="type != null">
         type,
@@ -164,11 +163,11 @@
       <if test="code != null">
         #{code,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=TIMESTAMP},
+      <if test="updated != null">
+        #{updated,jdbcType=TIMESTAMP},
       </if>
       <if test="icon != null">
         #{icon,jdbcType=VARCHAR},
@@ -176,8 +175,8 @@
       <if test="orderNo != null">
         #{orderNo,jdbcType=INTEGER},
       </if>
-      <if test="deleteFlag != null">
-        #{deleteFlag,jdbcType=VARCHAR},
+      <if test="deleted != null">
+        #{deleted,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
@@ -186,7 +185,7 @@
         #{url,jdbcType=VARCHAR},
       </if>
       <if test="parentId != null">
-        #{parentId,jdbcType=VARCHAR},
+        #{parentId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -208,11 +207,11 @@
       <if test="record.code != null">
         code = #{record.code,jdbcType=VARCHAR},
       </if>
-      <if test="record.createDate != null">
-        create_date = #{record.createDate,jdbcType=TIMESTAMP},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.updateDate != null">
-        update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      <if test="record.updated != null">
+        updated = #{record.updated,jdbcType=TIMESTAMP},
       </if>
       <if test="record.icon != null">
         icon = #{record.icon,jdbcType=VARCHAR},
@@ -220,8 +219,8 @@
       <if test="record.orderNo != null">
         order_no = #{record.orderNo,jdbcType=INTEGER},
       </if>
-      <if test="record.deleteFlag != null">
-        delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=VARCHAR},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
@@ -230,7 +229,7 @@
         url = #{record.url,jdbcType=VARCHAR},
       </if>
       <if test="record.parentId != null">
-        parent_id = #{record.parentId,jdbcType=VARCHAR},
+        parent_id = #{record.parentId,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -242,14 +241,14 @@
     set id = #{record.id,jdbcType=INTEGER},
       name = #{record.name,jdbcType=VARCHAR},
       code = #{record.code,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=TIMESTAMP},
-      update_date = #{record.updateDate,jdbcType=TIMESTAMP},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP},
       icon = #{record.icon,jdbcType=VARCHAR},
       order_no = #{record.orderNo,jdbcType=INTEGER},
-      delete_flag = #{record.deleteFlag,jdbcType=VARCHAR},
+      deleted = #{record.deleted,jdbcType=VARCHAR},
       type = #{record.type,jdbcType=VARCHAR},
       url = #{record.url,jdbcType=VARCHAR},
-      parent_id = #{record.parentId,jdbcType=VARCHAR}
+      parent_id = #{record.parentId,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -263,11 +262,11 @@
       <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=TIMESTAMP},
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="updateDate != null">
-        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      <if test="updated != null">
+        updated = #{updated,jdbcType=TIMESTAMP},
       </if>
       <if test="icon != null">
         icon = #{icon,jdbcType=VARCHAR},
@@ -275,8 +274,8 @@
       <if test="orderNo != null">
         order_no = #{orderNo,jdbcType=INTEGER},
       </if>
-      <if test="deleteFlag != null">
-        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
@@ -285,7 +284,7 @@
         url = #{url,jdbcType=VARCHAR},
       </if>
       <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=VARCHAR},
+        parent_id = #{parentId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -294,14 +293,14 @@
     update tb_function
     set name = #{name,jdbcType=VARCHAR},
       code = #{code,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=TIMESTAMP},
-      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP},
       icon = #{icon,jdbcType=VARCHAR},
       order_no = #{orderNo,jdbcType=INTEGER},
-      delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+      deleted = #{deleted,jdbcType=VARCHAR},
       type = #{type,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
-      parent_id = #{parentId,jdbcType=VARCHAR}
+      parent_id = #{parentId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

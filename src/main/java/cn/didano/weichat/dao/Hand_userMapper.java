@@ -25,19 +25,19 @@ public interface Hand_userMapper {
 
 	List<Tb_user> findAllUsers();
 
-	List<Out_Student_Search> getStudentListByMobile(String parentPhone);
+	List<Out_Student_Search> getStudentListByPhone(String parentPhone);
 
-	List<Tb_school> getSchoolListByMobile(String mobile);
+	List<Tb_school> getSchoolListByMobile(String phone);
 
 	String getRelationByRelationId(Integer relation_id);
 
-	Hand_staff getTeacherByMobile(String mobile);
+	Hand_staff getTeacherByPhone(String phone);
 
 	String getMobileByOpenId(String openId);
 
 	List<Tb_user> getUserListFromOthers();
 
-	List<Tb_staff> getStaffByMobileFromOthers(String mobile);
+	List<Tb_staff> getStaffByPhoneFromOthers(String phone);
 
 	List<Tb_schoolParent> getParentListByMobile(String mobile);
 
@@ -47,7 +47,7 @@ public interface Hand_userMapper {
 
 	List<Hand_staff> getTeacherByOpenid(String openId);
 
-	List<Hand_StudentParent> getStudentParentListByMobile(String mobile);
+	List<Hand_StudentParent> getStudentParentListByPhone(String phone);
 
 	Integer deleteDatafrom(Integer row);
 

@@ -93,13 +93,13 @@ public class FunctionController {
 		Out<OutList<Tb_function>> back = new Out<OutList<Tb_function>>();
 		
 		try {
-			Set<Tb_role> roles = user.getRoles();
+			/*Set<Tb_role> roles = user.getRoles();
 			Tb_role activeRole = userService.getUserActiveRole(user.getId());
 			for (Tb_role tb_role : roles) {
 				if (tb_role.getId() != null && activeRole.getId().equals(tb_role.getId())) {
 					
 				}
-			}
+			}*/
 			functionList = functionService.findAreaItems(parentId);
 			outList = new OutList<Tb_function>(functionList.size(), functionList);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);

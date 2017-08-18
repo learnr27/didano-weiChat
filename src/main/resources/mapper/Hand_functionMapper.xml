@@ -5,7 +5,7 @@
   <select id="findAllFunctions" resultType="cn.didano.weichat.model.Tb_function">
     select 
     *
-    from tb_function
+    from tb_function where deleted = 0
   </select>
   
   <select id="findFunctionsByUserId" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_function">
@@ -26,7 +26,7 @@
   
   
   <select id="findAreaItems" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_function">
-    SELECT * FROM tb_function WHERE parent_id=#{parentId,jdbcType=INTEGER} ORDER BY order_no;
+    SELECT * FROM tb_function WHERE parent_id=#{parentId,jdbcType=INTEGER} AND deleted = 0 ORDER BY order_no
   </select>
   
   

@@ -1,9 +1,6 @@
 package cn.didano.weichat.model;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-
 
 public class Tb_function {
     private Integer id;
@@ -12,33 +9,23 @@ public class Tb_function {
 
     private String code;
 
-    private Date createDate;
+    private Date created;
 
-    private Date updateDate;
+    private Date updated;
 
     private String icon;
 
     private Integer orderNo;
 
-    private String deleteFlag;
+    private String deleted;
 
     private String type;
 
     private String url;
 
-    private String parentId;
-    
-    /*private Set<Tb_role> roles = new HashSet<>(0);
+    private Integer parentId;
 
-    public Set<Tb_role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(Set<Tb_role> roles) {
-		this.roles = roles;
-	}*/
-
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -62,20 +49,20 @@ public class Tb_function {
         this.code = code == null ? null : code.trim();
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    public Date getCreated() {
+        return created;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
-    public Date getUpdateDate() {
-        return updateDate;
+    public Date getUpdated() {
+        return updated;
     }
 
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
+    public void setUpdated(Date updated) {
+        this.updated = updated;
     }
 
     public String getIcon() {
@@ -94,12 +81,12 @@ public class Tb_function {
         this.orderNo = orderNo;
     }
 
-    public String getDeleteFlag() {
-        return deleteFlag;
+    public String getDeleted() {
+        return deleted;
     }
 
-    public void setDeleteFlag(String deleteFlag) {
-        this.deleteFlag = deleteFlag == null ? null : deleteFlag.trim();
+    public void setDeleted(String deleted) {
+        this.deleted = deleted == null ? null : deleted.trim();
     }
 
     public String getType() {
@@ -118,11 +105,11 @@ public class Tb_function {
         this.url = url == null ? null : url.trim();
     }
 
-    public String getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
-        this.parentId = parentId == null ? null : parentId.trim();
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }
