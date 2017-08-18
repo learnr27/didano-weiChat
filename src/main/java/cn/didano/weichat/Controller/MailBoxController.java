@@ -70,7 +70,7 @@ public class MailBoxController {
 
 		List<Tb_notice> notices = null;
 		int mailId = 0;
-		Hand_mailRecord data = null;
+		Hand_mailRecord data = new Hand_mailRecord();
 		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
 		try {
 			
@@ -85,13 +85,8 @@ public class MailBoxController {
 						noticeService.setNoticeRead(own_id, notices.get(i).getId());
 					}
 				}
-				if (mailId > 0) {
-					back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
-				} else {
-					// 更新有问题
-					back.setBackTypeWithLog(data,BackType.FAIL_SEARCH_NORMAL);
-				}
-
+				
+			    back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			} else {	
 					back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			}
@@ -309,6 +304,8 @@ public class MailBoxController {
 		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
 		try {
 			mail = mailBoxService.findMailById(mailId);
+			data = new Hand_mailRecord();
+		    if(mail!=null){
 			String mailTitle = mail.getSenderName();
 			String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
 			if ("爸爸".equals(senderName)) {
@@ -324,7 +321,6 @@ public class MailBoxController {
 				head = HeadMemoryConfigStorageContainer.findByOriId(8);
 				mail.setHead(head.getAddress());
 			}
-			data = new Hand_mailRecord();
 			data.setMai(mail);
 			mails = mailBoxService.selectMailReplyByNoticeId(mailId);
 			// 根据时间排序
@@ -361,6 +357,9 @@ public class MailBoxController {
 			}
 			data.setReplys(mails);
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+		    }else{
+		    back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+		    }
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());

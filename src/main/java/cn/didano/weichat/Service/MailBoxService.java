@@ -52,6 +52,7 @@ public class MailBoxService {
 	 * 通过邮件id查找邮件
 	 */
 	public Tb_mail findMailById(Integer mailId){
+		System.out.println(111111);
 		return mailMapper.selectByPrimaryKey(mailId);
 	}
 	/**
