@@ -6,12 +6,11 @@
     <result column="openid" jdbcType="VARCHAR" property="openid" />
     <result column="officialAccountId" jdbcType="VARCHAR" property="officialaccountid" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
-    <result column="station" jdbcType="VARCHAR" property="station" />
-    <result column="create_date" jdbcType="VARCHAR" property="createDate" />
-    <result column="update_date" jdbcType="VARCHAR" property="updateDate" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="delete_flag" jdbcType="BIT" property="deleteFlag" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
     <result column="school_parent_id" jdbcType="INTEGER" property="schoolParentId" />
     <result column="student_id" jdbcType="INTEGER" property="studentId" />
     <result column="staff_id" jdbcType="INTEGER" property="staffId" />
@@ -78,9 +77,8 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, openid, officialAccountId, nickname, mobile, station, create_date, update_date, 
-    type, delete_flag, school_parent_id, student_id, staff_id, admin_id, school_admin_id, 
-    description
+    id, openid, officialAccountId, nickname, phone, created, updated, type, deleted, 
+    school_parent_id, student_id, staff_id, admin_id, school_admin_id, description
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_userExample" resultMap="BaseResultMap">
     select
@@ -118,17 +116,15 @@
       SELECT LAST_INSERT_ID()
     </selectKey>
     insert into tb_user (openid, officialAccountId, nickname, 
-      mobile, station, create_date, 
-      update_date, type, delete_flag, 
-      school_parent_id, student_id, staff_id, 
-      admin_id, school_admin_id, description
-      )
+      phone, created, updated, 
+      type, deleted, school_parent_id, 
+      student_id, staff_id, admin_id, 
+      school_admin_id, description)
     values (#{openid,jdbcType=VARCHAR}, #{officialaccountid,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
-      #{mobile,jdbcType=VARCHAR}, #{station,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, 
-      #{updateDate,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, #{deleteFlag,jdbcType=BIT}, 
-      #{schoolParentId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER}, 
-      #{adminId,jdbcType=INTEGER}, #{schoolAdminId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}
-      )
+      #{phone,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=INTEGER}, #{deleted,jdbcType=BIT}, #{schoolParentId,jdbcType=INTEGER}, 
+      #{studentId,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER}, #{adminId,jdbcType=INTEGER}, 
+      #{schoolAdminId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_user">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -145,23 +141,20 @@
       <if test="nickname != null">
         nickname,
       </if>
-      <if test="mobile != null">
-        mobile,
+      <if test="phone != null">
+        phone,
       </if>
-      <if test="station != null">
-        station,
+      <if test="created != null">
+        created,
       </if>
-      <if test="createDate != null">
-        create_date,
-      </if>
-      <if test="updateDate != null">
-        update_date,
+      <if test="updated != null">
+        updated,
       </if>
       <if test="type != null">
         type,
       </if>
-      <if test="deleteFlag != null">
-        delete_flag,
+      <if test="deleted != null">
+        deleted,
       </if>
       <if test="schoolParentId != null">
         school_parent_id,
@@ -192,23 +185,20 @@
       <if test="nickname != null">
         #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="mobile != null">
-        #{mobile,jdbcType=VARCHAR},
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="station != null">
-        #{station,jdbcType=VARCHAR},
+      <if test="created != null">
+        #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="createDate != null">
-        #{createDate,jdbcType=VARCHAR},
-      </if>
-      <if test="updateDate != null">
-        #{updateDate,jdbcType=VARCHAR},
+      <if test="updated != null">
+        #{updated,jdbcType=TIMESTAMP},
       </if>
       <if test="type != null">
         #{type,jdbcType=INTEGER},
       </if>
-      <if test="deleteFlag != null">
-        #{deleteFlag,jdbcType=BIT},
+      <if test="deleted != null">
+        #{deleted,jdbcType=BIT},
       </if>
       <if test="schoolParentId != null">
         #{schoolParentId,jdbcType=INTEGER},
@@ -251,23 +241,20 @@
       <if test="record.nickname != null">
         nickname = #{record.nickname,jdbcType=VARCHAR},
       </if>
-      <if test="record.mobile != null">
-        mobile = #{record.mobile,jdbcType=VARCHAR},
+      <if test="record.phone != null">
+        phone = #{record.phone,jdbcType=VARCHAR},
       </if>
-      <if test="record.station != null">
-        station = #{record.station,jdbcType=VARCHAR},
+      <if test="record.created != null">
+        created = #{record.created,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.createDate != null">
-        create_date = #{record.createDate,jdbcType=VARCHAR},
-      </if>
-      <if test="record.updateDate != null">
-        update_date = #{record.updateDate,jdbcType=VARCHAR},
+      <if test="record.updated != null">
+        updated = #{record.updated,jdbcType=TIMESTAMP},
       </if>
       <if test="record.type != null">
         type = #{record.type,jdbcType=INTEGER},
       </if>
-      <if test="record.deleteFlag != null">
-        delete_flag = #{record.deleteFlag,jdbcType=BIT},
+      <if test="record.deleted != null">
+        deleted = #{record.deleted,jdbcType=BIT},
       </if>
       <if test="record.schoolParentId != null">
         school_parent_id = #{record.schoolParentId,jdbcType=INTEGER},
@@ -298,12 +285,11 @@
       openid = #{record.openid,jdbcType=VARCHAR},
       officialAccountId = #{record.officialaccountid,jdbcType=VARCHAR},
       nickname = #{record.nickname,jdbcType=VARCHAR},
-      mobile = #{record.mobile,jdbcType=VARCHAR},
-      station = #{record.station,jdbcType=VARCHAR},
-      create_date = #{record.createDate,jdbcType=VARCHAR},
-      update_date = #{record.updateDate,jdbcType=VARCHAR},
+      phone = #{record.phone,jdbcType=VARCHAR},
+      created = #{record.created,jdbcType=TIMESTAMP},
+      updated = #{record.updated,jdbcType=TIMESTAMP},
       type = #{record.type,jdbcType=INTEGER},
-      delete_flag = #{record.deleteFlag,jdbcType=BIT},
+      deleted = #{record.deleted,jdbcType=BIT},
       school_parent_id = #{record.schoolParentId,jdbcType=INTEGER},
       student_id = #{record.studentId,jdbcType=INTEGER},
       staff_id = #{record.staffId,jdbcType=INTEGER},
@@ -326,23 +312,20 @@
       <if test="nickname != null">
         nickname = #{nickname,jdbcType=VARCHAR},
       </if>
-      <if test="mobile != null">
-        mobile = #{mobile,jdbcType=VARCHAR},
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
       </if>
-      <if test="station != null">
-        station = #{station,jdbcType=VARCHAR},
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
       </if>
-      <if test="createDate != null">
-        create_date = #{createDate,jdbcType=VARCHAR},
-      </if>
-      <if test="updateDate != null">
-        update_date = #{updateDate,jdbcType=VARCHAR},
+      <if test="updated != null">
+        updated = #{updated,jdbcType=TIMESTAMP},
       </if>
       <if test="type != null">
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="deleteFlag != null">
-        delete_flag = #{deleteFlag,jdbcType=BIT},
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=BIT},
       </if>
       <if test="schoolParentId != null">
         school_parent_id = #{schoolParentId,jdbcType=INTEGER},
@@ -370,12 +353,11 @@
     set openid = #{openid,jdbcType=VARCHAR},
       officialAccountId = #{officialaccountid,jdbcType=VARCHAR},
       nickname = #{nickname,jdbcType=VARCHAR},
-      mobile = #{mobile,jdbcType=VARCHAR},
-      station = #{station,jdbcType=VARCHAR},
-      create_date = #{createDate,jdbcType=VARCHAR},
-      update_date = #{updateDate,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      created = #{created,jdbcType=TIMESTAMP},
+      updated = #{updated,jdbcType=TIMESTAMP},
       type = #{type,jdbcType=INTEGER},
-      delete_flag = #{deleteFlag,jdbcType=BIT},
+      deleted = #{deleted,jdbcType=BIT},
       school_parent_id = #{schoolParentId,jdbcType=INTEGER},
       student_id = #{studentId,jdbcType=INTEGER},
       staff_id = #{staffId,jdbcType=INTEGER},

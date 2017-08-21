@@ -89,7 +89,7 @@ public class UserService {
 
 	
 	public List<Out_Student_Search> getStudentListByMobile(String parentPhone) {
-		List<Out_Student_Search> list = handUserMapper.getStudentListByMobile(parentPhone);
+		List<Out_Student_Search> list = handUserMapper.getStudentListByPhone(parentPhone);
 		System.out.println(list);
 		return list;
 	}
@@ -107,8 +107,8 @@ public class UserService {
 	}
 
 
-	public Hand_staff getTeacherByMobile(String mobile) {
-		Hand_staff teacher = handUserMapper.getTeacherByMobile(mobile);
+	public Hand_staff getTeacherByMobile(String phone) {
+		Hand_staff teacher = handUserMapper.getTeacherByPhone(phone);
 		return teacher;
 	}
 
@@ -133,8 +133,8 @@ public class UserService {
 	}
 
 
-	public List<Tb_staff> getStaffByMobileFromOthers(String mobile) {
-		List<Tb_staff> StaffList = handUserMapper.getStaffByMobileFromOthers(mobile);
+	public List<Tb_staff> getStaffByPhoneFromOthers(String phone) {
+		List<Tb_staff> StaffList = handUserMapper.getStaffByPhoneFromOthers(phone);
 		return StaffList;
 	}
 
@@ -150,10 +150,10 @@ public class UserService {
 	}
 
 
-	public List<Tb_schoolParent> getParentListByMobile(String mobile) {
+	/*public List<Tb_schoolParent> getParentListByMobile(String mobile) {
 		List<Tb_schoolParent> parentList = handUserMapper.getParentListByMobile(mobile);
 		return parentList;
-	}
+	}*/
 
 
 	public List<Out_Student_Search> getStudentListByOpenid(String openId) {
@@ -174,8 +174,8 @@ public class UserService {
 	}
 
 
-	public List<Hand_StudentParent> getStudentParentListByMobile(String mobile) {
-		List<Hand_StudentParent> list = handUserMapper.getStudentParentListByMobile(mobile);
+	public List<Hand_StudentParent> getStudentParentListByPhone(String phone) {
+		List<Hand_StudentParent> list = handUserMapper.getStudentParentListByPhone(phone);
 		return list;
 	}
 

@@ -59,7 +59,7 @@ public class AuthRealm extends AuthorizingRealm {
 		Tb_role role = roleService.getActiveRoleByUserid(userid);
 		/*Subject currentUser = SecurityUtils.getSubject();
 		currentUser.hasRole(role.getName());*/
-		Set<Tb_role> roles = user.getRoles();
+		/*Set<Tb_role> roles = user.getRoles();
 		Set<String> permissionSet = new HashSet<String>();
         for (Tb_role tb_role : roles) {
 			if (tb_role.getName() != null) {
@@ -75,7 +75,7 @@ public class AuthRealm extends AuthorizingRealm {
 				}
 			}
 		}
-		info.addStringPermissions(permissionSet);
+		info.addStringPermissions(permissionSet);*/
         
 		return info;
 	}
@@ -107,7 +107,7 @@ public class AuthRealm extends AuthorizingRealm {
 			 * 第三个参数realmName:当前realm的类名;
 			 */
 			SimpleAuthenticationInfo info = 
-					new SimpleAuthenticationInfo(user, user.getMobile(), this.getClass().getName());
+					new SimpleAuthenticationInfo(user, user.getPhone(), this.getClass().getName());
 			//返回给安全管理器;
 			return info;
 		}else {//没取到

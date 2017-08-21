@@ -1,8 +1,7 @@
 package cn.didano.weichat.Controller;
 
+import java.util.Date;
 import java.util.List;
-
-import javax.websocket.server.PathParam;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +79,11 @@ public class DataTransferController {
 			// userList = handUserMapper.getUserListFromOthers();
 			for (Tb_user tb_user : userList) {
 				String openid = tb_user.getOpenid();
-				String mobile = tb_user.getMobile();
+				String phone = tb_user.getPhone();
+				Date now = new Date();
+				tb_user.setDeleted(false);
+				tb_user.setCreated(now);
+				tb_user.setUpdated(now);
 				// 查询数据库中是否还有多个重复的数据;
 				// List<Tb_user> list = userService.getUserByOpenidFromOthers(openid);
 				// 查询学校的数据;
@@ -89,9 +92,9 @@ public class DataTransferController {
 				//List<Tb_class> classList = userService.get
 				
 				// 根据绑定表的电话,查询家长的数据集合;
-				List<Hand_StudentParent> parentList = userService.getStudentParentListByMobile(mobile);
+				List<Hand_StudentParent> parentList = userService.getStudentParentListByPhone(phone);
 				// 根据绑定表的电话,查询组织的数据集合;
-				List<Tb_staff> staffList = userService.getStaffByMobileFromOthers(mobile);
+				List<Tb_staff> staffList = userService.getStaffByPhoneFromOthers(phone);
 				if (parentList == null && staffList == null) {
 					userService.save(tb_user);
 					rowNum++;

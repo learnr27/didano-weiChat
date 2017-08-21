@@ -4,9 +4,8 @@
   
   
   <sql id="Base_Column_List">
-    id, openid, officialAccountId, nickname, mobile, station, create_date, update_date, 
-    type, delete_flag, school_parent_id, student_id, staff_id, admin_id, school_admin_id, 
-    description
+    id, openid, officialAccountId, nickname, phone, created, updated, type, deleted, 
+    school_parent_id, student_id, staff_id, admin_id, school_admin_id, description
   </sql>
   
   <select id="getUsersByopenId" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_user">
@@ -14,18 +13,19 @@
 	  tu.id                AS id,
 	  tu.officialAccountId AS officialaccountid,
 	  tu.nickname          AS nickname,
-	  tu.mobile            AS mobile,
-	  tu.station           AS station,
-	  tu.create_date       AS createDate,
-	  tu.update_date       AS updateDate,
+	  tu.phone             AS phone,
+	  tu.created       	   AS created,
+	  tu.updated           AS updated,
 	  tu.type              AS TYPE,
-	  tu.delete_flag       AS deleteFlag,
+	  tu.deleted           AS deleted,
 	  tu.school_parent_id  AS schoolParentId,
 	  tu.staff_id          AS staffId,
+	  tu.admin_id		   AS adminId,
+	  tu.school_admin_id   AS schoolAdminId
 	  tu.description       AS description
 	FROM tb_user tu
 	WHERE openid = #{openid,jdbcType=VARCHAR}
-	AND tu.delete_flag = 0
+	AND tu.deleted = 0
   </select>
   
   <select id="getStudentListByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.json.Out_Student_Search">
@@ -37,7 +37,7 @@
 	      WHERE 
 	      tu.openid = #{openid,jdbcType=VARCHAR}
 	      AND tu.type = 30
-	      AND tu.delete_flag = 0 ) AS tmp0,
+	      AND tu.deleted = 0 ) AS tmp0,
 	  (SELECT
 	     ts.id AS studentId,
 	     ts.name AS NAME,
@@ -45,7 +45,9 @@
 	     tsp.school_id AS schoolId
 	   FROM tb_student ts,
 	     tb_student_parent tsp
-	   WHERE ts.id = tsp.student_id) tmp1
+	   WHERE ts.id = tsp.student_id
+	   AND ts.deleted = 0 
+	   AND tsp.deleted = 0) tmp1
 	WHERE tmp0.school_parent_id = tmp1.parentId AND tmp0.student_id=tmp1.studentId) tmp3 
 	LEFT JOIN tb_school tsc ON tmp3.schoolId = tsc.id
   </select>
@@ -63,7 +65,9 @@
 		  tb_user tu
 		WHERE tu.openid = #{openid,jdbcType=VARCHAR}
 		AND tu.type = 31
-		AND tu.delete_flag = 0
+		AND tu.deleted = 0
+		AND sc.deleted = 0
+		AND st.deleted = 0
 		AND tu.staff_id = st.id
 		AND st.school_id = sc.id
 		ORDER BY st.id
@@ -84,8 +88,12 @@
 		tb_staff_class tsc
 		WHERE tu.type = 32
 		AND tu.openid = #{openid,jdbcType=VARCHAR}
-		AND tu.staff_id = s.id	
-		AND tu.delete_flag = 0
+		AND tu.staff_id = s.id
+		AND tu.deleted = 0
+		AND	s.deleted = 0
+		AND sc.deleted = 0
+		AND tc.deleted = 0
+		AND tsc.deleted = 0
 		AND s.school_id = sc.id
 		AND tsc.class_id = tc.id
 		AND tsc.staff_id = s.id
@@ -95,7 +103,7 @@
     select 
     <include refid="Base_Column_List" />
     from tb_user
-    where openid = #{openid,jdbcType=VARCHAR}
+    where openid = #{openid,jdbcType=VARCHAR} AND deleted = 0
   </select>
  
   <update id="enableRoleStatusById" parameterType="cn.didano.weichat.json.Hand_userRoleRel">
@@ -115,18 +123,12 @@
   <select id="getMobileByOpenId" parameterType="java.lang.String" resultType="java.lang.String">
   
   SELECT DISTINCT
-	  mobile
+	  phone
 	FROM tb_user
 	WHERE openid = #{openId,jdbcType=VARCHAR}
-    <!-- SELECT DISTINCT
-      wb.phone
-    FROM tb_weichat_bind wb,
-      tb_weichat w
-    WHERE w.id = wb.weichat_id
-        AND w.openid = #{openId,jdbcType=VARCHAR} -->
   </select>
   
-  <select id="getStudentListByMobile" resultType="cn.didano.weichat.json.Out_Student_Search">
+  <select id="getStudentListByPhone" resultType="cn.didano.weichat.json.Out_Student_Search">
 	SELECT
 	  tb_student.*,tb_student_parent.*,tb_class.title AS classtitle,tb_school.title AS schooltitle
 	FROM tb_student
@@ -155,16 +157,18 @@
   <select id="getSchoolListByMobile" resultType="cn.didano.weichat.model.Tb_school">
 	SELECT
 	  DISTINCT
-	    'true' AS QUERYID,sc.*
+	    sc.*
 	FROM tb_staff st,
 	  tb_school sc
-	WHERE st.phone = #{mobile,jdbcType=VARCHAR}
+	WHERE st.phone = #{phone,jdbcType=VARCHAR}
     AND st.type = 31
     AND st.school_id = sc.id
+    AND st.deleted = 0
+    AND sc.deleted = 0
     ORDER BY id
   </select>
   
-  <select id="getTeacherByMobile" resultType="cn.didano.weichat.model.Hand_staff">
+  <select id="getTeacherByPhone" resultType="cn.didano.weichat.model.Hand_staff">
 	SELECT
 		  s.id AS staff_id,
 		  s.*,
@@ -172,8 +176,10 @@
 		FROM tb_staff s,
 		  tb_school sc
 		WHERE s.type = 32
-		    AND s.phone = #{mobile,jdbcType=VARCHAR}
+		    AND s.phone = #{phone,jdbcType=VARCHAR}
 		    AND s.school_id = sc.id
+		    AND s.deleted = 0
+		    AND sc.deleted = 0
   </select>
   
   <select id="getRelationByRelationId" parameterType="java.lang.Integer" resultType="java.lang.String">
@@ -185,24 +191,21 @@
 	  tw.openid            AS openid,
 	  tw.officialAccountId AS officialaccountId,
 	  tw.nickname          AS nickname,
-	  twb.phone            AS mobile,
-	  tw.created           AS createDate,
-	  tw.updated           AS updateDate,
-	  tw.deleted           AS deleteFlag
+	  twb.phone            AS phone
 	FROM tb_weichat tw,
 	  tb_weichat_bind twb
 	WHERE tw.id = twb.weichat_id
+	AND tw.deleted = 0
+	AND twb.deleted = 0
   </select>
   
-  <select id="getStudentParentListByMobile" parameterType="java.lang.String" resultType="cn.didano.weichat.util.Hand_StudentParent">
+  <select id="getStudentParentListByPhone" parameterType="java.lang.String" resultType="cn.didano.weichat.util.Hand_StudentParent">
   	SELECT DISTINCT
-	  tsp1.name AS parentName,
 	  tsp1.id AS parentId,
-	  tsp2.student_id AS studentId,
-	  tsp2.*
+	  tsp2.student_id AS studentId
 	FROM tb_school_parent tsp1,
 	tb_student_parent tsp2
-	WHERE phone =  #{mobile,jdbcType=VARCHAR} 
+	WHERE phone =  #{phone,jdbcType=VARCHAR} 
 	AND tsp1.id = tsp2.parent_id
 	AND tsp1.deleted = 0
 	AND tsp2.deleted = 0
@@ -213,27 +216,29 @@
       where id > #{row,jdbcType=INTEGER}
   </delete>
   
-  <select id="getStaffByMobileFromOthers" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_staff">
+  <select id="getStaffByPhoneFromOthers" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_staff">
   	SELECT DISTINCT
-	  *
+	  id,type
 	FROM tb_staff
-	WHERE phone = #{mobile,jdbcType=VARCHAR}
+	WHERE phone = #{phone,jdbcType=VARCHAR}
+	AND deleted = 0
   </select>
   
   <insert id="insert" parameterType="cn.didano.weichat.model.Tb_user">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into tb_user (openid, officialAccountId, username, 
-      nickname, real_name, mobile, 
-      station, create_date, update_date, 
-      type, delete_flag, parent_id, 
-      staff_id, description)
-    values (#{openid,jdbcType=VARCHAR}, #{officialaccountid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
-      #{nickname,jdbcType=VARCHAR}, #{realName,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
-      #{station,jdbcType=VARCHAR}, #{createDate,jdbcType=VARCHAR}, #{updateDate,jdbcType=VARCHAR}, 
-      #{type,jdbcType=INTEGER}, #{deleteFlag,jdbcType=BIT}, #{parentId,jdbcType=INTEGER}, 
-      #{staffId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
+      insert into tb_user (openid, officialAccountId, nickname, 
+      phone, created, updated, 
+      type, deleted, school_parent_id, 
+      student_id, staff_id, admin_id, 
+      school_admin_id, description)
+    values (#{openid,jdbcType=VARCHAR}, #{officialaccountid,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=INTEGER}, #{deleted,jdbcType=BIT}, #{schoolParentId,jdbcType=INTEGER}, 
+      #{studentId,jdbcType=INTEGER}, #{staffId,jdbcType=INTEGER}, #{adminId,jdbcType=INTEGER}, 
+      #{schoolAdminId,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR})
+      )
   </insert>
   
   <select id="getUseridByStaffid" parameterType="cn.didano.weichat.json.In_StaffSearchUserid" resultType="cn.didano.weichat.model.Tb_user">

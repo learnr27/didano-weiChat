@@ -21,16 +21,6 @@ public class Tb_role {
 
     private String description;
     
-    private Set<Tb_function> functions = new HashSet<>(0);
-
-    public Set<Tb_function> getFunctions() {
-		return functions;
-	}
-
-	public void setFunctions(Set<Tb_function> functions) {
-		this.functions = functions;
-	}
-
 	public Integer getId() {
         return id;
     }

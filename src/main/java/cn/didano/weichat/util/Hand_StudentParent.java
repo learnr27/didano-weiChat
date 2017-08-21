@@ -1,5 +1,7 @@
 package cn.didano.weichat.util;
 
+import java.util.Date;
+
 import cn.didano.weichat.model.Tb_schoolParent;
 
 public class Hand_StudentParent extends Tb_schoolParent {

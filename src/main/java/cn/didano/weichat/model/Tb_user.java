@@ -1,176 +1,155 @@
 package cn.didano.weichat.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Date;
 
 public class Tb_user {
-	private Integer id;
+    private Integer id;
 
-	private String openid;
+    private String openid;
 
-	private String officialaccountid;
+    private String officialaccountid;
 
-	private String nickname;
+    private String nickname;
 
-	private String mobile;
+    private String phone;
 
-	private String station;
+    private Date created;
 
-	private String createDate;
+    private Date updated;
 
-	private String updateDate;
+    private Integer type;
 
-	private Integer type;
+    private Boolean deleted;
 
-	private Boolean deleteFlag;
+    private Integer schoolParentId;
 
-	private Integer schoolParentId;
+    private Integer studentId;
 
-	private Integer studentId;
+    private Integer staffId;
 
-	private Integer staffId;
+    private Integer adminId;
 
-	private Integer adminId;
+    private Integer schoolAdminId;
 
-	private Integer schoolAdminId;
+    private String description;
 
-	private String description;
+    public Integer getId() {
+        return id;
+    }
 
-	private Set<Tb_role> roles = new HashSet<>(0);
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Set<Tb_role> getRoles() {
-		return roles;
-	}
+    public String getOpenid() {
+        return openid;
+    }
 
-	public void setRoles(Set<Tb_role> roles) {
-		this.roles = roles;
-	}
+    public void setOpenid(String openid) {
+        this.openid = openid == null ? null : openid.trim();
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public String getOfficialaccountid() {
+        return officialaccountid;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setOfficialaccountid(String officialaccountid) {
+        this.officialaccountid = officialaccountid == null ? null : officialaccountid.trim();
+    }
 
-	public String getOpenid() {
-		return openid;
-	}
+    public String getNickname() {
+        return nickname;
+    }
 
-	public void setOpenid(String openid) {
-		this.openid = openid == null ? null : openid.trim();
-	}
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
+    }
 
-	public String getOfficialaccountid() {
-		return officialaccountid;
-	}
+    public String getPhone() {
+        return phone;
+    }
 
-	public void setOfficialaccountid(String officialaccountid) {
-		this.officialaccountid = officialaccountid == null ? null : officialaccountid.trim();
-	}
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
 
-	public String getNickname() {
-		return nickname;
-	}
+    public Date getCreated() {
+        return created;
+    }
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname == null ? null : nickname.trim();
-	}
+    public void setCreated(Date created) {
+        this.created = created;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public Date getUpdated() {
+        return updated;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile == null ? null : mobile.trim();
-	}
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
 
-	public String getStation() {
-		return station;
-	}
+    public Integer getType() {
+        return type;
+    }
 
-	public void setStation(String station) {
-		this.station = station == null ? null : station.trim();
-	}
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
-	public String getCreateDate() {
-		return createDate;
-	}
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-	public void setCreateDate(String createDate) {
-		this.createDate = createDate == null ? null : createDate.trim();
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	public String getUpdateDate() {
-		return updateDate;
-	}
+    public Integer getSchoolParentId() {
+        return schoolParentId;
+    }
 
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate == null ? null : updateDate.trim();
-	}
+    public void setSchoolParentId(Integer schoolParentId) {
+        this.schoolParentId = schoolParentId;
+    }
 
-	public Integer getType() {
-		return type;
-	}
+    public Integer getStudentId() {
+        return studentId;
+    }
 
-	public void setType(Integer type) {
-		this.type = type;
-	}
+    public void setStudentId(Integer studentId) {
+        this.studentId = studentId;
+    }
 
-	public Boolean getDeleteFlag() {
-		return deleteFlag;
-	}
+    public Integer getStaffId() {
+        return staffId;
+    }
 
-	public void setDeleteFlag(Boolean deleteFlag) {
-		this.deleteFlag = deleteFlag;
-	}
+    public void setStaffId(Integer staffId) {
+        this.staffId = staffId;
+    }
 
-	public Integer getSchoolParentId() {
-		return schoolParentId;
-	}
+    public Integer getAdminId() {
+        return adminId;
+    }
 
-	public void setSchoolParentId(Integer schoolParentId) {
-		this.schoolParentId = schoolParentId;
-	}
+    public void setAdminId(Integer adminId) {
+        this.adminId = adminId;
+    }
 
-	public Integer getStudentId() {
-		return studentId;
-	}
+    public Integer getSchoolAdminId() {
+        return schoolAdminId;
+    }
 
-	public void setStudentId(Integer studentId) {
-		this.studentId = studentId;
-	}
+    public void setSchoolAdminId(Integer schoolAdminId) {
+        this.schoolAdminId = schoolAdminId;
+    }
 
-	public Integer getStaffId() {
-		return staffId;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setStaffId(Integer staffId) {
-		this.staffId = staffId;
-	}
-
-	public Integer getAdminId() {
-		return adminId;
-	}
-
-	public void setAdminId(Integer adminId) {
-		this.adminId = adminId;
-	}
-
-	public Integer getSchoolAdminId() {
-		return schoolAdminId;
-	}
-
-	public void setSchoolAdminId(Integer schoolAdminId) {
-		this.schoolAdminId = schoolAdminId;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description == null ? null : description.trim();
-	}
+    public void setDescription(String description) {
+        this.description = description == null ? null : description.trim();
+    }
 }
