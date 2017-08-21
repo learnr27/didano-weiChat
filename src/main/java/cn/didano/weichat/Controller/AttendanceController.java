@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -243,6 +244,19 @@ public class AttendanceController {
 			// 转换为unix时间格式
 			attendanceData.setDate(date);
 			staffs = attendanceService.getDaySignStatisticList(attendanceData);
+			SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			for (int i = 0; i < staffs.size(); i++) {
+				if(staffs.get(i).getOut_time()!=null){
+					if(sdf.format(staffs.get(i).getOut_time()).equals("1970-01-01 00:00:00")){
+						staffs.get(i).setOut_time(null);
+					}
+				}
+				if(staffs.get(i).getIn_time()!=null){
+					if(sdf.format(staffs.get(i).getIn_time()).equals("1970-01-01 00:00:00")){
+						staffs.get(i).setIn_time(null);
+					}
+				}
+			}
 			outList = new OutList<Tb_staff>(staffs.size(), staffs);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
