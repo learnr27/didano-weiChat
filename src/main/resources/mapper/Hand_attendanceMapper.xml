@@ -2,6 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.didano.weichat.dao.Hand_attendanceMapper">
 
+
 <select id ="getDayArriveSchoolStatistic" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="Integer">
 SELECT COUNT(id) AS num FROM (
                     SELECT tb_student_detection.* FROM tb_student_detection
@@ -128,7 +129,12 @@ SELECT temp2.* FROM (
 SELECT tb_class.title,tb_staff_signdate.sign_status,
                 tb_staff_signdate.in_time,
                 tb_staff_signdate.out_time,
-                tb_staff.* 
+                tb_staff.id,
+                 tb_staff.type,
+                 tb_staff.school_id AS schoolId,
+                 tb_staff.name,
+                 tb_staff.phone,
+                 tb_staff.sign_type_id AS signTypeId              
                 FROM tb_staff
                 LEFT JOIN tb_staff_signdate ON tb_staff_signdate.staff_id = tb_staff.id 
                 AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m-%d') = #{date}
@@ -156,8 +162,9 @@ SELECT
   </select>
   
   <select id="findStaffInfoById" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
-  SELECT * FROM tb_staff b LEFT JOIN tb_staff_class a ON a.staff_id = b.id WHERE b.id = #{id}
-  </select>
+  SELECT a.class_id,b.id,b.TYPE,b.school_id AS schoolId,b.NAME,b.phone,b.sign_type_id AS signTypeId FROM 
+  tb_staff b LEFT JOIN tb_staff_class a ON a.staff_id = b.id WHERE b.id = #{id}
+   </select>
    <select id="findStudentArriveAndLeaveByClass" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_studentArriveAndLeaveDate">
    SELECT temp1.*,e.title,d.relation_title AS parent FROM (SELECT temp.* ,c.created AS leaveTime ,c.parent_id FROM(SELECT a.class_id,a.id,a.name,b.created AS arriveTime FROM tb_student a 
 LEFT JOIN tb_student_detection b ON  a.id=b.student_id AND DATE_FORMAT(b.created, '%Y-%m-%d') = #{date}

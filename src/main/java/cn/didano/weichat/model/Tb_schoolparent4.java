@@ -2,7 +2,7 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_schoolParent {
+public class Tb_schoolparent4 extends Tb_schoolParent{
     private Integer id;
 
     private Integer schoolId;
@@ -15,29 +15,48 @@ public class Tb_schoolParent {
 
     private Byte status;
     private Date created;
+    private Date updated;
+    private Boolean deleted;
+	// private String student_rfid;
+    private String parent_id_number;
+    private String student_id_number;
+    //private String rfid;
     
-  //private String rfid;
+   public Date getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Date updated) {
+		this.updated = updated;
+	}
+
+
     
-    // private String student_rfid;
-     private String parent_id_number;
-     private String student_id_number;
- 	public String getParent_id_number() {
- 		return parent_id_number;
- 	}
-
- 	public void setParent_id_number(String parent_id_number) {
- 		this.parent_id_number = parent_id_number;
- 	}
-
- 	public String getStudent_id_number() {
- 		return student_id_number;
- 	}
-
- 	public void setStudent_id_number(String student_id_number) {
- 		this.student_id_number = student_id_number;
- 	}
     
-   
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
+	public String getParent_id_number() {
+		return parent_id_number;
+	}
+
+	public void setParent_id_number(String parent_id_number) {
+		this.parent_id_number = parent_id_number;
+	}
+
+	public String getStudent_id_number() {
+		return student_id_number;
+	}
+
+	public void setStudent_id_number(String student_id_number) {
+		this.student_id_number = student_id_number;
+	}
+
 	@Override
 	public String toString() {
 		return "Tb_schoolparent [id=" + id + ", schoolId=" + schoolId + ", name=" + name + ", phone=" + phone

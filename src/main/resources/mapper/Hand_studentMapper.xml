@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_student_detectionMapper">
+   <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_student_detection">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="student_id" jdbcType="INTEGER" property="studentId" />
+		<result column="height" jdbcType="INTEGER" property="height" />
+		<result column="weight" jdbcType="INTEGER" property="weight" />
+	</resultMap>
+  <select id="select_student_detection" resultMap="BaseResultMap">
+SELECT
+	tb_student_detection.height,
+	tb_student_detection.weight
+FROM tb_student tmp1
+INNER JOIN tb_student_detection ON tmp1.id = tb_student_detection.student_id
+INNER JOIN tb_class tmp2 ON tmp1.class_id = tmp2.id
+WHERE
+		<![CDATA[tmp1.birthday >= #{birthday,jdbcType=DATE} 
+	AND tmp1.birthday <= #{birthday1,jdbcType=DATE}]]>
+		AND tmp2.tested = 0
+		AND tmp2.deleted = 0
+		AND tb_student_detection.deleted = 0		
+GROUP BY tmp1.id;
+  </select>
+</mapper>

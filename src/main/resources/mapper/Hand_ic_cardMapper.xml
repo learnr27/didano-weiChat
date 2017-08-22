@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_ic_cardMapper">
+ <resultMap id="weichatResultMap" type="cn.didano.weichat.model.Tb_ic_card">
+     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ic_type" jdbcType="INTEGER" property="icType" />
+    <result column="ic_number" jdbcType="VARCHAR" property="icNumber" />
+    <result column="rfid" jdbcType="VARCHAR" property="rfid" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+  </resultMap>
+  <select id="selectNoeIcInfo" parameterType="cn.didano.weichat.model.Tb_ic_card" resultMap="weichatResultMap"><!-- 
+    SELECT id,ic_type,ic_number,school_id,STATUS,created,updated,deleted from tb_ic_card where ic_number=#{icNumber} and school_id=#{schoolId} -->
+     SELECT * from tb_ic_card where ic_number=#{icNumber} and school_id=#{schoolId} and deleted=0
+  </select> 
+  
+  <update id="updateInfoByid" parameterType="Integer">
+		UPDATE tb_ic_card AS a SET a.status=2 WHERE a.id=#{id} 
+  </update>
+  
+  
+  <update id="updateInfoByic_number" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_ic_card AS a SET a.status=3,a.school_id=#{schoolId} WHERE a.ic_number=#{icNumber} 
+  </update>
+  
+  <update id="updateIcCardInfo" parameterType="cn.didano.weichat.model.Hand_ic_card">
+		UPDATE tb_ic_card AS a SET a.status=2,a.school_id=#{school_id} where <![CDATA[ic_number >= #{ic_numberOne} AND ic_number <= #{ic_numberTow} AND deleted=0]]> 
+  </update>
+  
+  <select id="select_between_icInfo" parameterType="cn.didano.weichat.model.Hand_icCardAndSchool_id" resultMap="weichatResultMap">
+    <!-- SELECT id,ic_type,ic_number,school_id,STATUS,created,updated,deleted from tb_ic_card where <![CDATA[ic_number >= #{icNumberNoe} AND ic_number <= #{icNumberTow} AND school_id=#{school_id} AND deleted=0]]> 
+   -->
+   SELECT * from tb_ic_card where <![CDATA[ic_number >= #{icNumberNoe} AND ic_number <= #{icNumberTow} AND school_id=#{school_id} AND deleted=0]]> 
+   </select> 
+  
+   <select id="select_ICMaxNumber" parameterType="INTEGER" resultMap="weichatResultMap">
+    <!-- SELECT id,ic_type,MAX(id),ic_number,school_id,STATUS,created,updated,deleted FROM tb_ic_card WHERE school_id=#{school_id} -->
+    SELECT * FROM tb_ic_card WHERE school_id=#{school_id} and deleted=0
+  </select> 
+  
+  
+  <update id="updateChongZhiIcCardInfo" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_ic_card AS a SET a.status=1,a.school_id=0 where a.id=#{id} and deleted=0
+  </update>
+  <update id="updateChongZhiStudentInfo" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_student AS stu SET stu.ic_card_id=0,stu.rfid='' where stu.ic_card_id=#{id} and stu.rfid=#{rfid}
+  </update>
+  <update id="updateChongZhiParentInfo" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_student_parent AS sp SET sp.ic_card_id=0,sp.rfid='' where sp.ic_card_id=#{id} and sp.rfid=#{rfid}
+  </update>
+  <update id="updateChongZhiTeacherInfo" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_staff AS sf SET sf.ic_card_id=0,sf.rfid='' where sf.ic_card_id=#{id} and sf.rfid=#{rfid}
+  </update>
+  
+  <update id="remove_icCard" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_ic_card set deleted=1 where 
+		<if test="rfid != null">
+       	 <![CDATA[rfid=#{rfid}]]>
+      	</if>
+		<if test="icNumber != null">
+        	<![CDATA[ or ic_number = #{icNumber}]]>
+      	</if>
+  </update>
+  
+  <update id="remove_rfidAndIcNumber" parameterType="cn.didano.weichat.model.Tb_ic_card">
+		UPDATE tb_ic_card set deleted=1 where rfid=#{rfid} and ic_number = #{icNumber}
+  </update>
+  
+</mapper>
+

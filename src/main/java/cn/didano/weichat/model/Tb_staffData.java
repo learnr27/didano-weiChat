@@ -2,16 +2,15 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+public class Tb_staffData extends Tb_staff{
 
-public class Tb_staff {
-    private Integer id;
+	private String name ;
+	private Integer classId;
+	private Integer id;
 
     private Byte type;
 
     private Integer schoolId;
-
-    private String name;
 
     private String phone;
 
@@ -36,69 +35,7 @@ public class Tb_staff {
     private Boolean deleted;
 
     private Date updated;
-    //手写
-    private String title;
-    
-    private Integer class_id;
-    
-    private byte sign_status;
-    
-    private Date in_time;
-    
-    private Date out_time;
-    
-   
-    public Integer getSchoolId() {
-		return schoolId;
-	}
-
-	public void setSchoolId(Integer schoolId) {
-		this.schoolId = schoolId;
-	}
-
-	public Integer getClass_id() {
-		return class_id;
-	}
-
-	public void setClass_id(Integer class_id) {
-		this.class_id = class_id;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public byte getSign_status() {
-		return sign_status;
-	}
-
-	public void setSign_status(byte sign_status) {
-		this.sign_status = sign_status;
-	}
-
-	@JsonFormat(pattern = "HH:mm",timezone="GMT+8")
-	public Date getIn_time() {
-		return in_time;
-	}
-
-	public void setIn_time(Date in_time) {
-		this.in_time = in_time;
-	}
-
-	@JsonFormat(pattern = "HH:mm",timezone="GMT+8")
-	public Date getOut_time() {
-		return out_time;
-	}
-
-	public void setOut_time(Date out_time) {
-		this.out_time = out_time;
-	}
-
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -114,14 +51,12 @@ public class Tb_staff {
         this.type = type;
     }
 
-
-
-    public String getName() {
-        return name;
+    public Integer getSchoolId() {
+        return schoolId;
     }
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
+    public void setSchoolId(Integer schoolId) {
+        this.schoolId = schoolId;
     }
 
     public String getPhone() {
@@ -219,4 +154,18 @@ public class Tb_staff {
     public void setUpdated(Date updated) {
         this.updated = updated;
     }
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Integer getClassId() {
+		return classId;
+	}
+	public void setClassId(Integer classId) {
+		this.classId = classId;
+	}
+	
 }

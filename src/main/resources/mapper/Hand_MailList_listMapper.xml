@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_MailList_listMapper">
+<!-- 需要修改rfid -->
+<select id="findByTeacher" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+select tmp6.id,tmp6.classId,v.id as switchId,v.is_use,tmp6.icCardId,tmp6.school_id,tmp6.name,tmp6.gender,tmp6.birthday,tmp6.device_registered,tmp6.status,tmp6.rfid,tmp6.ic_card_id,tmp6.ic_number,tmp6.student_ic_number,tmp6.staff_ic_number from (select tmp3.class_id as classId,tmp3.ic_card_id as icCardId,tmp3.*,tmp3.ic_number as student_ic_number,tmp4.ic_number as staff_ic_number from (select tmp1.*,tmp2.ic_number from 
+	(SELECT a.* FROM tb_student a,tb_staff_class b WHERE b.staff_id=#{id} AND a.class_id=b.class_id  AND a.deleted =0 AND b.deleted=0 ORDER BY CONVERT( a.name USING gbk))tmp1 left join (select * from tb_ic_card where deleted=0) tmp2 on tmp1.rfid=tmp2.rfid) tmp3 
+	left join 
+	(select card.ic_number,tmp5.class_id from (select staff.rfid,sc.class_id from tb_staff staff,tb_staff_class sc where staff.id=sc.staff_id and staff.deleted=0 and sc.staff_id=#{id}) tmp5 left join (select * from tb_ic_card where deleted=0) card on tmp5.rfid=card.rfid) tmp4 
+on tmp3.class_id=tmp4.class_id) as tmp6 left join `vd_auth_switch` v on tmp6.id=v.owner_id
+ </select> 
+ 
+ 
+ 
+ <!-- yang  学生的查询 和家长-->
+<select id="findStudentByIcNumber" parameterType="cn.didano.weichat.model.Tb_student" resultType="cn.didano.weichat.model.Tb_student4List">
+   SELECT MAX(a.id),a.*,b.title as schoolTitle,c.title as classTitle FROM tb_student a left join tb_school b on a.school_id=b.id left join tb_class c on a.class_id=c.id where a.rfid=#{rfid} and a.deleted=0 
+      <if test="id != null">
+        <![CDATA[and a.id <> #{id}]]>
+      </if>
+</select>
+
+<select id="selectSchoolBystaffId" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+ 	select school_id as schoolId from tb_staff where id=#{id} and deleted=0
+</select>
+
+<select id="findParentByIcNumber" parameterType="cn.didano.weichat.model.Tb_student" resultType="cn.didano.weichat.model.Hand_wholeStudent4PhoneBook">
+ select tmp1.title,tmp1.name,tmp2.title as schoolTitle,tmp3.title as classTitle from 
+ (select Max(a.id),a.relation_title as title,b.name,b.school_id,b.class_id from tb_student_parent a,tb_student b where a.rfid=#{rfid} and b.id=a.student_id and a.deleted=0 
+ 	  <if test="id != null">
+        <![CDATA[and a.id <> #{id}]]>
+      </if>) 
+ tmp1 left join tb_school tmp2 on tmp1.school_id=tmp2.id left join tb_class tmp3 on tmp1.class_id=tmp3.id 
+</select>
+
+ <select id="findAll" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+ SELECT a.id,a.class_id as classId,a.name,a.birthday,a.gender FROM tb_student a WHERE   a.deleted =0  ORDER BY CONVERT( a.name USING gbk )
+  </select>
+ 
+ <select id="findById" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook"> 
+ SELECT a.id,a.class_id  as classId,a.name,a.birthday,a.gender FROM tb_student a WHERE  a.id=#{id} AND a.deleted =0 ORDER BY CONVERT( a.name USING gbk )
+ </select>
+<select id="findClassIdBySid" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staffData">
+   SELECT class_id  as classId FROM tb_staff_class WHERE staff_id = #{id} and deleted=0
+</select> 
+ <select id="findByName"  parameterType="cn.didano.weichat.model.Tb_studentData" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+	select tmp3.id,v.id as switchId,tmp3.classId,tmp3.name,tmp3.gender,tmp3.birthday,tmp3.student_ic_number,tmp3.icCardId,v.`is_use` from (select tmp1.id,tmp1.class_id as classId,tmp1.name,tmp1.gender,tmp1.birthday,tmp2.ic_number as 
+	student_ic_number,tmp1.ic_card_id as icCardId from
+	tb_student tmp1
+	left join (select * from tb_ic_card where school_id=#{schoolid} and deleted=0 and ic_type=2) tmp2
+	on tmp1.rfid=tmp2.rfid 
+	where tmp1.name like #{name}
+	and tmp1.school_id=#{schoolid}
+	and tmp1.deleted=0 ORDER BY CONVERT( NAME USING gbk ) )as tmp3 left join `vd_auth_switch` v on tmp3.`id` = v.`owner_id`
+  </select>
+ <select id="findByNameClass"  parameterType="cn.didano.weichat.model.Tb_studentData" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+  <!--  select * from tb_student where name like #{name} and class_id=#{schoolid} and deleted=0 ORDER BY CONVERT( NAME USING gbk ) -->
+  <!-- select tmp1.id,tmp1.class_id,tmp1.name,tmp1.gender,tmp1.birthday,tmp2.rfid from tb_student tmp1 left join tb_ic_card tmp2 on tmp1.rfid=tmp2.rfid where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 ORDER BY CONVERT( NAME USING gbk ) 
+ --> 
+select tmp3.id,v.id as switchId,v.is_use,tmp3.classId,tmp3.name,tmp3.gender,tmp3.birthday,tmp3.student_ic_number,tmp3.icCardId from 
+(select tmp1.id,tmp1.class_id  as classId,tmp1.name,tmp1.gender,tmp1.birthday,tmp2.ic_number as student_ic_number,tmp1.ic_card_id as icCardId 
+from tb_student tmp1 left join (select * from tb_ic_card where deleted=0 and ic_type=2) tmp2 on tmp1.rfid=tmp2.rfid 
+where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 ORDER BY CONVERT( NAME USING gbk ) )as tmp3 left join `vd_auth_switch` v on tmp3.id=v.owner_id
+ </select>
+ <select id="findByschool" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+  SELECT * FROM tb_student WHERE school_id=#{id} and deleted=0 ORDER BY class_id ORDER BY CONVERT( NAME USING gbk )
+ </select>
+ <select id="findWholeStudentParentsByschool" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_wholeStudentParent4PhoneBook">
+ select
+	tmp2.relation_id,
+	tmp2.parent_id,
+	tmp1.id,
+	tmp1.School_id as SchoolId,
+	tmp1.class_id as classId,
+	tmp1.title,
+	tmp1.NAME,
+	tmp1.gender,
+	tmp1.birthday,
+	tmp2.relation_title as parent_name,
+	tmp3.phone as parent_phone,
+	tmp1.ic_number as student_ic_number,
+	tmp1.ic_card_id as studentIcCardId,
+	tmp2.ic_number as parent_ic_number,
+	tmp2.ic_card_id as parentIcCardId,
+	tmp1.is_use ,
+	tmp1.switchId
+		from (
+		select tmpIn.*,b.title,c.ic_number from (select tmpIn2.* from
+    (select a.id,
+    a.School_id,
+    a.class_id,
+    a.rfid,
+    a.ic_card_id,
+		a.NAME,
+		a.gender,
+		a.birthday,vd.is_use,vd.id as switchId from tb_student a left join vd_auth_switch vd on a.id=vd.owner_id
+    where  a.school_id =#{id} AND a.deleted = 0)
+    as tmpIn2 ORDER BY
+		CONVERT (tmpIn2. NAME USING gbk)) as tmpIn
+		left join tb_class b on tmpIn.class_id = b.id
+		left join (select * from tb_ic_card where school_id=#{id} and deleted=0 and ic_type=2) c on c.rfid=tmpIn.rfid
+		) tmp1
+		left join
+		(select d.relation_id,d.ic_card_id,d.parent_id,d.relation_title,d.student_id,f.ic_number,e.title
+		from `tb_student_parent` d left join tb_class e on e.id=d.class_id
+		left join (select * from tb_ic_card where school_id=#{id} and deleted=0 and ic_type=1) f on f.rfid=d.rfid where d.school_id=#{id} and d.deleted=0
+		) tmp2
+		on tmp1.id=tmp2.student_id left join tb_school_parent tmp3 on tmp2.parent_id=tmp3.id;  
+ </select>
+ <select id="findteacherByschool" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+ SELECT tmp1.status,
+		tmp1.in_time,
+		tmp1.out_time,
+		tmp1.id,
+		tmp1.name,
+		tmp1.phone,
+		tmp1.class_id  as classId,
+		c.title,
+		tmp1.type,
+		tmp1.school_id ,
+		tmp3.ic_number as staff_ic_number,
+		tmp1.ic_card_id as icCardId
+	FROM
+	(SELECT a.ic_card_id,a.status,a.id,b.class_id,a.type,a.school_id,a.name,a.phone,c.in_time,c.out_time,a.rfid
+	FROM tb_staff a,tb_staff_class b ,tb_sign_type c WHERE a.school_id=#{id} AND a.deleted=0 AND a.type =32 and a.id=b.staff_id and a.sign_type_id=c.id
+	)AS tmp1 LEFT JOIN tb_class c ON tmp1.class_id=c.id left join (select * from tb_ic_card where deleted=0 and school_id=#{id} and ic_type=1) tmp3 on tmp1.rfid=tmp3.rfid ORDER BY CONVERT( tmp1.name USING gbk ) 
+ </select>
+ <select id="findrelation" resultType="cn.didano.weichat.model.Tb_relation">
+      select id,title from tb_relation
+  </select>
+  <select id="findrelationById" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_relation">
+     select id,title from tb_relation where id=#{id} and deleted=0
+  </select>
+<select id="findParentById" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_parent4mailList">
+ SELECT
+  p.id,
+  tmp2.relation_id,
+  tmp2.title AS parent_name,
+  tmp3.ic_number as parent_ic_number,
+  tmp2.ic_card_id as icCardId,
+  p.phone AS parent_phone
+FROM
+  (
+    SELECT
+      p.relation_id,
+      tmp1.id,
+      tmp1. NAME,
+      p.relation_title AS title,
+      tmp1.birthday,
+      tmp1.gender,
+      tmp1.class_id  as classId,
+      p.parent_id AS parent_id,
+      p.rfid,
+      p.ic_card_id
+    FROM
+      tb_student AS tmp1,
+      tb_student_parent p
+    WHERE
+      tmp1.id = p.student_id
+    AND tmp1.id = #{id}
+    AND p.deleted = 0
+    AND tmp1.deleted = 0
+  ) AS tmp2
+LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from tb_ic_card where deleted=0 and ic_type=1) tmp3 on tmp2.rfid=tmp3.rfid 	
+</select>
+
+<select id="findParentByStudentId" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_parent4mailList">
+select * from tb_student_parent where student_id=#{id} and deleted=0
+</select>
+<select id="findByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+  SELECT a.*,a.class_id  as classId FROM tb_student a WHERE  a.class_id=#{id} AND a.deleted =0 ORDER BY CONVERT( a.name USING gbk )
+ </select>
+<select id="findTeacherByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+	  SELECT  
+		tmp1.ic_card_id as icCardId,tmp1.title,tmp1.status,tmp1.school_id,tmp1.id,tmp1.name,tmp1.type,tmp1.phone,tmp1.class_id  as classId,c.in_time,c.out_time ,card.ic_number as staff_ic_number
+		FROM 
+	 (SELECT a.ic_card_id,c.title,a.status,a.sign_type_id,a.school_id,a.id,a.name,a.phone,a.type,b.class_id,a.rfid
+	 FROM 
+	 tb_staff a,tb_staff_class b ,tb_class c
+	 WHERE 
+	 a.type=32 AND a.id=b.staff_id  AND a.deleted=0 AND b.deleted=0 AND b.class_id=c.id ) AS tmp1 
+	 LEFT JOIN tb_sign_type c ON (tmp1.sign_type_id =c.id) left join (select * from tb_ic_card where deleted=0 and ic_type=1) card on tmp1.rfid=card.rfid
+	 WHERE  class_id=#{id} ORDER BY CONVERT( tmp1.name USING gbk )
+</select>
+<select id="findBystaffbyId" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+ select tmp1.title,tmp1.status,tmp1.sign_type_id,tmp1.school_id as schoolId,tmp1.id,tmp1.name,tmp1.phone,
+	tmp1.type,tmp1.class_id  as classId,tmp2.ic_number as staff_ic_number 
+	from ( SELECT c.title,a.status,a.sign_type_id,a.school_id,
+	a.id,a.name,a.phone,a.type,b.class_id,a.rfid FROM tb_staff a,tb_staff_class b ,tb_class c
+	 WHERE a.id=b.staff_id  AND a.deleted=0  AND 
+	b.class_id=c.id AND a.id=#{id} ORDER BY CONVERT( a.name USING gbk )
+	) tmp1 left join (select * from tb_ic_card where deleted=0) tmp2 on tmp1.rfid=tmp2.rfid
+</select>
+
+
+<select id="findTeacherByNameClass" parameterType="cn.didano.weichat.model.Tb_staffData" resultType="cn.didano.weichat.model.Hand_staffTransit4PhoneBook"> 
+	select tmp1.ic_card_id as icCardId,tmp2.ic_number as staff_ic_number,tmp1.sign_type_id AS SignTypeId,tmp1.title,tmp1.status,tmp1.school_id,tmp1.id,tmp1.name,tmp1.type,tmp1.phone,tmp1.class_id  as classId,c.in_time,c.out_time FROM 
+	 (SELECT a.ic_card_id,a.rfid,c.title,a.status,a.sign_type_id,a.school_id,a.id,a.name,a.phone,a.type,b.class_id FROM tb_staff a,tb_staff_class b ,tb_class c
+	 WHERE   a.id=b.staff_id  AND a.deleted=0 AND b.deleted=0 AND b.class_id=c.id AND a.name LIKE #{name} and a.school_id=#{schoolId}) AS tmp1 
+	 LEFT JOIN tb_sign_type c ON (tmp1.sign_type_id =c.id) left join (select * from tb_ic_card where deleted=0 and school_id=#{schoolId} and ic_type=1) tmp2 on tmp1.rfid=tmp2.rfid ORDER BY CONVERT( tmp1.name USING gbk )
+</select>
+<select id="findParentByPid" parameterType="cn.didano.weichat.model.Tb_student_parent" resultType="cn.didano.weichat.model.Hand_parent4mailList">
+   SELECT * FROM tb_student_parent where  student_id=#{id} and parent_id=#{parentId}  and deleted=0
+</select>
+<update id="Update" parameterType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
+  UPDATE tb_student a set 
+      <if test="icCardId !=null">
+        a.ic_card_id = #{icCardId},
+      </if>
+      <if test="student_ic_number != null">
+        a.rfid = #{student_ic_number},
+      </if>
+   a.name=#{name},a.class_id=#{classId},a.gender=#{gender,jdbcType=TINYINT},a.birthday=#{birthday,jdbcType=DATE} where a.id=#{id}
+</update>
+
+<update id="delete" parameterType="Integer">
+UPDATE tb_student AS a SET a.deleted=1,ic_card_id=0,rfid=NULL WHERE a.id=#{id} 
+</update>
+
+
+<update id="UpdateSchoolParent" parameterType="cn.didano.weichat.model.Hand_parent4mailList">
+   UPDATE tb_school_parent a SET 
+      
+     a.phone=#{parent_phone} where a.id = #{id} 
+</update>
+
+ <update id="UpdateStudentParent" parameterType="cn.didano.weichat.model.Hand_parent4mailList">     
+     UPDATE tb_student_parent b SET 
+      <if test="icCardId != null">
+        b.ic_card_id = #{icCardId},
+      </if>
+      <if test="parent_ic_number != null">
+       b.rfid = #{parent_ic_number},
+     </if>
+     b.relation_id =#{relation_id},b.relation_title=#{parent_name} where  b.parent_id=#{id} and b.deleted=0
+</update>
+
+<update id="deleteSchool_parentBySid" parameterType="Integer">
+   UPDATE tb_school_parent a SET a.deleted=1 WHERE
+   a.id IN (SELECT * FROM(SELECT parent_id FROM tb_student_parent WHERE student_id=#{id})a) 
+</update>
+
+<update id="deleteStudent_parentBySid" parameterType="Integer">
+   UPDATE tb_student_parent b SET b.deleted = 1,b.rfid=NULL,b.ic_card_id=0 WHERE
+   b.student_id=#{id}
+</update>
+
+<update id="deleteSingleSchoolparentByid" parameterType="cn.didano.weichat.model.Tb_deleteParentDate">
+ UPDATE tb_school_parent a SET a.deleted=1 WHERE
+   a.id =#{parent_id}
+</update>
+<update id="deleteSingleStudentlparentByid" parameterType="cn.didano.weichat.model.Tb_deleteParentDate">
+ UPDATE tb_student_parent b SET b.deleted = 1 WHERE
+   b.parent_id=#{parent_id} AND b.student_id = #{student_id}
+</update>
+</mapper>
