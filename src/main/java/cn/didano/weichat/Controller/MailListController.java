@@ -119,7 +119,7 @@ public class MailListController {
 			for (Hand_staff4PhoneBook teacher : classstaff) {
 				staff1 = new Hand_staff4PhoneBook();
 				BeanUtils.copyProperties(staff1, teacher);
-				staff1.setSchool_id(teacher.getSchool_id());
+				staff1.setSchoolId(teacher.getSchoolId());
 				doctor.add(staff1);
 			}
 			outList = new OutList<Hand_staff4PhoneBook>(doctor.size(), doctor);
@@ -152,7 +152,7 @@ public class MailListController {
 		Out<OutList<Tb_class>> back = new Out<OutList<Tb_class>>();
 		try {
 			// 查询该学校所有班级
-			classs = classService.findAll(staff.getSchool_id());
+			classs = classService.findAll(staff.getSchoolId());
 			if (classs.size() > 0) {
 				outList = new OutList<Tb_class>(classs.size(), classs);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_UPDATE);
@@ -217,7 +217,7 @@ public class MailListController {
 				// 设置要查询的人员的名字和该学校id
 				Tb_staff staffNameData = new Tb_staff();
 				staffNameData.setName("%" + name + "%");
-				staffNameData.setSchool_id(staff4SchoolId.getSchool_id());
+				staffNameData.setSchoolId(staff4SchoolId.getSchoolId());
 				// 通过名字和学校id进行模糊查询
 				List<Hand_staffTransit4PhoneBook> staffFindByName = staffService.findByNameSchool(staffNameData);
 				Hand_staff4PhoneBook target = null;
@@ -238,12 +238,12 @@ public class MailListController {
 				// 设置要查询的人员的名字和该学校id
 				Tb_staff staffNameData = new Tb_staff();
 				staffNameData.setName("%" + name + "%");
-				staffNameData.setSchool_id(staff4SchoolId.getSchool_id());
+				staffNameData.setSchoolId(staff4SchoolId.getSchoolId());
 				// 查询该名字为园长的人
 				List<Hand_staffTransit4PhoneBook> boss = staffService.findBossByNameschool(staffNameData);
 				Tb_staffData data2 = new Tb_staffData();
 				data2.setName("%" + name + "%");
-				data2.setSchool_id(staff4SchoolId.getSchool_id());
+				data2.setSchoolId(staff4SchoolId.getSchoolId());
 				staffAll.addAll(boss);
 				// 查询改名字为教职工的人
 				List<Hand_staffTransit4PhoneBook> teacherAll = mailListService.findTeacherByNameClass(data2);
@@ -264,7 +264,7 @@ public class MailListController {
 				}
 				Tb_staff tf = new Tb_staff();
 				tf.setName("%" + name + "%");
-				tf.setSchool_id(staff4SchoolId.getSchool_id());
+				tf.setSchoolId(staff4SchoolId.getSchoolId());
 				// 查询该名字为医生或勤务的人
 				List<Hand_staffTransit4PhoneBook> helper = staffService.findByNameType(tf);
 				Tb_sign_type t1 = null;
@@ -300,7 +300,7 @@ public class MailListController {
 			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()) {
 				// yang修改sql
 				data1.setName("%" + name + "%");
-				data1.setSchoolid(staff4SchoolId.getSchool_id());
+				data1.setSchoolid(staff4SchoolId.getSchoolId());
 				// 按名字查询学生集合
 				student = mailListService.findByname(data1);
 			} else {
@@ -421,7 +421,7 @@ public class MailListController {
 					}
 					// 判断要新增的人员是否为园长
 					if (teacher_a.getType() != StaffType.SCHOOLMASTER.getIndex()) {
-						vd_date.setSchoolId(operator.getSchool_id());
+						vd_date.setSchoolId(operator.getSchoolId());
 						vd_date.setInTime(sdf.parse(teacher_a.getSetIntime()));
 						vd_date.setOutTime(sdf.parse(teacher_a.getSetOuttime()));
 						vd_date.setCreated(new Date());
@@ -434,7 +434,7 @@ public class MailListController {
 					} else {
 						vd_staff.setSignTypeId(0);
 					}
-					vd_staff.setSchool_id(operator.getSchool_id());
+					vd_staff.setSchoolId(operator.getSchoolId());
 					// yang 新增RFID
 					if (tb_ic_card != null) {
 						vd_staff.setRfid(tb_ic_card.getRfid());
@@ -450,7 +450,7 @@ public class MailListController {
 					if (teacher_a.getType() == StaffType.TEACHEER.getIndex()) {
 						vd_class.setClassId(teacher_a.getClassId());
 						vd_class.setCreated(new Date());
-						vd_class.setSchoolId(vd_staff.getSchool_id());
+						vd_class.setSchoolId(vd_staff.getSchoolId());
 						vd_class.setStaffId(vd_staff.getId());
 						staffService.insertClassSelective(vd_class);
 					}
@@ -461,7 +461,7 @@ public class MailListController {
 
 					// 新增家长json方式
 					JSONObject jsonParam = new JSONObject();
-					jsonParam.put("school_id", vd_staff.getSchool_id());
+					jsonParam.put("school_id", vd_staff.getSchoolId());
 					jsonParam.put("type", 2);
 					jsonParam.put("staff_id", vd_staff.getId());
 
@@ -495,13 +495,13 @@ public class MailListController {
 					} else {
 						// 判断该员工是否已经有签到时间数据，没有的话就新增
 						if (staffService.findById(teacher_a.getId()).getSignTypeId() != 0) {
-							vd_date.setSchoolId(operator.getSchool_id());
+							vd_date.setSchoolId(operator.getSchoolId());
 							vd_date.setInTime(sdf.parse(teacher_a.getSetIntime()));
 							vd_date.setOutTime(sdf.parse(teacher_a.getSetOuttime()));
 							vd_date.setId(staffService.findById(teacher_a.getId()).getSignTypeId());
 							rowNum3 = staffService.updateType(vd_date);
 						} else {
-							vd_date.setSchoolId(operator.getSchool_id());
+							vd_date.setSchoolId(operator.getSchoolId());
 							vd_date.setInTime(sdf.parse(teacher_a.getSetIntime()));
 							vd_date.setOutTime(sdf.parse(teacher_a.getSetOuttime()));
 							vd_date.setCreated(new Date());
@@ -529,13 +529,13 @@ public class MailListController {
 						if (!staffService.findclassidByStaffid(vd_staff.getId()).isEmpty()) {
 							vd_class.setClassId(teacher_a.getClassId());
 							vd_class.setId(staffService.findclassidByStaffid(vd_staff.getId()).get(0).getId());
-							vd_class.setSchoolId(operator.getSchool_id());
+							vd_class.setSchoolId(operator.getSchoolId());
 							vd_class.setStaffId(teacher_a.getId());
 							staffService.updateclass(vd_class);
 						} else {
 							vd_class.setClassId(teacher_a.getClassId());
 							vd_class.setCreated(new Date());
-							vd_class.setSchoolId(operator.getSchool_id());
+							vd_class.setSchoolId(operator.getSchoolId());
 							vd_class.setStaffId(vd_staff.getId());
 							staffService.insertClassSelective(vd_class);
 						}
@@ -606,7 +606,7 @@ public class MailListController {
 			// 取该学校所有班级对应的学生及家长
 			// yang 修改了sql 添加表
 			List<Hand_wholeStudentParent4PhoneBook> studentParents = mailListService
-					.findWholeStudentParentsByschool(staff.getSchool_id());
+					.findWholeStudentParentsByschool(staff.getSchoolId());
 			// 学生-学生家长集合的map
 			Map<Integer, List<Hand_wholeStudentParent4PhoneBook>> student2WholesMap = new HashMap<Integer, List<Hand_wholeStudentParent4PhoneBook>>();
 			for (Hand_wholeStudentParent4PhoneBook studentParent : studentParents) {
@@ -696,7 +696,7 @@ public class MailListController {
 			List<Hand_staff4PhoneBook> staffall = new ArrayList<Hand_staff4PhoneBook>();
 			// 校长
 			// yang修改了sql
-			List<Hand_staffTransit4PhoneBook> bosses = staffService.findBossByschool(staff.getSchool_id());
+			List<Hand_staffTransit4PhoneBook> bosses = staffService.findBossByschool(staff.getSchoolId());
 			if (!bosses.isEmpty()) {
 				for (Tb_staff one : bosses) {
 					Hand_staff4PhoneBook target = new Hand_staff4PhoneBook();
@@ -706,20 +706,20 @@ public class MailListController {
 			}
 			// 取教职工（老师）
 			// yang 修改sql 添加表tb_ic_card
-			List<Hand_staff4PhoneBook> teacherall = mailListService.findteacherByschool(staff.getSchool_id());
+			List<Hand_staff4PhoneBook> teacherall = mailListService.findteacherByschool(staff.getSchoolId());
 			Hand_staff4PhoneBook staff1 = null;
 			for (Hand_staff4PhoneBook teacher : teacherall) {
 				staff1 = new Hand_staff4PhoneBook();
 				BeanUtils.copyProperties(staff1, teacher);
 
-				staff1.setSchool_id(teacher.getSchool_id());
+				staff1.setSchoolId(teacher.getSchoolId());
 				staff1.setIn_time(teacher.getIn_time());
 				staff1.setOut_time(teacher.getOut_time());
 				staffall.add(staff1);
 			}
 			// 取教职工（医生、勤务）
 			// 没有该sql
-			List<Hand_staffTransit4PhoneBook> workers = staffService.findByType(staff.getSchool_id());
+			List<Hand_staffTransit4PhoneBook> workers = staffService.findByType(staff.getSchoolId());
 			Tb_sign_type t = null;
 			if (!workers.isEmpty()) {
 				for (Tb_staff one : workers) {
@@ -787,7 +787,7 @@ public class MailListController {
 
 				List<Hand_staff4PhoneBook> all = new ArrayList<Hand_staff4PhoneBook>();
 				// 查找该老师所属学校的园长
-				List<Hand_staffTransit4PhoneBook> bosses = staffService.findBossByschool(staff.getSchool_id());
+				List<Hand_staffTransit4PhoneBook> bosses = staffService.findBossByschool(staff.getSchoolId());
 				// 校长
 				if (!bosses.isEmpty()) {
 					for (Tb_staff one : bosses) {
@@ -804,7 +804,7 @@ public class MailListController {
 				for (Hand_staff4PhoneBook teacher : classstaff) {
 					staff1 = new Hand_staff4PhoneBook();
 					BeanUtils.copyProperties(staff1, teacher);
-					staff1.setSchool_id(teacher.getSchool_id());
+					staff1.setSchoolId(teacher.getSchoolId());
 					staff1.setIn_time(teacher.getIn_time());
 					staff1.setOut_time(teacher.getOut_time());
 					staff1.setStaff_ic_number(teacher.getStaff_ic_number());
@@ -812,7 +812,7 @@ public class MailListController {
 					all.add(staff1);
 				}
 				// 教职工（后勤）
-				List<Hand_staffTransit4PhoneBook> workers = staffService.findByType(staff.getSchool_id());
+				List<Hand_staffTransit4PhoneBook> workers = staffService.findByType(staff.getSchoolId());
 				Tb_sign_type t = null;
 				if (!workers.isEmpty()) {
 					for (Tb_staff one : workers) {
@@ -1014,7 +1014,9 @@ public class MailListController {
 		// throws IllegalAccessException, InvocationTargetException,
 		// ClientProtocolException, IOException {
 		logger.info("访问  MailListController:Student_add_edit,student_a=" + student_a);
+		System.out.println(student_a.getClassId());
 		Tb_class tb_class = classService.selectById(student_a.getClassId());
+		System.out.println(tb_class);
 		Hand_student4MailListHasParents vd_student = new Hand_student4MailListHasParents();
 		Hand_WholeStudentParents4PhoneBook list = new Hand_WholeStudentParents4PhoneBook();
 		Tb_schoolparent4 vd_parent = new Tb_schoolparent4();

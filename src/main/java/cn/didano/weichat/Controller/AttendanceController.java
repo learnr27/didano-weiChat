@@ -67,7 +67,7 @@ public class AttendanceController {
 		try {
 			data = new Hand_classArriveData();
 			attendanceDate = new Hand_attendanceData();
-			attendanceDate.setSchool_id(staff.getSchool_id());
+			attendanceDate.setSchool_id(staff.getSchoolId());
 			attendanceDate.setDate(date);
 			attendanceDate.setStaff_id(staff_id);
 			// 查询该学校所有班级到达人数

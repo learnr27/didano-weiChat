@@ -9,7 +9,7 @@ public class Tb_staff {
 
     private Byte type;
 
-    private Integer school_id;
+    private Integer schoolId;
 
     private String name;
 
@@ -48,12 +48,12 @@ public class Tb_staff {
     private Date out_time;
     
    
-    public Integer getSchool_id() {
-		return school_id;
+    public Integer getSchoolId() {
+		return schoolId;
 	}
 
-	public void setSchool_id(Integer school_id) {
-		this.school_id = school_id;
+	public void setSchoolId(Integer schoolId) {
+		this.schoolId = schoolId;
 	}
 
 	public Integer getClass_id() {

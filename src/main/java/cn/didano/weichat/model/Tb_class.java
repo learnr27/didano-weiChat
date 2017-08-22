@@ -92,4 +92,12 @@ public class Tb_class {
     public void setTested(Integer tested) {
         this.tested = tested;
     }
+
+	@Override
+	public String toString() {
+		return "Tb_class [id=" + id + ", schoolId=" + schoolId + ", title=" + title + ", start=" + start + ", status="
+				+ status + ", created=" + created + ", updated=" + updated + ", deleted=" + deleted + ", tested="
+				+ tested + "]";
+	}
+    
 }

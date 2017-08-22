@@ -15,12 +15,32 @@ public class Tb_schoolparent4 extends Tb_schoolParent{
 
     private Byte status;
     private Date created;
-    
-    //private String rfid;
-    
-   // private String student_rfid;
+    private Date updated;
+    private Boolean deleted;
+	// private String student_rfid;
     private String parent_id_number;
     private String student_id_number;
+    //private String rfid;
+    
+   public Date getUpdated() {
+		return updated;
+	}
+
+	public void setUpdated(Date updated) {
+		this.updated = updated;
+	}
+
+
+    
+    
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
+	}
+
 	public String getParent_id_number() {
 		return parent_id_number;
 	}

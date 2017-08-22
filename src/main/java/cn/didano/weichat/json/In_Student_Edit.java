@@ -64,7 +64,7 @@ public class In_Student_Edit {
 	public Integer getClassId() {
 		return classId;
 	}
-	public void setClass_id(Integer classId) {
+	public void setClassId(Integer classId) {
 		this.classId = classId;
 	}
 	public Byte getGender() {
