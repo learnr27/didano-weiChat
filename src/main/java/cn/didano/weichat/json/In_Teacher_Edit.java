@@ -100,6 +100,13 @@ public class In_Teacher_Edit {
 	public void setStatus(byte status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "In_Teacher_Edit [staffid=" + staffid + ", id=" + id + ", name=" + name + ", phone=" + phone + ", type="
+				+ type + ", classId=" + classId + ", setIntime=" + setIntime + ", setOuttime=" + setOuttime
+				+ ", status=" + status + ", staff_ic_number=" + staff_ic_number + ", icCardId=" + icCardId + "]";
+	}
+	
 	
 	
 	

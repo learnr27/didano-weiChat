@@ -401,7 +401,7 @@ public class MailListController {
 			int rowNum3 = 0;
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 			boolean boo = false;
-			if (teacher_a.getStaff_ic_number() != "") {
+			if (teacher_a.getStaff_ic_number() != null) {
 				// 如果输入的编号IC卡表里面不存在，那么返回错误信息，如果有才继续
 				tb_ic_card = iCCardService.selectIcByNumber(teacher_a.getStaff_ic_number(),
 						IcCardType.ADULT.getIndex());
