@@ -96,6 +96,7 @@ public class PrincipalNoticeController {
 			pricipalNotice = new Tb_principal_notice();
 			BeanUtils.copyProperties(notice, notice_edit);
 			BeanUtils.copyProperties(pricipalNotice, notice_edit);
+			System.out.println(staff.getType());
 			if(staff.getType()==31){//当登录者为园长时则为发布园长通知
 			//按班级给父母职工分类
 			if(notice_edit.getAllStaff()==0){//判断发布范围是否为仅员工
@@ -134,8 +135,9 @@ public class PrincipalNoticeController {
 			pricipalNotice.setSenderName(staff.getName() + "园长");
 			}else{//当登录者为老师时则为发送班级通知
 				Tb_staffData staffClass =mailListService.findClassIdBySid(notice_edit.getOnlineId());
-				parents=mailListService.findParentByClass(staffClass.getClass_id());
-				staffs=mailListService.findTeacherByClass(staffClass.getClass_id());
+				System.out.println(staffClass.getClassId());
+				parents=mailListService.findParentByClass(staffClass.getClassId());
+				staffs=mailListService.findTeacherByClass(staffClass.getClassId());
 				for (int i = 0; i < parents.size(); i++) {
 					parentsId.add(parents.get(i).getId());
 				}
@@ -150,7 +152,6 @@ public class PrincipalNoticeController {
 			pricipalNotice.setCreated(new Date());
 			//插入园长通知表
 			principalNoticeService.insertSelective(pricipalNotice);
-			int num = parentsId.size();
 			notice.setCreated(new Date());
 			// 设置通知模型
 			notice.setNoticeModel(notice_edit.getNoticeModel());
@@ -166,11 +167,12 @@ public class PrincipalNoticeController {
 				notice.setRedirectUrl(notice_edit.getUrl());
 			}
 			// 插入通知表
-			noticeService.insertNoticeSelective(notice);
-			int rowNum = 0;
+			int rowNum =noticeService.insertNoticeSelective(notice);
+			
 			// 插入家长消息列表
 			if(notice_edit.getAllStaff()==0){//判断发布范围是否为仅员工
-			for (int i = 0; i < num; i++) {
+				System.out.println(parentsId.size());
+			for (int i = 0; i < parentsId.size(); i++) {
 				noticeUser = new Tb_noticeUser();
 				// 默认未读
 				noticeUser.setIsRead((byte) 0);
@@ -179,11 +181,12 @@ public class PrincipalNoticeController {
 				noticeUser.setUserType((byte)30);
 				noticeUser.setCreated(new Date());
 				noticeService.insertNoticeUserSelective(noticeUser);
-				rowNum++;
 			}
 			}
 			// 插入职工消息列表
+			System.out.println(staffsId.size());
 			for (int i = 0; i < staffsId.size(); i++) {
+				
 				noticeUser = new Tb_noticeUser();
 				// 默认未读
 				noticeUser.setIsRead((byte) 0);
@@ -192,7 +195,6 @@ public class PrincipalNoticeController {
 				noticeUser.setUserType((byte)32);
 				noticeUser.setCreated(new Date());
 				noticeService.insertNoticeUserSelective(noticeUser);
-				rowNum++;
 			}
 			// List<Tb_websocket_channel> noticeChannel =
 			// websocketService.selcetChannelByType((byte)0);
@@ -203,7 +205,7 @@ public class PrincipalNoticeController {
 
 			} else {
 				// 更新有问题
-				back.setBackTypeWithLog(BackType.FAIL_INSERT_NO_INSERT, "rowNum=" + rowNum);
+				back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=" + rowNum);
 			}
 			// end else
 

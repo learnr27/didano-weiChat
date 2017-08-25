@@ -2,7 +2,7 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_staffData extends Tb_staff{
+public class Tb_staffData {
 
 	private String name ;
 	private Integer classId;
