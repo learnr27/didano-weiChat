@@ -21,6 +21,7 @@ import cn.didano.weichat.model.Tb_mail_replyExample;
 import cn.didano.weichat.model.Tb_notice_reply;
 import cn.didano.weichat.model.Tb_notice_replyExample;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_staffExample;
 import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_student_parentExample;
 
@@ -73,10 +74,22 @@ public class MailBoxService {
 		return mailReplyMapper.insertSelective(record);
 	}
 	/**
-	 * 查找园长
+	 * 查找职工
 	 */
 	 public Tb_staff selectBossById(Integer userId){
 		 return staffMapper.selectByPrimaryKey(userId);
+	 }
+	 /**
+	  * 根据学校id查找学校所有园长
+	  */
+	 public List<Tb_staff> findBossBySchoolId(Integer schoolId){
+		 Tb_staffExample condition = new Tb_staffExample();
+		 Tb_staffExample.Criteria criteria = condition.createCriteria();
+	         //对于已经deleted=1的不显示 禁用不显示
+	 		criteria.andDeletedEqualTo(false);
+	 		criteria.andSchoolIdEqualTo(schoolId);
+	 		criteria.andTypeEqualTo((byte)31);
+	 		return staffMapper.selectByExample(condition);
 	 }
 	/**
 	 * 通过家长id查询学校所有园长

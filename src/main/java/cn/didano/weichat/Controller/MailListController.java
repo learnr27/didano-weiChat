@@ -389,6 +389,7 @@ public class MailListController {
 			@ApiParam(value = "新增编辑职工", required = true) @RequestBody In_Teacher_Edit teacher_a) {
 		logger.info("访问  MailListController:Teacher_add,teacher_a=" + teacher_a);
 		// 操作人的信息
+		System.out.println(teacher_a);
 		Tb_staff operator = staffService.findById(teacher_a.getStaffid());
 		Tb_staff vd_staff = new Tb_staff();
 		Tb_staff_class vd_class = new Tb_staff_class();
@@ -401,7 +402,7 @@ public class MailListController {
 			int rowNum3 = 0;
 			SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 			boolean boo = false;
-			if (teacher_a.getStaff_ic_number() != null) {
+			if (teacher_a.getStaff_ic_number() != null ) {
 				// 如果输入的编号IC卡表里面不存在，那么返回错误信息，如果有才继续
 				tb_ic_card = iCCardService.selectIcByNumber(teacher_a.getStaff_ic_number(),
 						IcCardType.ADULT.getIndex());
@@ -1025,7 +1026,7 @@ public class MailListController {
 		Tb_student_parent vd_studentparent = new Tb_student_parent();
 		Out<String> back = new Out<String>();
 		Tb_ic_card tb_ic_cardNoe = null;
-		if (student_a.getStudent_ic_number() != "") {
+		if (student_a.getStudent_ic_number() != null ) {
 			// 如果输入的编号IC卡表里面不存在，那么返回错误信息，如果有才继续
 			tb_ic_cardNoe = iCCardService.selectIcByNumber(student_a.getStudent_ic_number(),
 					IcCardType.BABY.getIndex());
@@ -1184,7 +1185,7 @@ public class MailListController {
 					for (Hand_parent4mailList add : student_a.getParent()) {
 						Tb_ic_card tb_ic_card = null;
 
-						if (add.getParent_ic_number() != "") {
+						if ( add.getParent_ic_number()!=null) {
 							tb_ic_card = iCCardService.selectIcByNumber(add.getParent_ic_number(), IcCardType.ADULT.getIndex());
 						}
 						// 修改家长的ic卡状态
@@ -1331,7 +1332,7 @@ public class MailListController {
 		Hand_staffTransit4PhoneBook selectInfoByic_number = null;
 		Tb_staff tb_staff = new Tb_staff();
 		try {
-			if (hand_id_type.getIc_number() != "") {
+			if ( hand_id_type.getIc_number() !=null) {
 				// 零时变量
 				int a = 0;
 				// 拿前端传过来的值进行判断，再进行保存类型到a变量中方便查询
