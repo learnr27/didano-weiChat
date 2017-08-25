@@ -60,88 +60,88 @@ public class NoticeController {
 	 *
 	 * @param c_channel
 	 * @return
-	 */
-	@ApiOperation(value = "发布通知", notes = "发布通知")
-	@PostMapping(value = "publish_notice")
-	@ResponseBody
-	public Out<String> publish_notice(
-			@ApiParam(value = "发布通知", required = true) @RequestBody In_Notice_Edit notice_edit) {
-		logger.info("访问  NoticeController:publish_notice,notice_e=" + notice_edit);
-
-		Tb_notice notice = null;
-		Tb_noticeUser noticeUser = null;
-		Tb_staff staff = null;
-		Out<String> back = new Out<String>();
-		try {
-			staff = mailService.selectBossById(notice_edit.getOnlineId());
-			notice = new Tb_notice();
-			BeanUtils.copyProperties(notice, notice_edit);
-			// 设置发送者身份
-			notice.setSenderId(notice_edit.getOnlineId());
-			if (staff.getType() == 31) {
-				notice.setSenderName(staff.getName() + "园长");
-			} else if (staff.getType() == 32) {
-				notice.setSenderName(staff.getName() + "老师");
-			}
-			int num = notice_edit.getUserId().size();
-			notice.setCreated(new Date());
-			// 设置通知模型
-			notice.setNoticeModel(notice_edit.getNoticeModel());
-			// 设置通知类型
-			notice.setNoticeType(notice_edit.getNoticeType());
-			// 设置内部url或者外部url
-			if (notice_edit.getNoticeModel() == 1) {
-				// 设置转向地址
-				if (notice_edit.getNoticeType() == 0) {
-					notice.setRedirectUrl(ModulePathType.MORNING_REPORT.getUrl());
-				} else if (notice_edit.getNoticeType() == 1) {
-					notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl());
-				} else if (notice_edit.getNoticeType() == 2) {
-					notice.setRedirectUrl(ModulePathType.SHUTTLE_REPORT.getUrl());
-				} else if (notice_edit.getNoticeType() == 3) {
-					notice.setRedirectUrl(ModulePathType.PUBLIC_SIGNAL.getUrl());
-				}
-			} else if (notice_edit.getNoticeModel() == 2) {
-				notice.setRedirectUrl(notice_edit.getUrl());
-			}
-			// 插入通知表
-			noticeService.insertNoticeSelective(notice);
-			int rowNum = 0;
-			// 设置用户标记表
-			for (int i = 0; i < num; i++) {
-				noticeUser = new Tb_noticeUser();
-				// 默认未读
-				noticeUser.setIsRead((byte) 0);
-				noticeUser.setNoticeId(notice.getId());
-				noticeUser.setUserId(notice_edit.getUserId().get(i).getUserId());
-				noticeUser.setUserType(notice_edit.getUserId().get(i).getUserType());
-				noticeUser.setCreated(new Date());
-				noticeService.insertNoticeUserSelective(noticeUser);
-				rowNum++;
-			}
-			// List<Tb_websocket_channel> noticeChannel =
-			// websocketService.selcetChannelByType((byte)0);
-			// // 广播通知 websocket
-			// noticeService.broadcast(noticeChannel.get(0).getChannel());
-			if (rowNum > 0) {
-				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
-
-			} else {
-				// 更新有问题
-				back.setBackTypeWithLog(BackType.FAIL_INSERT_NO_INSERT, "rowNum=" + rowNum);
-			}
-			// end else
-
-		} catch (ServiceException e) {
-			// 服务层错误，包括 内部service 和 对外service
-			logger.warn(e.getMessage());
-			back.setServiceExceptionWithLog(e.getExceptionEnums());
-		} catch (Exception ex) {
-			logger.warn(ex.getMessage());
-			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
-		}
-		return back;
-	}
+//	 */
+//	@ApiOperation(value = "发布通知", notes = "发布通知")
+//	@PostMapping(value = "publish_notice")
+//	@ResponseBody
+//	public Out<String> publish_notice(
+//			@ApiParam(value = "发布通知", required = true) @RequestBody In_Notice_Edit notice_edit) {
+//		logger.info("访问  NoticeController:publish_notice,notice_e=" + notice_edit);
+//
+//		Tb_notice notice = null;
+//		Tb_noticeUser noticeUser = null;
+//		Tb_staff staff = null;
+//		Out<String> back = new Out<String>();
+//		try {
+//			staff = mailService.selectBossById(notice_edit.getOnlineId());
+//			notice = new Tb_notice();
+//			BeanUtils.copyProperties(notice, notice_edit);
+//			// 设置发送者身份
+//			notice.setSenderId(notice_edit.getOnlineId());
+//			if (staff.getType() == 31) {
+//				notice.setSenderName(staff.getName() + "园长");
+//			} else if (staff.getType() == 32) {
+//				notice.setSenderName(staff.getName() + "老师");
+//			}
+//			//int num = notice_edit.getUserId().size();
+//			notice.setCreated(new Date());
+//			// 设置通知模型
+//			notice.setNoticeModel(notice_edit.getNoticeModel());
+//			// 设置通知类型
+//			notice.setNoticeType(notice_edit.getNoticeType());
+//			// 设置内部url或者外部url
+//			if (notice_edit.getNoticeModel() == 1) {
+//				// 设置转向地址
+//				if (notice_edit.getNoticeType() == 0) {
+//					notice.setRedirectUrl(ModulePathType.MORNING_REPORT.getUrl());
+//				} else if (notice_edit.getNoticeType() == 1) {
+//					notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl());
+//				} else if (notice_edit.getNoticeType() == 2) {
+//					notice.setRedirectUrl(ModulePathType.SHUTTLE_REPORT.getUrl());
+//				} else if (notice_edit.getNoticeType() == 3) {
+//					notice.setRedirectUrl(ModulePathType.PUBLIC_SIGNAL.getUrl());
+//				}
+//			} else if (notice_edit.getNoticeModel() == 2) {
+//				notice.setRedirectUrl(notice_edit.getUrl());
+//			}
+//			// 插入通知表
+//			noticeService.insertNoticeSelective(notice);
+//			int rowNum = 0;
+//			// 设置用户标记表
+////			for (int i = 0; i < num; i++) {
+////				noticeUser = new Tb_noticeUser();
+////				// 默认未读
+////				noticeUser.setIsRead((byte) 0);
+////				noticeUser.setNoticeId(notice.getId());
+////			//	noticeUser.setUserId(notice_edit.getUserId().get(i).getUserId());
+////				//noticeUser.setUserType(notice_edit.getUserId().get(i).getUserType());
+////				noticeUser.setCreated(new Date());
+////				noticeService.insertNoticeUserSelective(noticeUser);
+////				rowNum++;
+////			}
+//			// List<Tb_websocket_channel> noticeChannel =
+//			// websocketService.selcetChannelByType((byte)0);
+//			// // 广播通知 websocket
+//			// noticeService.broadcast(noticeChannel.get(0).getChannel());
+//			if (rowNum > 0) {
+//				back.setBackTypeWithLog(BackType.SUCCESS_INSERT, "Id=" + "," + ":rowNum=" + rowNum);
+//
+//			} else {
+//				// 更新有问题
+//				back.setBackTypeWithLog(BackType.FAIL_INSERT_NO_INSERT, "rowNum=" + rowNum);
+//			}
+//			// end else
+//
+//		} catch (ServiceException e) {
+//			// 服务层错误，包括 内部service 和 对外service
+//			logger.warn(e.getMessage());
+//			back.setServiceExceptionWithLog(e.getExceptionEnums());
+//		} catch (Exception ex) {
+//			logger.warn(ex.getMessage());
+//			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+//		}
+//		return back;
+//	}
 
 	/**
 	 * 根据用户id,用户类型查找消息列表

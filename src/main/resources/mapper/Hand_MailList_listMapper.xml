@@ -125,6 +125,26 @@ where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 OR
 	FROM tb_staff a,tb_staff_class b ,tb_sign_type c WHERE a.school_id=#{id} AND a.deleted=0 AND a.type =32 and a.id=b.staff_id and a.sign_type_id=c.id
 	)AS tmp1 LEFT JOIN tb_class c ON tmp1.class_id=c.id left join (select * from tb_ic_card where deleted=0 and school_id=#{id} and ic_type=1) tmp3 on tmp1.rfid=tmp3.rfid ORDER BY CONVERT( tmp1.name USING gbk ) 
  </select>
+ 
+ <select id="findStaffById" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+ SELECT tmp1.status,
+		tmp1.in_time,
+		tmp1.out_time,
+		tmp1.id,
+		tmp1.name,
+		tmp1.phone,
+		tmp1.class_id  AS classId,
+		c.title,
+		tmp1.type,
+		tmp1.school_id ,
+		tmp3.ic_number AS staff_ic_number,
+		tmp1.ic_card_id AS icCardId
+	FROM
+	(SELECT a.ic_card_id,a.status,a.id,b.class_id,a.type,a.school_id,a.name,a.phone,c.in_time,c.out_time,a.rfid
+	FROM tb_staff a,tb_staff_class b ,tb_sign_type c WHERE a.id=#{id} AND a.deleted=0 AND a.type =32 and a.id=b.staff_id and a.sign_type_id=c.id
+	)AS tmp1 LEFT JOIN tb_class c ON tmp1.class_id=c.id LEFT JOIN (
+	SELECT * FROM tb_ic_card WHERE deleted=0  AND ic_type=1) tmp3 ON tmp1.rfid=tmp3.rfid ORDER BY CONVERT( tmp1.name USING gbk ) AND tmp3.school_id=tmp1.school_id
+ </select>
  <select id="findrelation" resultType="cn.didano.weichat.model.Tb_relation">
       select id,title from tb_relation
   </select>
@@ -201,6 +221,11 @@ select * from tb_student_parent where student_id=#{id} and deleted=0
 </select>
 <select id="findParentByPid" parameterType="cn.didano.weichat.model.Tb_student_parent" resultType="cn.didano.weichat.model.Hand_parent4mailList">
    SELECT * FROM tb_student_parent where  student_id=#{id} and parent_id=#{parentId}  and deleted=0
+</select>
+<select id="findParentByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_schoolParent">
+  SELECT tb_student.id,tb_student.name ,tb_student_parent.parent_id,tb_student_parent.relation_title FROM tb_student LEFT JOIN tb_student_parent ON 
+tb_student_parent.student_id=tb_student.id AND tb_student_parent.deleted=0 
+WHERE tb_student.class_id=#{classId} AND tb_student.deleted=0 
 </select>
 <update id="Update" parameterType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
   UPDATE tb_student a set 

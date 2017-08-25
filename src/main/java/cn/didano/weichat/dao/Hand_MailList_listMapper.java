@@ -10,6 +10,7 @@ import cn.didano.weichat.model.Hand_wholeStudent4PhoneBook;
 import cn.didano.weichat.model.Hand_wholeStudentParent4PhoneBook;
 import cn.didano.weichat.model.Tb_deleteParentDate;
 import cn.didano.weichat.model.Tb_relation;
+import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staffData;
 import cn.didano.weichat.model.Tb_student;
 import cn.didano.weichat.model.Tb_student4List;
@@ -42,7 +43,7 @@ public interface Hand_MailList_listMapper {
 	Tb_relation findrelationById(Integer id);
 	List<Hand_parent4mailList> findParentByPid(Tb_student_parent tsp);
 	Tb_staffData findClassIdBySid(Integer id);
-
+	Hand_staff4PhoneBook findStaffById(Integer id );
 	int Update( Hand_WholeStudentParents4PhoneBook list); 
 	int UpdateSchoolParent(Hand_parent4mailList parent);
 	int UpdateStudentParent(Hand_parent4mailList parent);
@@ -52,4 +53,5 @@ public interface Hand_MailList_listMapper {
 	int deleteSingleSchoolparentByid(Tb_deleteParentDate date);
 	int deleteSingleStudentlparentByid(Tb_deleteParentDate date);
 	List<Hand_parent4mailList> findParentByStudentId(Integer id);
+	List<Tb_schoolParent> findParentByClass(Integer classId);
 }
