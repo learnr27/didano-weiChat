@@ -199,7 +199,7 @@
 	AND twb.deleted = 0
   </select>
   
-  <select id="getStudentParentListByPhone" parameterType="java.lang.String" resultType="cn.didano.weichat.util.Hand_StudentParent">
+  <select id="getStudentParentListByPhone" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_StudentParent">
   	SELECT DISTINCT
 	  tsp1.id AS parentId,
 	  tsp2.student_id AS studentId

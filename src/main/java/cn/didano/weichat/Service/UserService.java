@@ -14,13 +14,13 @@ import cn.didano.weichat.json.Hand_userRoleRel;
 import cn.didano.weichat.json.In_ParentSearchUserid;
 import cn.didano.weichat.json.In_StaffSearchUserid;
 import cn.didano.weichat.json.Out_Student_Search;
+import cn.didano.weichat.model.Hand_StudentParent;
 import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_role;
 import cn.didano.weichat.model.Tb_school;
 import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_user;
-import cn.didano.weichat.util.Hand_StudentParent;
 
 @Service
 public class UserService {

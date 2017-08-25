@@ -55,53 +55,14 @@ public class StructureController {
 		} catch (WxErrorException e) {
 			e.printStackTrace();
 		}
-
-		// response.getWriter().flush();
-		// response.getWriter().close();
-		// return null;
 		return modelAndView;
 	}
 	
+	@GetMapping(value = "/uploadForm")
+	public ModelAndView uploadForm(HttpServletRequest request) {
+		ModelAndView modelAndView = new ModelAndView("uploadForm");
+		return modelAndView;
+	}
 	
-//	@ApiOperation(value = "测试1", notes = "测试1")
-//	@GetMapping(value = "/getAuthOpenidTest1")
-//	public String getAuthOpenidTest1() {
-//		String code = null;
-//		try {
-//			WxMpService wxMpService = ContextUtil.act.getBean(WxMpService.class);
-//			wxMpService.setWxMpConfigStorage(WxMpInMemoryConfigStorageContainer.findByOriId("gh_c0a5d7478a57"));
-//
-//			String source = "www.didano.cn/wechat_v2/structure/babycenter?oriid=gh_c0a5d7478a57";
-//			String redirectURI = CommonUtil.urlEncodeUTF8(source);
-//			String scope = "snsapi_base"; 
-//			String state = "state";
-//			System.out.println(redirectURI);
-//			 
-//			 System.out.println("123456");
-//			 String url = wxMpService.oauth2buildAuthorizationUrl(redirectURI, scope, state);
-//			 
-//			System.out.println("url地址值为:" + url);
-//			
-//			code = wxMpService.getOAuth2Code(url);
-//			logger.info("获取code的数据为:"+code);
-//			
-//			//WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
-//			//wxMpOAuth2AccessToken = wxMpService.oauth2refreshAccessToken(wxMpOAuth2AccessToken.getRefreshToken());
-//			
-//			
-//			logger.info("code数据是: " + code);
-//		} catch (WxErrorException e) {
-//			e.printStackTrace();
-//		}
-//		return code;
-//	}
-//	
-//	@ApiOperation(value = "测试2", notes = "测试2")
-//	@GetMapping(value = "/getAuthOpenidTest2")
-//	public void getAuthOpenidTest2() {
-//		System.out.println("11");
-//		Oauth2Test test2 = new Oauth2Test();
-//		test2.oauth2GetCode2();
-//	}
 
 }

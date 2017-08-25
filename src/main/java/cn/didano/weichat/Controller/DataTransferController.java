@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.didano.weichat.Service.UserService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.model.Hand_StudentParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_user;
-import cn.didano.weichat.util.Hand_StudentParent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 /*
