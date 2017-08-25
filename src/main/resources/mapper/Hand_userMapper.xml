@@ -257,5 +257,10 @@
 	AND staff_id = #{parentid,jdbcType=INTEGER}
   </select>
   
-  
+  <select id="getDuplicateStudentParentData" resultType="cn.didano.weichat.model.Tb_student_parent">
+  	select * from tb_student_parent tmp2 where parent_id in (select tmp1.parent_id from (select *, count(*) as parent_id_num  from (select * from tb_student_parent where deleted=0) as tmp0 group by parent_id) as tmp1 where tmp1.parent_id_num>1)  order by tmp2.id desc
+  </select>
+  <select id="getDuplicateParentData" resultType="cn.didano.weichat.model.Tb_school_parent">
+  	select * from tb_school_parent tmp2 where id in (select tmp1.parent_id from (select *, count(*) as parent_id_num  from (select * from tb_student_parent where deleted=0) as tmp0 group by parent_id) as tmp1 where tmp1.parent_id_num>1)  order by tmp2.id desc
+  </select>
 </mapper>

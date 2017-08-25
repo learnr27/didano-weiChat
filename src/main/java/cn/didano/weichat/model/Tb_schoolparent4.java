@@ -2,7 +2,7 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_schoolparent4 extends Tb_schoolParent{
+public class Tb_schoolparent4 extends Tb_school_parent{
     private Integer id;
 
     private Integer schoolId;

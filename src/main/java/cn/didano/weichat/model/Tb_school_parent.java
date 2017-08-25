@@ -2,7 +2,7 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
-public class Tb_schoolParent {
+public class Tb_school_parent {
     private Integer id;
 
     private Integer schoolId;
@@ -14,45 +14,14 @@ public class Tb_schoolParent {
     private Integer type;
 
     private Byte status;
+
     private Date created;
-    
-  //private String rfid;
-    
-    // private String student_rfid;
-     private String parent_id_number;
-     private String student_id_number;
- 	public String getParent_id_number() {
- 		return parent_id_number;
- 	}
 
- 	public void setParent_id_number(String parent_id_number) {
- 		this.parent_id_number = parent_id_number;
- 	}
+    private Date updated;
 
- 	public String getStudent_id_number() {
- 		return student_id_number;
- 	}
+    private Boolean deleted;
 
- 	public void setStudent_id_number(String student_id_number) {
- 		this.student_id_number = student_id_number;
- 	}
-    
-   
-	@Override
-	public String toString() {
-		return "Tb_schoolparent [id=" + id + ", schoolId=" + schoolId + ", name=" + name + ", phone=" + phone
-				+ ", type=" + type + ", status=" + status + ", created=" + created + "]";
-	}
-
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
-	}
-
-	public Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -98,5 +67,29 @@ public class Tb_schoolParent {
 
     public void setStatus(Byte status) {
         this.status = status;
+    }
+
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated(Date updated) {
+        this.updated = updated;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

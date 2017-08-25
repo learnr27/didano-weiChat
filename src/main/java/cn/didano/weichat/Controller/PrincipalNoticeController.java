@@ -41,7 +41,7 @@ import cn.didano.weichat.model.Tb_mail_reply;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_principal_notice;
-import cn.didano.weichat.model.Tb_schoolParent;
+import cn.didano.weichat.model.Tb_school_parent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staffData;
 import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
@@ -80,12 +80,12 @@ public class PrincipalNoticeController {
 		Tb_notice notice = null;
 		Tb_noticeUser noticeUser = null;
 		Tb_staff staff = null;
-		List<Tb_schoolParent> parents = null;
+		List<Tb_school_parent> parents = null;
 		List<Hand_staff4PhoneBook> staffs = null;
 		List<Integer> classId=null;
 		List<Integer> parentsId=new ArrayList<Integer>();
 		List<Integer> staffsId=new ArrayList<Integer>();
-		Map<Integer,List<Tb_schoolParent>> map = new HashMap<Integer,List<Tb_schoolParent>>();
+		Map<Integer,List<Tb_school_parent>> map = new HashMap<Integer,List<Tb_school_parent>>();
 		Map<Integer,List<Hand_staff4PhoneBook>> staffMap = new HashMap<Integer,List<Hand_staff4PhoneBook>>();
 		Out<String> back = new Out<String>();
 		try {

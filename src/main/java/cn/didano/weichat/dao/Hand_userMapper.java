@@ -8,8 +8,9 @@ import cn.didano.weichat.json.In_StaffSearchUserid;
 import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_school;
-import cn.didano.weichat.model.Tb_schoolParent;
+import cn.didano.weichat.model.Tb_school_parent;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_user;
 import cn.didano.weichat.util.Hand_StudentParent;
 
@@ -39,7 +40,7 @@ public interface Hand_userMapper {
 
 	List<Tb_staff> getStaffByPhoneFromOthers(String phone);
 
-	List<Tb_schoolParent> getParentListByMobile(String mobile);
+	List<Tb_school_parent> getParentListByMobile(String mobile);
 
 	List<Out_Student_Search> getStudentListByOpenid(String openId);
 
@@ -55,6 +56,9 @@ public interface Hand_userMapper {
 
 	Tb_user getUseridByParentid(In_ParentSearchUserid parent);
 
-
+	List<Tb_student_parent> getDuplicateStudentParentData();
+	
+	List<Tb_school_parent> getDuplicateParentData();
+	
 	
 }

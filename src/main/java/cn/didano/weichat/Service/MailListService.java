@@ -14,7 +14,7 @@ import cn.didano.weichat.model.Hand_wholeStudent4PhoneBook;
 import cn.didano.weichat.model.Hand_wholeStudentParent4PhoneBook;
 import cn.didano.weichat.model.Tb_deleteParentDate;
 import cn.didano.weichat.model.Tb_relation;
-import cn.didano.weichat.model.Tb_schoolParent;
+import cn.didano.weichat.model.Tb_school_parent;
 import cn.didano.weichat.model.Tb_staffData;
 import cn.didano.weichat.model.Tb_student;
 import cn.didano.weichat.model.Tb_student4List;
@@ -36,7 +36,7 @@ public class MailListService {
 	/**
 	 * 通过班级id查找该班级所有家长
 	 */
-	public List<Tb_schoolParent> findParentByClass(Integer classId){
+	public List<Tb_school_parent> findParentByClass(Integer classId){
 		return mailList_listMapper.findParentByClass(classId);
 	}
 	/**

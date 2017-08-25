@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import cn.didano.weichat.constant.DeletedType;
 import cn.didano.weichat.constant.StatusType;
 import cn.didano.weichat.dao.Hand_student4MailListHasParentsMapper;
-import cn.didano.weichat.dao.Tb_schoolparentMapper;
+import cn.didano.weichat.dao.Tb_school_parentMapper;
 import cn.didano.weichat.dao.Tb_studentMapper;
 import cn.didano.weichat.dao.Tb_student_detection4photoWallMapper;
 import cn.didano.weichat.dao.Tb_student_parentMapper;
@@ -37,7 +37,7 @@ public class StudentService {
 	@Autowired
 	private Tb_student_parentMapper studentparentMapper;
 	@Autowired
-	private Tb_schoolparentMapper schoolparentMapper;
+	private Tb_school_parentMapper schoolparentMapper;
 	
 
 	/**

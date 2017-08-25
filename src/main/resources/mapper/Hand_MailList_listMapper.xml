@@ -222,7 +222,7 @@ select * from tb_student_parent where student_id=#{id} and deleted=0
 <select id="findParentByPid" parameterType="cn.didano.weichat.model.Tb_student_parent" resultType="cn.didano.weichat.model.Hand_parent4mailList">
    SELECT * FROM tb_student_parent where  student_id=#{id} and parent_id=#{parentId}  and deleted=0
 </select>
-<select id="findParentByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_schoolParent">
+<select id="findParentByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_school_parent">
   SELECT tb_student.id,tb_student.name ,tb_student_parent.parent_id,tb_student_parent.relation_title FROM tb_student LEFT JOIN tb_student_parent ON 
 tb_student_parent.student_id=tb_student.id AND tb_student_parent.deleted=0 
 WHERE tb_student.class_id=#{classId} AND tb_student.deleted=0 

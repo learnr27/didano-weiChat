@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +17,7 @@ import cn.didano.weichat.Service.UserService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_user;
 import cn.didano.weichat.util.Hand_StudentParent;
 import io.swagger.annotations.Api;
@@ -140,5 +143,43 @@ public class DataTransferController {
 			e.printStackTrace();
 		}
 		return back;
+	}
+	
+	/**
+	 * 补录数据
+	 * 确保student_parent 有多少条数据，那么school_parent表就有多少数据
+	 * @param isdo
+	 * @return
+	 */
+	@ApiOperation(value = "数据库tb_school_parent表补录数据", notes = "数据库tb_user表从指定行开始删除数据")
+	@PostMapping(value = "supplyData2schoolParentTable")
+	@ResponseBody
+	public Out<String> supplyData2schoolParentTable(@RequestBody String isdo) {
+		logger.info("访问 DataTransferController类: supplyData2schoolParentTable方法");
+		
+		Out<String> back = new Out<>();
+		if("do".equals("isdo")){
+			//getDuplicateStudentParentData 先获取有重复 student_parent ,
+			try {
+				List<Tb_student_parent> dlist= userService.getDuplicateStudentParentData();
+				
+//				if (rowNum > 0) {
+//					back.setBackTypeWithLog(BackType.SUCCESS_DELETE, "总共删除的条目数为 rowNum=" + rowNum);
+//
+//				} else {
+//					// 更新有问题
+//					back.setBackTypeWithLog(BackType.FAIL_DELETE_NO_DELETE, "rowNum=" + rowNum);
+//				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			// 更新有问题
+			back.setBackTypeWithLog(BackType.FAIL_DB, "没做任何操作");
+		}
+		
+		
+		return back;
+		
 	}
 }
