@@ -3,18 +3,25 @@ package cn.didano.weichat.Controller;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.didano.weichat.Service.ParentService;
+import cn.didano.weichat.Service.StudentParentService;
 import cn.didano.weichat.Service.UserService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.json.Out;
+import cn.didano.weichat.model.Tb_school_parent;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_user;
 import cn.didano.weichat.util.Hand_StudentParent;
 import io.swagger.annotations.Api;
@@ -36,6 +43,13 @@ public class DataTransferController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ParentService parentService;
+	
+	@Autowired
+	private StudentParentService studentParentService;
+	
 	
 	@ApiOperation(value = "数据库tb_user表从指定行开始删除数据", notes = "数据库tb_user表从指定行开始删除数据")
 	@GetMapping(value = "/delete/{row}")
@@ -138,6 +152,78 @@ public class DataTransferController {
 			logger.info("总共插入的条目数为:   "+rowNum);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return back;
+	}
+	
+	/**
+	 * 补录数据
+	 * 确保student_parent 有多少条数据，那么school_parent表就有多少数据
+	 * @param isdo
+	 * @return
+	 */
+	@ApiOperation(value = "数据库tb_school_parent表补录数据", notes = "数据库tb_user表从指定行开始删除数据")
+	@PostMapping(value = "supplyData2schoolParentTable")
+	@ResponseBody
+	public Out<String> supplyData2schoolParentTable(@RequestBody String isdo) {
+		logger.info("访问 DataTransferController类: supplyData2schoolParentTable方法");
+		logger.info("isdo="+isdo);
+		Out<String> back = new Out<>();
+		List<Tb_student_parent> studentParentlist;
+		List<Tb_school_parent> parentlist;
+		if("do".equals(isdo)){
+			//getDuplicateStudentParentData 先获取有重复 student_parent ,
+			try {
+				studentParentlist= userService.getDuplicateStudentParentData();
+				parentlist= userService.getDuplicateParentData();
+				int count=0;
+				//外部以重复家长数目循环，内部以单个家长多个学生循环
+				for(Tb_school_parent parent:parentlist){
+					count++;
+					logger.info("count="+count+"tp.getId()="+parent.getId());
+					Tb_school_parent tmp = new Tb_school_parent();
+					BeanUtils.copyProperties(tmp, parent);
+					tmp.setId(null);
+					tmp.setUpdated(null);
+					int check = 0;
+					int i = 0;
+					int size = studentParentlist.size();
+					for(Tb_student_parent studentParent:studentParentlist){
+						i++;
+						logger.info("tsp.getId()="+studentParent.getId()+":parent.getId()="+parent.getId()+":tsp.getParentId()="+studentParent.getParentId());
+						if(parent.getId().equals(studentParent.getParentId())){
+							check++;
+							logger.info("check="+check+"|parent.getId()="+parent.getId());
+							//超过一条就插入
+							if(check>1){
+								logger.info("check="+check);
+								logger.info("ready insert tb_school_parent...");
+								tmp.setSchoolId(studentParent.getSchoolId());
+								parentService.insertSelective(tmp);
+								logger.info("insert one..."+tmp.getId());
+								studentParent.setParentId(tmp.getId());
+								//更新parentId
+								studentParentService.updateByPrimaryKey(studentParent);
+								logger.info("update tb_student_parent..."+studentParent.getId());
+							}
+						}
+						if(i==size){
+							if(check==0){
+								logger.info("no found,studentParent.getParentId="+studentParent.getParentId());
+							}else if(check==1){
+								logger.info("found check==1,studentParent.getParentId="+studentParent.getParentId());
+							}else{
+								logger.info("found,check=="+check+",studentParent.getParentId="+studentParent.getParentId());
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			// 更新有问题
+			back.setBackTypeWithLog(BackType.FAIL_DB, "没做任何操作");
 		}
 		return back;
 	}
