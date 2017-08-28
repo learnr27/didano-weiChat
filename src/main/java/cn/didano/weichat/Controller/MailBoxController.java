@@ -253,7 +253,7 @@ public class MailBoxController {
 				// 根据登录者的身份设置发送者称呼
 				if (mail_write.getUserType() == 31) {
 					Tb_staff staff = mailBoxService.selectBossById(mail_write.getUserId());
-					mailReply.setSenderName(staff.getName() + "园长");
+					mailReply.setSenderName(staff.getName() + "(园长)");
 				} else {
 					Hand_addressName parent = mailBoxService.selectAddressName(data);
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
@@ -337,10 +337,14 @@ public class MailBoxController {
 				String title = mails.get(i).getSenderName();
 				String name = title.substring(title.length() - 2, title.length());
 				// 设置头像
-				if ("园长".equals(name)) {
+				if ("长)".equals(name)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(9);
 					mails.get(i).setHead(head.getAddress());
-				} else if ("爸爸".equals(name)) {
+				}else if("园长".equals(name)){
+					head = HeadMemoryConfigStorageContainer.findByOriId(9);
+					mails.get(i).setHead(head.getAddress());
+				}
+				else if ("爸爸".equals(name)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(5);
 					mails.get(i).setHead(head.getAddress());
 				} else if ("妈妈".equals(name)) {
