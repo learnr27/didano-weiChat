@@ -223,9 +223,8 @@ select * from tb_student_parent where student_id=#{id} and deleted=0
    SELECT * FROM tb_student_parent where  student_id=#{id} and parent_id=#{parentId}  and deleted=0
 </select>
 <select id="findParentByClass" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_schoolParent">
-  SELECT tb_student.id AS studentId,tb_student.name ,tb_student_parent.parent_id AS id,tb_student_parent.relation_title FROM tb_student LEFT JOIN tb_student_parent ON 
-tb_student_parent.student_id=tb_student.id AND tb_student_parent.deleted=0 
-WHERE tb_student.class_id=#{classId} AND tb_student.deleted=0 
+ SELECT tb_student.id AS studentId,tb_student.name ,tb_student_parent.parent_id AS id,tb_student_parent.relation_title FROM tb_student , tb_student_parent 
+WHERE tb_student.class_id=#{classId} AND tb_student.deleted=0 AND tb_student_parent.student_id=tb_student.id AND tb_student_parent.deleted=0  
 </select>
 <update id="Update" parameterType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
   UPDATE tb_student a set 
