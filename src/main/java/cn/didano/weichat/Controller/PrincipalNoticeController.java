@@ -305,22 +305,35 @@ public class PrincipalNoticeController {
 				}
 			}
 			// 插入职工消息列表
+			if(staffsId.size()!=0){
 			for (int i = 0; i < staffsId.size(); i++) {
 				noticeUser = new Tb_noticeUser();
 				// 默认未读
-				noticeUser.setIsRead((byte) 0);
+				if(staffsId.get(i)==notice_edit.getOnlineId()){
+					
+					noticeUser.setIsRead((byte) 1);
+					}else{
+					noticeUser.setIsRead((byte) 0);
+					}
 				noticeUser.setNoticeId(notice.getId());
 				noticeUser.setUserId(staffsId.get(i));
 				noticeUser.setUserType((byte) 32);
 				noticeUser.setCreated(new Date());
 				noticeService.insertNoticeUserSelective(noticeUser);
 			}
+			}
 			// 插入其他园长信息
 			if (boss != null) {
 				for (int i = 0; i < boss.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 默认未读
+					System.out.println(boss.get(i).getId());
+					if(boss.get(i).getId().equals(notice_edit.getOnlineId())){
+						System.out.println(11111);
+					noticeUser.setIsRead((byte) 1);
+					}else{
 					noticeUser.setIsRead((byte) 0);
+					}
 					noticeUser.setNoticeId(notice.getId());
 					noticeUser.setUserId(boss.get(i).getId());
 					noticeUser.setUserType(boss.get(i).getType());
