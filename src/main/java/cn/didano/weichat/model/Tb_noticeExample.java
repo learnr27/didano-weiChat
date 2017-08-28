@@ -685,6 +685,76 @@ public class Tb_noticeExample {
             return (Criteria) this;
         }
 
+        public Criteria andPublicationScopeIsNull() {
+            addCriterion("publication_scope is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeIsNotNull() {
+            addCriterion("publication_scope is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeEqualTo(String value) {
+            addCriterion("publication_scope =", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeNotEqualTo(String value) {
+            addCriterion("publication_scope <>", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeGreaterThan(String value) {
+            addCriterion("publication_scope >", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeGreaterThanOrEqualTo(String value) {
+            addCriterion("publication_scope >=", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeLessThan(String value) {
+            addCriterion("publication_scope <", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeLessThanOrEqualTo(String value) {
+            addCriterion("publication_scope <=", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeLike(String value) {
+            addCriterion("publication_scope like", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeNotLike(String value) {
+            addCriterion("publication_scope not like", value, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeIn(List<String> values) {
+            addCriterion("publication_scope in", values, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeNotIn(List<String> values) {
+            addCriterion("publication_scope not in", values, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeBetween(String value1, String value2) {
+            addCriterion("publication_scope between", value1, value2, "publicationScope");
+            return (Criteria) this;
+        }
+
+        public Criteria andPublicationScopeNotBetween(String value1, String value2) {
+            addCriterion("publication_scope not between", value1, value2, "publicationScope");
+            return (Criteria) this;
+        }
+
         public Criteria andNoticeTypeIsNull() {
             addCriterion("notice_type is null");
             return (Criteria) this;

@@ -21,6 +21,8 @@ public class Tb_notice {
 
     private Integer sourceId;
 
+    private String publicationScope;
+
     private Byte noticeType;
 
     private Date created;
@@ -28,6 +30,7 @@ public class Tb_notice {
     private Date updated;
 
     private Boolean deleted;
+
   //手写加入
     private byte is_read;
     
@@ -58,7 +61,6 @@ public class Tb_notice {
 	public void setDate(String date) {
 		this.date = date;
 	}
-
 
 	public Integer getId() {
         return id;
@@ -132,6 +134,14 @@ public class Tb_notice {
         this.sourceId = sourceId;
     }
 
+    public String getPublicationScope() {
+        return publicationScope;
+    }
+
+    public void setPublicationScope(String publicationScope) {
+        this.publicationScope = publicationScope == null ? null : publicationScope.trim();
+    }
+
     public Byte getNoticeType() {
         return noticeType;
     }
@@ -163,14 +173,4 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
-
-	@Override
-	public String toString() {
-		return "Tb_notice [id=" + id + ", title=" + title + ", content=" + content + ", priority=" + priority
-				+ ", senderId=" + senderId + ", senderName=" + senderName + ", noticeModel=" + noticeModel
-				+ ", redirectUrl=" + redirectUrl + ", sourceId=" + sourceId + ", noticeType=" + noticeType
-				+ ", created=" + created + ", updated=" + updated + ", deleted=" + deleted + ", is_read=" + is_read
-				+ ", headUrl=" + headUrl + ", date=" + date + "]";
-	}
-    
 }

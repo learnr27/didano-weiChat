@@ -11,6 +11,7 @@
     <result column="notice_model" jdbcType="TINYINT" property="noticeModel" />
     <result column="redirect_url" jdbcType="VARCHAR" property="redirectUrl" />
     <result column="source_id" jdbcType="INTEGER" property="sourceId" />
+    <result column="publication_scope" jdbcType="VARCHAR" property="publicationScope" />
     <result column="notice_type" jdbcType="TINYINT" property="noticeType" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="updated" jdbcType="TIMESTAMP" property="updated" />
@@ -76,7 +77,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, title, content, priority, sender_id, sender_name, notice_model, redirect_url, 
-    source_id, notice_type, created, updated, deleted
+    source_id, publication_scope, notice_type, created, updated, deleted
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_noticeExample" resultMap="BaseResultMap">
     select
@@ -115,14 +116,14 @@
     </selectKey>
     insert into tb_notice (title, content, priority, 
       sender_id, sender_name, notice_model, 
-      redirect_url, source_id, notice_type, 
-      created, updated, deleted
-      )
+      redirect_url, source_id, publication_scope, 
+      notice_type, created, updated, 
+      deleted)
     values (#{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{priority,jdbcType=TINYINT}, 
       #{senderId,jdbcType=INTEGER}, #{senderName,jdbcType=VARCHAR}, #{noticeModel,jdbcType=TINYINT}, 
-      #{redirectUrl,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, #{noticeType,jdbcType=TINYINT}, 
-      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
-      )
+      #{redirectUrl,jdbcType=VARCHAR}, #{sourceId,jdbcType=INTEGER}, #{publicationScope,jdbcType=VARCHAR}, 
+      #{noticeType,jdbcType=TINYINT}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_notice">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -153,6 +154,9 @@
       </if>
       <if test="sourceId != null">
         source_id,
+      </if>
+      <if test="publicationScope != null">
+        publication_scope,
       </if>
       <if test="noticeType != null">
         notice_type,
@@ -191,6 +195,9 @@
       </if>
       <if test="sourceId != null">
         #{sourceId,jdbcType=INTEGER},
+      </if>
+      <if test="publicationScope != null">
+        #{publicationScope,jdbcType=VARCHAR},
       </if>
       <if test="noticeType != null">
         #{noticeType,jdbcType=TINYINT},
@@ -242,6 +249,9 @@
       <if test="record.sourceId != null">
         source_id = #{record.sourceId,jdbcType=INTEGER},
       </if>
+      <if test="record.publicationScope != null">
+        publication_scope = #{record.publicationScope,jdbcType=VARCHAR},
+      </if>
       <if test="record.noticeType != null">
         notice_type = #{record.noticeType,jdbcType=TINYINT},
       </if>
@@ -270,6 +280,7 @@
       notice_model = #{record.noticeModel,jdbcType=TINYINT},
       redirect_url = #{record.redirectUrl,jdbcType=VARCHAR},
       source_id = #{record.sourceId,jdbcType=INTEGER},
+      publication_scope = #{record.publicationScope,jdbcType=VARCHAR},
       notice_type = #{record.noticeType,jdbcType=TINYINT},
       created = #{record.created,jdbcType=TIMESTAMP},
       updated = #{record.updated,jdbcType=TIMESTAMP},
@@ -305,6 +316,9 @@
       <if test="sourceId != null">
         source_id = #{sourceId,jdbcType=INTEGER},
       </if>
+      <if test="publicationScope != null">
+        publication_scope = #{publicationScope,jdbcType=VARCHAR},
+      </if>
       <if test="noticeType != null">
         notice_type = #{noticeType,jdbcType=TINYINT},
       </if>
@@ -330,12 +344,14 @@
       notice_model = #{noticeModel,jdbcType=TINYINT},
       redirect_url = #{redirectUrl,jdbcType=VARCHAR},
       source_id = #{sourceId,jdbcType=INTEGER},
+      publication_scope = #{publicationScope,jdbcType=VARCHAR},
       notice_type = #{noticeType,jdbcType=TINYINT},
       created = #{created,jdbcType=TIMESTAMP},
       updated = #{updated,jdbcType=TIMESTAMP},
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
     <select id="selectBossByParentId" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staff">
   SELECT * FROM tb_staff WHERE school_id=(SELECT school_id FROM tb_school_parent WHERE id =#{userId}) and type=31
   </select>

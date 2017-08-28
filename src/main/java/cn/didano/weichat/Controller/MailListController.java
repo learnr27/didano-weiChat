@@ -1167,7 +1167,7 @@ public class MailListController {
 				int rowNum = mailListService.Update(list);// insert 以修改sql
 
 				// 删除掉已经取消的父母信息
-				if (!"".equals(student_a.getDeleteParents())) {
+				if (student_a.getDeleteParents()!=null) {
 					String[] arr = student_a.getDeleteParents().split("_");
 					Tb_deleteParentDate date = null;
 					for (int i = 0; i < arr.length; i++) {

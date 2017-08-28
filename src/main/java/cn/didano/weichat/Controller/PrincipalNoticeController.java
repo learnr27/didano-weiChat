@@ -4,8 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,28 +21,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.didano.weichat.Service.ClassService;
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.MailListService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.PrincipalNoticeService;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.ModulePathType;
+import cn.didano.weichat.constant.StaffType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
-import cn.didano.weichat.model.Hand_mailRecord;
+import cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook;
+import cn.didano.weichat.model.Hand_parent4mailList;
 import cn.didano.weichat.model.Hand_staff4PhoneBook;
-import cn.didano.weichat.model.Tb_head_sculpture;
-import cn.didano.weichat.model.Tb_mail;
-import cn.didano.weichat.model.Tb_mail_reply;
+import cn.didano.weichat.model.Tb_classStudent;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
 import cn.didano.weichat.model.Tb_principal_notice;
 import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staffData;
-import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
+import cn.didano.weichat.model.Tb_teacherAndStudent;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -63,7 +62,55 @@ public class PrincipalNoticeController {
 	private NoticeService noticeService;
 	@Autowired
 	private MailListService mailListService;
+	@Autowired
+	private ClassService classService;
 
+	/**
+	 * 老师查询该班级学生信息
+	 *
+	 * @throws ParseException
+	 * @throws InvocationTargetException
+	 * @throws IllegalAccessException
+	 */
+	@PostMapping(value = "student_searchByClass/{staff_id}")
+	@ApiOperation(value = "老师查询该班级学生信息", notes = "老师查询该班级学生信息")
+	@ResponseBody
+	public Out<Tb_classStudent> student_searchByTeacher(@PathVariable("staff_id") Integer staff_id) {
+		logger.info("访问 PrincipalNoticeController:student_searchByTeacher,staff_id=" + staff_id);
+		// 获取当前登录人员的信息
+		Tb_staff staff = mailBoxService.selectBossById(staff_id);
+		// 获取当前登录老师的班级id
+		Tb_staffData classid = mailListService.findClassIdBySid(staff_id);
+		List<Hand_WholeStudentParents4PhoneBook> students = null;
+		Tb_classStudent data = new Tb_classStudent();
+		Out<Tb_classStudent> back = new Out<Tb_classStudent>();
+		try {
+			if (staff.getType() == StaffType.TEACHEER.getIndex()) {
+				// 获取当前老师所带的所有学生
+				students = mailListService.findByTeacher(staff.getId());
+				if (!students.isEmpty()) {
+					// 添加每个学生对应的父母信息
+					for (Hand_WholeStudentParents4PhoneBook list : students) {
+						List<Hand_parent4mailList> parent = mailListService.findparent(list.getId());
+						list.getParent().addAll(parent);
+					}
+
+					data.getStudent().addAll(students);
+				}
+				data.setClassId(classid.getClassId());
+				data.setClassName(classService.selectNameByPrimaryKey(classid.getClassId()));
+
+
+			}
+			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+		
+		} catch (Exception e) {
+			logger.warn(e.getMessage());
+			back.setBackType(BackType.INFO_INVOCATIONTARGETEXCEPTION, e.getMessage());
+		} 
+		return back;
+	}
+	
 	/**
 	 * 查看园长通知列表
 	 *
@@ -140,14 +187,17 @@ public class PrincipalNoticeController {
 		List<Tb_staff> boss = null;
 		List<Integer> classId = null;
 		List<Integer> parentsId = new ArrayList<Integer>();
+		List<Integer> studentId = new ArrayList<Integer>();
 		List<Integer> staffsId = new ArrayList<Integer>();
+		List<Hand_parent4mailList> studentParent=null;
 		Map<Integer, List<Tb_schoolParent>> map = new HashMap<Integer, List<Tb_schoolParent>>();
+		Map<Integer, List<Hand_parent4mailList>> parentMap = new HashMap<Integer, List<Hand_parent4mailList>>();
 		Map<Integer, List<Hand_staff4PhoneBook>> staffMap = new HashMap<Integer, List<Hand_staff4PhoneBook>>();
 		Out<String> back = new Out<String>();
 		try {
 			// 查询当前登陆人员身份
 			staff = mailBoxService.selectBossById(notice_edit.getOnlineId());
-			classId = notice_edit.getClassId();
+			classId = notice_edit.getClassIdOrStudentId();
 			notice = new Tb_notice();
 			pricipalNotice = new Tb_principal_notice();
 			BeanUtils.copyProperties(notice, notice_edit);
@@ -180,12 +230,15 @@ public class PrincipalNoticeController {
 							staffsId.add(staffMap.get(key).get(i).getId());
 						}
 					}
-
+					//设置发布范围
+                  notice.setPublicationScope("全园");
 				} else {// 发布范围仅为员工时
 					staffs = mailListService.findteacherByschool(staff.getSchoolId());
 					for (int i = 0; i < staffs.size(); i++) {
 						staffsId.add(staffs.get(i).getId());
 					}
+					//设置发布范围
+					 notice.setPublicationScope("职工");
 				}
 				// 查询本校其他园长
 				boss = mailBoxService.findBossBySchoolId(staff.getSchoolId());
@@ -195,14 +248,26 @@ public class PrincipalNoticeController {
 			} else {// 当登录者为老师时则为发送班级通知
 				Tb_staffData staffClass = mailListService.findClassIdBySid(notice_edit.getOnlineId());
 				System.out.println(staffClass.getClassId());
-				parents = mailListService.findParentByClass(staffClass.getClassId());
-				staffs = mailListService.findTeacherByClass(staffClass.getClassId());
-				for (int i = 0; i < parents.size(); i++) {
-					parentsId.add(parents.get(i).getId());
+				//设置发布范围
+				 notice.setPublicationScope(classService.selectNameByPrimaryKey(staffClass.getClassId()));
+				studentId=notice_edit.getClassIdOrStudentId();
+				//根据学生分类把家长放入一个map
+				for (int i = 0; i < studentId.size(); i++) {
+					studentParent=mailListService.findparent(studentId.get(i));
+			        parentMap.put(studentId.get(i), studentParent);
 				}
-				for (int i = 0; i < staffs.size(); i++) {
-					staffsId.add(staffs.get(i).getId());
+				
+				// 将家长id放入一个集合
+				Set<Integer> keys = parentMap.keySet();
+				Iterator<Integer> it = keys.iterator();
+				while (it.hasNext()) {
+					int key = it.next();
+					for (int i = 0; i < parentMap.get(key).size(); i++) {
+						parentsId.add(parentMap.get(key).get(i).getId());
+					}
 				}
+				
+				staffsId.add(notice_edit.getOnlineId());
 				// 设置发送者身份
 				notice.setSenderName(staff.getName() + "老师");
 				pricipalNotice.setSenderName(staff.getName() + "老师");

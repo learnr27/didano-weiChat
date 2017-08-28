@@ -24,8 +24,8 @@ public class In_Notice_Edit {
 	private String url;
 	@ApiModelProperty(value = "登录者id",required=true)
 	private Integer onlineId;
-	@ApiModelProperty(value = "接收班级",required=true)
-	private List<Integer> classId= new ArrayList<Integer>();
+	@ApiModelProperty(value = "接收班级或者学生id",required=true)
+	private List<Integer> classIdOrStudentId= new ArrayList<Integer>();
 	@ApiModelProperty(value = "发布是否勾选仅教职工",required=true)
 	private byte allStaff;
 
@@ -74,14 +74,15 @@ public class In_Notice_Edit {
 //	public void setNoticeType(Byte noticeType) {
 //		this.noticeType = noticeType;
 //	}
-	public List<Integer> getClassId() {
-		return classId;
-	}
-	public void setClassId(List<Integer> classId) {
-		this.classId = classId;
-	}
+	
 	public byte getAllStaff() {
 		return allStaff;
+	}
+	public List<Integer> getClassIdOrStudentId() {
+		return classIdOrStudentId;
+	}
+	public void setClassIdOrStudentId(List<Integer> classIdOrStudentId) {
+		this.classIdOrStudentId = classIdOrStudentId;
 	}
 	public void setAllStaff(byte allStaff) {
 		this.allStaff = allStaff;
