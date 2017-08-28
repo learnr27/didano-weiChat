@@ -247,7 +247,6 @@ public class PrincipalNoticeController {
 				pricipalNotice.setSenderName(staff.getName() + "园长");
 			} else {// 当登录者为老师时则为发送班级通知
 				Tb_staffData staffClass = mailListService.findClassIdBySid(notice_edit.getOnlineId());
-				System.out.println(staffClass.getClassId());
 				//设置发布范围
 				 notice.setPublicationScope(classService.selectNameByPrimaryKey(staffClass.getClassId()));
 				studentId=notice_edit.getClassIdOrStudentId();
@@ -266,7 +265,6 @@ public class PrincipalNoticeController {
 						parentsId.add(parentMap.get(key).get(i).getId());
 					}
 				}
-				
 				staffsId.add(notice_edit.getOnlineId());
 				// 设置发送者身份
 				notice.setSenderName(staff.getName() + "老师");
@@ -295,7 +293,6 @@ public class PrincipalNoticeController {
 
 			// 插入家长消息列表
 			if (notice_edit.getAllStaff() == 0) {// 判断发布范围是否为仅员工
-				System.out.println(parentsId.size());
 				for (int i = 0; i < parentsId.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 默认未读
