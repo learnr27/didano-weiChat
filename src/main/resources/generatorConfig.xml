@@ -5,7 +5,7 @@
 <generatorConfiguration>
 	<!--数据库驱动 -->
 	<classPathEntry
-		location="C:/Users/TOPFEEL/.m2/repository/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar" />
+		location="/Users/wangyi/.m2/repository/mysql/mysql-connector-java/5.1.40/mysql-connector-java-5.1.40.jar" />
 	<context id="weiChat_didano" targetRuntime="MyBatis3" defaultModelType="flat">
 		<commentGenerator>
 			<property name="suppressDate" value="true" />
@@ -14,7 +14,7 @@
 		<!--数据库链接地址账号密码 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
 			connectionURL="jdbc:mysql://localhost/xiaonuo" userId="root"
-			password="123">
+			password="123456">
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
@@ -216,11 +216,11 @@
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
 		</table> -->
-		<table tableName="tb_notice" domainObjectName="Tb_notice"
+		<!-- <table tableName="tb_notice" domainObjectName="Tb_notice"
 			enableCountByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>  
-		</table> -->
+		</table>  -->
 		<!-- <table tableName="tb_student_parent" domainObjectName="Tb_student_parent"
 			enableCountByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" >
@@ -274,18 +274,18 @@
 			selectByExampleQueryId="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true">
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
 		</table> -->
-		<table tableName="tb_user" domainObjectName="Tb_user"
-			enableCountByExample="true" enableUpdateByExample="true"
-			enableDeleteByExample="true" enableSelectByExample="true"
-			selectByExampleQueryId="true">
-			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
-		</table>
-		<!-- <table tableName="tb_school_parent" domainObjectName="Tb_schoolParent"
+		<!-- <table tableName="tb_user" domainObjectName="Tb_user"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"
 			selectByExampleQueryId="true">
 			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
 		</table> -->
+		<table tableName="tb_school_parent" domainObjectName="Tb_school_parent"
+			enableCountByExample="true" enableUpdateByExample="true"
+			enableDeleteByExample="true" enableSelectByExample="true"
+			selectByExampleQueryId="true">
+			<generatedKey column="ID" sqlStatement="MYSQL" identity="true"/>
+		</table>
 		<!-- <table tableName="tb_school" domainObjectName="Tb_school"
 			enableCountByExample="true" enableUpdateByExample="true"
 			enableDeleteByExample="true" enableSelectByExample="true"

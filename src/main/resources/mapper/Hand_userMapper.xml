@@ -2,6 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.didano.weichat.dao.Hand_userMapper">
   
+  <resultMap id="Tb_school_parent" type="cn.didano.weichat.model.Tb_school_parent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+  </resultMap>
+  
+  <resultMap id="Tb_student_parent" type="cn.didano.weichat.model.Tb_student_parent">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="school_id" jdbcType="INTEGER" property="schoolId" />
+    <result column="class_id" jdbcType="INTEGER" property="classId" />
+    <result column="student_id" jdbcType="INTEGER" property="studentId" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="rfid" jdbcType="VARCHAR" property="rfid" />
+    <result column="ic_card_id" jdbcType="INTEGER" property="icCardId" />
+    <result column="relation_id" jdbcType="TINYINT" property="relationId" />
+    <result column="relation_title" jdbcType="VARCHAR" property="relationTitle" />
+    <result column="qrcode_url" jdbcType="VARCHAR" property="qrcodeUrl" />
+    <result column="qrcode_url_old" jdbcType="VARCHAR" property="qrcodeUrlOld" />
+    <result column="qrcode_school_key_old" jdbcType="VARCHAR" property="qrcodeSchoolKeyOld" />
+    <result column="qrcode_school_key" jdbcType="VARCHAR" property="qrcodeSchoolKey" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="updated" jdbcType="TIMESTAMP" property="updated" />
+    <result column="deleted" jdbcType="BIT" property="deleted" />
+  </resultMap>
   
   <sql id="Base_Column_List">
     id, openid, officialAccountId, nickname, phone, created, updated, type, deleted, 
@@ -257,5 +287,10 @@
 	AND staff_id = #{parentid,jdbcType=INTEGER}
   </select>
   
-  
+  <select id="getDuplicateStudentParentData" resultMap="Tb_student_parent">
+  	select * from tb_student_parent tmp2 where parent_id in (select tmp1.parent_id from (select *, count(*) as parent_id_num  from (select * from tb_student_parent where deleted=0) as tmp0 group by parent_id) as tmp1 where tmp1.parent_id_num>1)  order by tmp2.id desc
+  </select>
+  <select id="getDuplicateParentData" resultMap="Tb_school_parent">
+  	select * from tb_school_parent tmp2 where status=1 and deleted=0 and id in (select tmp1.parent_id from (select *, count(*) as parent_id_num  from (select * from tb_student_parent where deleted=0) as tmp0 group by parent_id) as tmp1 where tmp1.parent_id_num>1)  order by tmp2.id desc
+  </select>
 </mapper>

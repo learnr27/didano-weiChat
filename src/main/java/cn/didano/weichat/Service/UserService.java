@@ -17,8 +17,9 @@ import cn.didano.weichat.json.Out_Student_Search;
 import cn.didano.weichat.model.Hand_staff;
 import cn.didano.weichat.model.Tb_role;
 import cn.didano.weichat.model.Tb_school;
-import cn.didano.weichat.model.Tb_schoolParent;
+import cn.didano.weichat.model.Tb_school_parent;
 import cn.didano.weichat.model.Tb_staff;
+import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_user;
 import cn.didano.weichat.util.Hand_StudentParent;
 
@@ -213,5 +214,13 @@ public class UserService {
 		return userList;
 	}
 
+	
+	public List<Tb_student_parent> getDuplicateStudentParentData() {
+		return handUserMapper.getDuplicateStudentParentData();
+	}
+	
+	public List<Tb_school_parent> getDuplicateParentData() {
+		return handUserMapper.getDuplicateParentData();
+	}
 	
 }
