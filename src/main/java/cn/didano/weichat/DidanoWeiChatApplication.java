@@ -9,6 +9,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.OfficialAccountService;
+import cn.didano.weichat.file.StorageProperties;
 import cn.didano.weichat.model.Hand_officialAccount;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
@@ -30,6 +32,7 @@ import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 @SpringBootApplication
 @ComponentScan({ "cn.didano.weichat" })
 @ServletComponentScan
+@EnableConfigurationProperties(StorageProperties.class)
 public class DidanoWeiChatApplication extends SpringBootServletInitializer {
 	private static final Logger log = LoggerFactory.getLogger(DidanoWeiChatApplication.class);
 	/*

@@ -26,11 +26,11 @@ import cn.didano.weichat.file.StorageFileNotFoundException;
 import cn.didano.weichat.file.StorageService;
 import io.swagger.annotations.Api;
 
-@Api(value = "微信前端上传文件")
+@Api(value = "微信前端上传文件" , tags = "微信前端上传文件")
 @Controller
 @RequestMapping("/base/fileupload")
 public class FileUploadController {
-	private static final Logger log = Logger.getLogger(FileUploadController.class);
+	private static final Logger logger = Logger.getLogger(FileUploadController.class);
 
 	private final StorageService storageService;
 
@@ -40,16 +40,6 @@ public class FileUploadController {
 		this.storageService = storageService;
 	}
 
-	@GetMapping("/files/{filename:.+}")
-	@ResponseBody
-	public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
-		storageService.deleteAll();
-		storageService.init();
-		Resource file = storageService.loadAsResource(filename);
-		return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"")
-				.body(file);
-	}
 
 	/**
 	 * 上传单个文件
@@ -57,17 +47,12 @@ public class FileUploadController {
 	 * @param redirectAttributes
 	 * @return
 	 */
+	@ResponseBody
 	@PostMapping("/single")
-	public String handleFileUploadSingle(@RequestParam("file") MultipartFile file,@RequestParam("module") String module,
-			RedirectAttributes redirectAttributes) {
-
-		storageService.deleteAll();
-		storageService.init();
-
+	public String handleFileUploadSingle(@RequestParam("file") MultipartFile file,@RequestParam("module") String module) {
+		logger.info("FileUploadController handleFileUploadSingle");
 		storageService.store(file,module);
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
-		return "redirect:/";
+		return "http://www.disan.coms/sd/a/ba.jpg";
 	}
 
 	/**
@@ -77,18 +62,19 @@ public class FileUploadController {
 	 * @return
 	 */
 	@PostMapping("/multifile")
+	@ResponseBody
 	public String handleFileUploadMultifile(@RequestParam("file") List<MultipartFile> files,@RequestParam("module") String module,
 			RedirectAttributes redirectAttributes) {
 
-		storageService.deleteAll();
-		storageService.init();
-		for (int i = 0; i < files.size(); i++) {
-			// Optional.ofNullable(files.get(i)).map(files.get(i)::getName).orElse("no
-			// name");
-			storageService.store(files.get(i),module, i + 1);
-			redirectAttributes.addFlashAttribute("message",
-					"You successfully uploaded " + files.get(i).getOriginalFilename() + "!");
-		}
+//		storageService.deleteAll();
+//		storageService.init();
+//		for (int i = 0; i < files.size(); i++) {
+//			// Optional.ofNullable(files.get(i)).map(files.get(i)::getName).orElse("no
+//			// name");
+//			storageService.store(files.get(i),module, i + 1);
+//			redirectAttributes.addFlashAttribute("message",
+//					"You successfully uploaded " + files.get(i).getOriginalFilename() + "!");
+//		}
 		return "redirect:/";
 	}
 
