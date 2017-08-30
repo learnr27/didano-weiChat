@@ -22,8 +22,8 @@ public class RoleType {
 	
 	
 	
-	public final static String AGENT_NAME = "代理商管理员";					//代理商管理员;
-	public final static String PRODUCT_NAME = "生产管理员";					//生产管理员;
+	public final static String AGENT_ADMINISTRATOR_NAME = "代理商管理员";		//代理商管理员;
+	public final static String PRODUCT_ADMINISTRATOR_NAME = "生产管理员";		//生产管理员;
 	public final static String SCHOOL_ADMINISTRATOR_NAME = "学校管理员";		//学校管理员;
 	public final static String ORG_ADMINISTRATOR_NAME = "组织管理员";			//组织管理员;
 	public final static String SUPER_ADMINISTRATOR_NAME = "超级管理员";		//超级管理员;

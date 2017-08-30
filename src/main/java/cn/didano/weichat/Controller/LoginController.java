@@ -67,15 +67,26 @@ public class LoginController {
 				openId = openid;
 			}
 			logger.info("openId数据为:  " + openId);
-
+			/*
+			 *  public final static int AGENT_ADMINISTRATOR = 25;		//代理商管理员;
+				public final static int PRODUCT_ADMINISTRATOR = 26;		//生产管理员;
+				public final static int SCHOOL_ADMINISTRATOR = 27;		//学校管理员;
+				public final static int ORG_ADMINISTRATOR = 28;			//组织管理员;
+				public final static int SUPER_ADMINISTRATOR = 29;		//超级管理员;
+			 */
+			//目前有11种角色类型,依次为家长,园长,老师,医生,后勤,行政,(超级管理员,组织管理员,学校管理员,生产管理员,代理商管理员);
 			Hand_RoleSelect hand_RoleSelect1 = new Hand_RoleSelect();
 			Hand_RoleSelect hand_RoleSelect2 = new Hand_RoleSelect();
 			Hand_RoleSelect hand_RoleSelect3 = new Hand_RoleSelect();
-			/*
-			 * Hand_RoleSelect hand_RoleSelect4 = new Hand_RoleSelect(); Hand_RoleSelect
-			 * hand_RoleSelect5 = new Hand_RoleSelect(); Hand_RoleSelect hand_RoleSelect6 =
-			 * new Hand_RoleSelect();
-			 */
+			Hand_RoleSelect hand_RoleSelect4 = new Hand_RoleSelect(); 
+			Hand_RoleSelect hand_RoleSelect5 = new Hand_RoleSelect(); 
+			Hand_RoleSelect hand_RoleSelect6 = new Hand_RoleSelect();
+			/*Hand_RoleSelect hand_RoleSelect7 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect8 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect9 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect10 = new Hand_RoleSelect();
+			Hand_RoleSelect hand_RoleSelect11 = new Hand_RoleSelect();*/
+			 
 			hand_RoleSelect1.setRoleType(RoleType.PARENT);
 			hand_RoleSelect1.setRoleName(RoleType.PARENT_NAME);
 
@@ -84,17 +95,35 @@ public class LoginController {
 
 			hand_RoleSelect3.setRoleType(RoleType.TEACHER);
 			hand_RoleSelect3.setRoleName(RoleType.TEACHER_NAME);
-
+			//医生
 			/*
-			 * hand_RoleSelect4.setRoleType(RoleType.DOCTOR);
-			 * hand_RoleSelect4.setRoleName(RoleType.DOCTOR_NAME);
-			 * 
-			 * hand_RoleSelect5.setRoleType(RoleType.SERVICE);
-			 * hand_RoleSelect5.setRoleName(RoleType.SERVICE_NAME);
-			 * 
-			 * hand_RoleSelect6.setRoleType(RoleType.ASSISTANT);
-			 * hand_RoleSelect6.setRoleName(RoleType.ASSISTANT_NAME);
-			 */
+			 * hand_RoleSelect4.setRoleType(RoleType.TEACHER);
+			 * hand_RoleSelect4.setRoleName(RoleType.TEACHER_NAME);
+			*/
+			hand_RoleSelect4.setRoleType(RoleType.DOCTOR);
+			hand_RoleSelect4.setRoleName(RoleType.DOCTOR_NAME);
+			
+			hand_RoleSelect5.setRoleType(RoleType.SERVICE);
+			hand_RoleSelect5.setRoleName(RoleType.SERVICE_NAME);
+			
+			hand_RoleSelect6.setRoleType(RoleType.ASSISTANT);
+			hand_RoleSelect6.setRoleName(RoleType.ASSISTANT_NAME);
+			
+			/*hand_RoleSelect7.setRoleType(RoleType.SUPER_ADMINISTRATOR);
+			hand_RoleSelect7.setRoleName(RoleType.SUPER_ADMINISTRATOR_NAME);
+			
+			hand_RoleSelect8.setRoleType(RoleType.ORG_ADMINISTRATOR);
+			hand_RoleSelect8.setRoleName(RoleType.ORG_ADMINISTRATOR_NAME);
+			
+			hand_RoleSelect9.setRoleType(RoleType.SCHOOL_ADMINISTRATOR);
+			hand_RoleSelect9.setRoleName(RoleType.SCHOOL_ADMINISTRATOR_NAME);
+			
+			hand_RoleSelect10.setRoleType(RoleType.PRODUCT_ADMINISTRATOR);
+			hand_RoleSelect10.setRoleName(RoleType.PRODUCT_ADMINISTRATOR_NAME);
+			
+			hand_RoleSelect11.setRoleType(RoleType.AGENT_ADMINISTRATOR);
+			hand_RoleSelect11.setRoleName(RoleType.AGENT_ADMINISTRATOR_NAME);*/
+			 
 
 			// 家长
 			List<Out_Student_Search> studenList = userService.getStudentListByOpenid(openId);
@@ -108,6 +137,8 @@ public class LoginController {
 				hand_Role_Weichat.setSchoolName(student.getSchooltitle());
 				hand_Role_Weichat.setStudentId(student.getStudentId());
 				hand_Role_Weichat.setStudentName(student.getName());
+				hand_Role_Weichat.setClassId(student.getClassId());
+				hand_Role_Weichat.setClassName(student.getClassName());
 				hand_RoleSelect1.getList().add(hand_Role_Weichat);
 			}
 			// 园长
@@ -138,13 +169,61 @@ public class LoginController {
 				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
 				hand_RoleSelect3.getList().add(hand_Role_Weichat);
 			}
+			
+			/*// 医生
+			List<Hand_staff> doctorList = userService.getDoctorByOpenid(openId);
+			for (Hand_staff staff : doctorList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.DOCTOR);
+				hand_Role_Weichat.setRoleName(RoleType.DOCTOR_NAME);
+				hand_Role_Weichat.setId(staff.getId());
+				hand_Role_Weichat.setStaffId(staff.getStaffId());
+				hand_Role_Weichat.setClassId(staff.getClassId());
+				hand_Role_Weichat.setClassName(staff.getClassName());
+				hand_Role_Weichat.setSchoolId(staff.getSchoolId());
+				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
+				hand_RoleSelect4.getList().add(hand_Role_Weichat);
+			}
+			
+			// 后勤
+			List<Hand_staff> serviceList = userService.getServiceByOpenid(openId);
+			for (Hand_staff staff : serviceList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.SERVICE);
+				hand_Role_Weichat.setRoleName(RoleType.SERVICE_NAME);
+				hand_Role_Weichat.setId(staff.getId());
+				hand_Role_Weichat.setStaffId(staff.getStaffId());
+				hand_Role_Weichat.setClassId(staff.getClassId());
+				hand_Role_Weichat.setClassName(staff.getClassName());
+				hand_Role_Weichat.setSchoolId(staff.getSchoolId());
+				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
+				hand_RoleSelect5.getList().add(hand_Role_Weichat);
+			}
+			
+			// 行政
+			List<Hand_staff> assistantList = userService.getAssistantByOpenid(openId);
+			for (Hand_staff staff : assistantList) {
+				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
+				hand_Role_Weichat.setRoleType(RoleType.ASSISTANT);
+				hand_Role_Weichat.setRoleName(RoleType.ASSISTANT_NAME);
+				hand_Role_Weichat.setId(staff.getId());
+				hand_Role_Weichat.setStaffId(staff.getStaffId());
+				hand_Role_Weichat.setClassId(staff.getClassId());
+				hand_Role_Weichat.setClassName(staff.getClassName());
+				hand_Role_Weichat.setSchoolId(staff.getSchoolId());
+				hand_Role_Weichat.setSchoolName(staff.getSchoolName());
+				hand_RoleSelect6.getList().add(hand_Role_Weichat);
+			}*/
+			
 			// 医生,后勤,行政暂时没有做;
 			hand_RoleSelect1.setNum(hand_RoleSelect1.getList().size());
 			hand_RoleSelect2.setNum(hand_RoleSelect2.getList().size());
 			hand_RoleSelect3.setNum(hand_RoleSelect3.getList().size());
-			/*
-			 * hand_RoleSelect4.setNum(hand_RoleSelect4.getList().size());
-			 * hand_RoleSelect5.setNum(hand_RoleSelect5.getList().size());
+			/*hand_RoleSelect4.setNum(hand_RoleSelect4.getList().size());
+			hand_RoleSelect5.setNum(hand_RoleSelect5.getList().size());
+			hand_RoleSelect6.setNum(hand_RoleSelect6.getList().size());*/
+			
+			 /* hand_RoleSelect5.setNum(hand_RoleSelect5.getList().size());
 			 * hand_RoleSelect6.setNum(hand_RoleSelect6.getList().size());
 			 */
 
@@ -157,6 +236,15 @@ public class LoginController {
 			if (hand_RoleSelect3.getNum() > 0) {
 				hand_RoleSelects.add(hand_RoleSelect3);
 			}
+			/*if (hand_RoleSelect4.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect4);
+			}
+			if (hand_RoleSelect5.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect5);
+			}
+			if (hand_RoleSelect6.getNum() > 0) {
+				hand_RoleSelects.add(hand_RoleSelect6);
+			}*/
 			/*
 			 * if (hand_RoleSelect4.getNum() > 0) { hand_RoleSelects.add(hand_RoleSelect4);
 			 * } if (hand_RoleSelect5.getNum() > 0) {

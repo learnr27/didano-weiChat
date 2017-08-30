@@ -60,6 +60,12 @@ public interface Hand_userMapper {
 	List<Tb_student_parent> getDuplicateStudentParentData();
 	
 	List<Tb_school_parent> getDuplicateParentData();
+
+	List<Hand_staff> getDoctorByOpenid(String openId);
+
+	List<Hand_staff> getServiceByOpenid(String openId);
+
+	List<Hand_staff> getAssistantByOpenid(String openId);
 	
 	
 }

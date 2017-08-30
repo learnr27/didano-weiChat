@@ -222,5 +222,23 @@ public class UserService {
 	public List<Tb_school_parent> getDuplicateParentData() {
 		return handUserMapper.getDuplicateParentData();
 	}
+
+
+	public List<Hand_staff> getDoctorByOpenid(String openId) {
+		List<Hand_staff> doctorList = handUserMapper.getDoctorByOpenid(openId);
+		return doctorList;
+	}
+
+
+	public List<Hand_staff> getServiceByOpenid(String openId) {
+		List<Hand_staff> serviceList = handUserMapper.getServiceByOpenid(openId);
+		return serviceList;
+	}
+
+
+	public List<Hand_staff> getAssistantByOpenid(String openId) {
+		List<Hand_staff> assistantList = handUserMapper.getAssistantByOpenid(openId);
+		return assistantList;
+	}
 	
 }

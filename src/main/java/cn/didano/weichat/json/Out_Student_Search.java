@@ -11,6 +11,16 @@ public class Out_Student_Search extends Tb_student {
 	private String schooltitle;
 
 	private Integer parentId;
+	
+	private String className;
+
+	public String getClassName() {
+		return className;
+	}
+
+	public void setClassName(String className) {
+		this.className = className;
+	}
 
 	public Integer getId() {
 		return id;
