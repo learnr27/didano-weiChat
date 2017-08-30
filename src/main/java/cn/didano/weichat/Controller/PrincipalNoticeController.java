@@ -48,7 +48,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Api(value = "园长通知服务", tags = "园长通知服务，提供给表现层")
+@Api(value = "校园通知服务", tags = "校园通知服务，提供给表现层")
 @RestController
 @RequestMapping(value = "/base/principal/post/")
 public class PrincipalNoticeController {
@@ -111,7 +111,7 @@ public class PrincipalNoticeController {
 	}
 
 	/**
-	 * 查看园长通知列表
+	 * 查看校园通知列表
 	 *
 	 * @throws ParseException
 	 * @throws InvocationTargetException
@@ -165,7 +165,7 @@ public class PrincipalNoticeController {
 	}
 
 	/**
-	 * 发布园长通知，班级通知
+	 * 发布校园通知
 	 *
 	 * @param c_channel
 	 * @return
@@ -364,7 +364,7 @@ public class PrincipalNoticeController {
 	}
 
 	/**
-	 * 根据园长班级通知id查询通知
+	 * 根据校园通知id查询通知
 	 *
 	 * @throws ParseException
 	 * @throws InvocationTargetException
