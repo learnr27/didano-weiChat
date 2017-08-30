@@ -117,7 +117,7 @@ where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 OR
 		tmp1.class_id  as classId,
 		c.title,
 		tmp1.type,
-		tmp1.school_id ,
+		tmp1.school_id as schoolId ,
 		tmp3.ic_number as staff_ic_number,
 		tmp1.ic_card_id as icCardId
 	FROM
