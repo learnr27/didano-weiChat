@@ -21,6 +21,10 @@ public class OssInfo {
 	private String domain;
 	private String cdn;
 	private String imgPath;
+	private String tmpPath;
+	private String formalPath;
+	private String tmp;
+	private String formal;
 	
 	
 	
@@ -79,5 +83,38 @@ public class OssInfo {
 	public void setImgPath(String imgPath) {
 		this.imgPath = imgPath;
 	}
+
+	public String getTmpPath() {
+		return tmpPath;
+	}
+
+	public void setTmpPath(String tmpPath) {
+		this.tmpPath = tmpPath;
+	}
+
+	public String getFormalPath() {
+		return formalPath;
+	}
+
+	public void setFormalPath(String formalPath) {
+		this.formalPath = formalPath;
+	}
+
+	public String getTmp() {
+		return tmp;
+	}
+
+	public void setTmp(String tmp) {
+		this.tmp = tmp;
+	}
+
+	public String getFormal() {
+		return formal;
+	}
+
+	public void setFormal(String formal) {
+		this.formal = formal;
+	}
+	
 	
 }
