@@ -680,6 +680,16 @@ public class MailListController {
 					map.put(one.getClassId(), student);
 				}
 			}
+			//找出没有学生的班级
+			List<Tb_class> schoolAllClass=classService.findAll(staff.getSchoolId());
+			for (int i = 0; i < schoolAllClass.size(); i++) {
+				if(!map.containsKey(schoolAllClass.get(i).getId())){
+					cs = new Tb_classStudent();
+					cs.setClassId(schoolAllClass.get(i).getId());
+					cs.setClassName(schoolAllClass.get(i).getTitle());
+					student2.add(cs);
+				}
+			}
 			// 循环map将数据返回给总返回数据
 			Set<Integer> keys = map.keySet();
 			Iterator<Integer> it = keys.iterator();
