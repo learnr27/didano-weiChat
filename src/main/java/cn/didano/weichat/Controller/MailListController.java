@@ -455,6 +455,10 @@ public class MailListController {
 						vd_class.setStaffId(vd_staff.getId());
 						staffService.insertClassSelective(vd_class);
 					}
+					
+					
+					
+			
 					// 引入二维码接口，生成对应的二维码
 					HttpPost httpPost = new HttpPost(appConfigProperties.getQrcodePath());
 					CloseableHttpClient client = HttpClients.createDefault();
@@ -1083,7 +1087,7 @@ public class MailListController {
 					for (Hand_parent4mailList add : student_a.getParent()) {
 						// 查询家长的ic卡是否存在
 						Tb_ic_card tb_ic_card = null;
-						if ("".equals(add.getParent_ic_number())) {
+						if (add.getParent_ic_number()!=null) {
 							tb_ic_card = iCCardService.selectIcByNumber(add.getParent_ic_number(),IcCardType.ADULT.getIndex());
 						}
 						vd_parent.setSchoolId(classService.selectById(vd_student.getClassId()).getSchoolId());
