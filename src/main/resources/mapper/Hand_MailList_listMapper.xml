@@ -28,7 +28,7 @@ on tmp3.class_id=tmp4.class_id) as tmp6 left join `vd_auth_switch` v on tmp6.id=
  select tmp1.title,tmp1.name,tmp2.title as schoolTitle,tmp3.title as classTitle from 
  (select Max(a.id),a.relation_title as title,b.name,b.school_id,b.class_id from tb_student_parent a,tb_student b where a.rfid=#{rfid} and b.id=a.student_id and a.deleted=0 
  	  <if test="id != null">
-        <![CDATA[and a.id <> #{id}]]>
+        <![CDATA[and a.parent_id <> #{id}]]>
       </if>) 
  tmp1 left join tb_school tmp2 on tmp1.school_id=tmp2.id left join tb_class tmp3 on tmp1.class_id=tmp3.id 
 </select>
