@@ -71,11 +71,15 @@
 	  (SELECT
 	     ts.id AS studentId,
 	     ts.name AS NAME,
+	     tsp.class_id AS classId,
+	     tc.title AS className,
 	     tsp.parent_id AS parentId,
 	     tsp.school_id AS schoolId
 	   FROM tb_student ts,
+	     tb_class tc,
 	     tb_student_parent tsp
 	   WHERE ts.id = tsp.student_id
+	   AND tsp.class_id = tc.id
 	   AND ts.deleted = 0 
 	   AND tsp.deleted = 0) tmp1
 	WHERE tmp0.school_parent_id = tmp1.parentId AND tmp0.student_id=tmp1.studentId) tmp3 
@@ -127,6 +131,75 @@
 		AND s.school_id = sc.id
 		AND tsc.class_id = tc.id
 		AND tsc.staff_id = s.id
+  </select>
+  
+  <select id="getDoctorByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">
+	  SELECT 
+	tu.id,
+	s.id AS staffId,
+	tc.id AS classId,
+	tc.title AS className,
+	sc.id AS schoolId,
+	sc.title AS schoolName
+	FROM tb_staff s,
+	tb_school sc,
+	tb_user tu,
+	tb_class tc
+	WHERE tu.type = 33
+	AND tu.openid = #{openid,jdbcType=VARCHAR}
+	AND tu.staff_id = s.id
+	AND s.school_id = tc.school_id
+	AND tu.deleted = 0
+	AND s.deleted = 0
+	AND sc.deleted = 0
+	AND tc.deleted = 0
+	AND s.school_id = sc.id;
+  </select>
+  
+  <select id="getServiceByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">
+	  SELECT 
+	tu.id,
+	s.id AS staffId,
+	tc.id AS classId,
+	tc.title AS className,
+	sc.id AS schoolId,
+	sc.title AS schoolName
+	FROM tb_staff s,
+	tb_school sc,
+	tb_user tu,
+	tb_class tc
+	WHERE tu.type = 34
+	AND tu.openid = #{openid,jdbcType=VARCHAR}
+	AND tu.staff_id = s.id
+	AND s.school_id = tc.school_id
+	AND tu.deleted = 0
+	AND s.deleted = 0
+	AND sc.deleted = 0
+	AND tc.deleted = 0
+	AND s.school_id = sc.id;
+  </select>
+  
+  <select id="getAssistantByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">
+	  SELECT 
+	tu.id,
+	s.id AS staffId,
+	tc.id AS classId,
+	tc.title AS className,
+	sc.id AS schoolId,
+	sc.title AS schoolName
+	FROM tb_staff s,
+	tb_school sc,
+	tb_user tu,
+	tb_class tc
+	WHERE tu.type = 35
+	AND tu.openid = #{openid,jdbcType=VARCHAR}
+	AND tu.staff_id = s.id
+	AND s.school_id = tc.school_id
+	AND tu.deleted = 0
+	AND s.deleted = 0
+	AND sc.deleted = 0
+	AND tc.deleted = 0
+	AND s.school_id = sc.id;
   </select>
   
   <select id="selectUserByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Tb_user">
