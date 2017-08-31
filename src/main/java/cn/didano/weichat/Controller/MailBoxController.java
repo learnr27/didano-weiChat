@@ -202,7 +202,7 @@ public class MailBoxController {
 				notice.setNoticeModel(NoticeModel.INSIDE_URL.getIndex());
 				notice.setNoticeType(NoticeType.PRINCIPAL_MAIL.getIndex());
 				notice.setPriority(NoticeTop.NOT_TOP.getIndex());
-				notice.setRedirectUrl(ModulePathType.PRINCIPAL_MAIL.getUrl() + "{" + mail.getId() + "}");
+				notice.setRedirectUrl(ModulePathType.PRINCIPAL_MAIL.getUrl()  + mail.getId() );
 				notice.setSenderName(addressName.getName() + "的" + addressName.getRelation_title());
 				notice.setSenderId(mail_write.getUserId());
 				notice.setSourceId(mail.getId());

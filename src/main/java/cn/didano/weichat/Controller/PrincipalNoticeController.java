@@ -284,7 +284,7 @@ public class PrincipalNoticeController {
 			// 设置内部url或者外部url
 			if (notice_edit.getNoticeModel() == 1) {
 				// 设置转向地址
-				notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl() + "{" + pricipalNotice.getId() + "}");
+				notice.setRedirectUrl(ModulePathType.PRINCIPAL_NOTICE.getUrl() + pricipalNotice.getId());
 			} else if (notice_edit.getNoticeModel() == 2) {
 				notice.setRedirectUrl(notice_edit.getUrl());
 			}
