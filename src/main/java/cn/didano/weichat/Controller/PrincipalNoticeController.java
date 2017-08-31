@@ -203,7 +203,7 @@ public class PrincipalNoticeController {
 			BeanUtils.copyProperties(notice, notice_edit);
 			BeanUtils.copyProperties(pricipalNotice, notice_edit);
 			System.out.println(staff.getType());
-			if (staff.getType() == 31) {// 当登录者为园长时则为发布园长通知
+			if (staff.getType() == 31 || staff.getType() == 35 ) {// 当登录者为园长或者行政时则为发布园长通知
 				// 按班级给父母职工分类
 				if (notice_edit.getAllStaff() == 0) {// 判断发布范围是否为仅员工
 					for (int i = 0; i < classId.size(); i++) {
@@ -250,7 +250,7 @@ public class PrincipalNoticeController {
 				// 设置发送者身份
 				notice.setSenderName(staff.getName() + "(园长)");
 				pricipalNotice.setSenderName(staff.getName() + "(园长)");
-			} else {// 当登录者为老师时则为发送班级通知
+			} else  if(staff.getType() == 32){// 当登录者为老师时则为发送班级通知
 				//查询班级
 				Tb_staffData staffClass = mailListService.findClassIdBySid(notice_edit.getOnlineId());
 				// 设置发布范围

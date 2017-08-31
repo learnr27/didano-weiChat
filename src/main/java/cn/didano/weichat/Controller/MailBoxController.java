@@ -189,7 +189,6 @@ public class MailBoxController {
 				//查询该家长所在学校的园长和行政
 				boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 				addressName = mailBoxService.selectAddressName(data);
-                System.out.println(boss);
 				// 插入邮件表
 				Tb_mail mail = new Tb_mail();
 				mail.setContent(mail_write.getContent());
@@ -223,7 +222,6 @@ public class MailBoxController {
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
 				}
-				System.out.println(1);
 				// 插入其他家长接收
 				for (int i = 0; i < parents.size(); i++) {
 					noticeUser = new Tb_noticeUser();
@@ -240,7 +238,6 @@ public class MailBoxController {
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
 				}
-				System.out.println(12);
 				if (rowNum > 0) {
 					back.setBackTypeWithLog(mail.getId(), BackType.SUCCESS_INSERT);
 				} else {
