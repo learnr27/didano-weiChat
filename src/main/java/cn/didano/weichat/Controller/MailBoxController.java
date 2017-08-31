@@ -186,9 +186,10 @@ public class MailBoxController {
 				data.setStudentId(mail_write.getStudentId());
 				data.setUserId(mail_write.getUserId());
 				parents = mailBoxService.findParentByStudentId(mail_write.getStudentId());
+				//查询该家长所在学校的园长和行政
 				boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 				addressName = mailBoxService.selectAddressName(data);
-
+                System.out.println(boss);
 				// 插入邮件表
 				Tb_mail mail = new Tb_mail();
 				mail.setContent(mail_write.getContent());
@@ -217,11 +218,12 @@ public class MailBoxController {
 					noticeUser.setIsRead((byte) 0);
 					noticeUser.setNoticeId(notice.getId());
 					noticeUser.setUserId(boss.get(i).getId());
-					noticeUser.setUserType((byte) 31);
+					noticeUser.setUserType(boss.get(i).getType());
 					noticeUser.setCreated(new Date());
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
 				}
+				System.out.println(1);
 				// 插入其他家长接收
 				for (int i = 0; i < parents.size(); i++) {
 					noticeUser = new Tb_noticeUser();
@@ -238,6 +240,7 @@ public class MailBoxController {
 					noticeService.insertNoticeUserSelective(noticeUser);
 					rowNum++;
 				}
+				System.out.println(12);
 				if (rowNum > 0) {
 					back.setBackTypeWithLog(mail.getId(), BackType.SUCCESS_INSERT);
 				} else {
@@ -252,11 +255,14 @@ public class MailBoxController {
 				data.setStudentId(mail_write.getStudentId());
 				// 根据登录者的身份设置发送者称呼
 				if (mail_write.getUserType() == 31) {
-					Tb_staff staff = mailBoxService.selectBossById(mail_write.getUserId());
+					Tb_staff staff = mailBoxService.selectStaffById(mail_write.getUserId());
 					mailReply.setSenderName(staff.getName() + "(园长)");
-				} else {
+				} else if(mail_write.getUserType() == 30) {
 					Hand_addressName parent = mailBoxService.selectAddressName(data);
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
+				}else if (mail_write.getUserType() == 35) {
+					Tb_staff staff = mailBoxService.selectStaffById(mail_write.getUserId());
+					mailReply.setSenderName(staff.getName() + "(行政)");
 				}
 				mailReply.setSenderId(mail_write.getUserId());
 				mailReply.setContent(mail_write.getContent());
@@ -337,7 +343,11 @@ public class MailBoxController {
 				String title = mails.get(i).getSenderName();
 				String name = title.substring(title.length() - 2, title.length());
 				// 设置头像
+				
 				if ("长)".equals(name)) {
+					head = HeadMemoryConfigStorageContainer.findByOriId(9);
+					mails.get(i).setHead(head.getAddress());
+				}else if("政)".equals(name)){
 					head = HeadMemoryConfigStorageContainer.findByOriId(9);
 					mails.get(i).setHead(head.getAddress());
 				}else if("园长".equals(name)){

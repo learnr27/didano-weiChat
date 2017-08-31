@@ -76,7 +76,7 @@ public class MailBoxService {
 	/**
 	 * 查找职工
 	 */
-	 public Tb_staff selectBossById(Integer userId){
+	 public Tb_staff selectStaffById(Integer userId){
 		 return staffMapper.selectByPrimaryKey(userId);
 	 }
 	 /**

@@ -1,5 +1,6 @@
 package cn.didano.weichat.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import cn.didano.weichat.dao.Tb_staff_signdateMapper;
 import cn.didano.weichat.dao.View_staff_ic_cardMapper;
 import cn.didano.weichat.exception.DBExceptionEnums;
 import cn.didano.weichat.exception.ServiceException;
+import cn.didano.weichat.model.Hand_staff4PhoneBook;
 import cn.didano.weichat.model.Hand_staffTransit4PhoneBook;
 import cn.didano.weichat.model.Tb_sign_type;
 import cn.didano.weichat.model.Tb_staff;
@@ -63,7 +65,33 @@ public class StaffService {
 		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
 		return staffMapper.selectByExample(condition);
 	}
-
+	/**
+	 * 查询一个学校的后勤医生行政
+	 * 
+	 * @return
+	 */
+	public List<Tb_staff> selectSchoolAllServey(Integer schoolId) {
+		List<Byte> type= new ArrayList<Byte>();
+		type.add((byte)31);
+		type.add((byte)32);
+		Tb_staffExample condition = new Tb_staffExample();
+		Tb_staffExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示
+		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
+		criteria.andSchoolIdEqualTo(schoolId);
+		criteria.andTypeNotIn(type);
+		return staffMapper.selectByExample(condition);
+	}
+	
+	/**
+	 * 查询一个学校除了园长外的所有职工
+	 * 
+	 * @return
+	 */
+	public List<Hand_staff4PhoneBook> selectSchoolAllStaff(Integer schoolId) {
+		
+		return tb_staffM4ListMapper.selectSchoolAllStaff(schoolId);
+	}
 	/**
 	 * 查询集合
 	 * 

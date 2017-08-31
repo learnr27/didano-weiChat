@@ -27,4 +27,5 @@ public interface Tb_staffMapper {
     int updateByPrimaryKeySelective(Tb_staff record);
 
     int updateByPrimaryKey(Tb_staff record);
+
 }

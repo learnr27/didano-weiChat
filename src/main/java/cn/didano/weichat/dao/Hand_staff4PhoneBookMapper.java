@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import cn.didano.weichat.model.Hand_staff4PhoneBook;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staffExample;
 
@@ -29,4 +30,6 @@ public interface Hand_staff4PhoneBookMapper {
     int updateByPrimaryKeySelective(Tb_staff record);
 
     int updateByPrimaryKey(Tb_staff record);
+    
+    List<Hand_staff4PhoneBook> selectSchoolAllStaff(Integer schoolId); 
 }
