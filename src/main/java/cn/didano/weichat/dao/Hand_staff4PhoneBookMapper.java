@@ -32,4 +32,5 @@ public interface Hand_staff4PhoneBookMapper {
     int updateByPrimaryKey(Tb_staff record);
     
     List<Hand_staff4PhoneBook> selectSchoolAllStaff(Integer schoolId); 
+    List<Hand_staff4PhoneBook> selectSchoolAllAdministrationInteger(Integer schoolId); 
 }

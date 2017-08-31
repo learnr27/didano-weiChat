@@ -82,7 +82,15 @@ public class StaffService {
 		criteria.andTypeNotIn(type);
 		return staffMapper.selectByExample(condition);
 	}
-	
+	/**
+	 * 查询一个学校所有后勤
+	 * 
+	 * @return
+	 */
+	public List<Hand_staff4PhoneBook> selectSchoolAllAdministrationInteger (Integer schoolId) {
+		
+		return tb_staffM4ListMapper.selectSchoolAllAdministrationInteger(schoolId);
+	}
 	/**
 	 * 查询一个学校除了园长外的所有职工
 	 * 

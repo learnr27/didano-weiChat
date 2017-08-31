@@ -345,4 +345,7 @@
    <select id="selectSchoolAllStaff" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
 SELECT * FROM tb_staff WHERE tb_staff.type !=31 AND tb_staff.school_id=#{schoolId} and tb_staff.deleted=0 ;
  </select>
+ <select id="selectSchoolAllAdministrationInteger" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
+SELECT * FROM tb_staff WHERE tb_staff.type =35 AND tb_staff.school_id=#{schoolId} and tb_staff.deleted=0 ;
+ </select>
 </mapper>
