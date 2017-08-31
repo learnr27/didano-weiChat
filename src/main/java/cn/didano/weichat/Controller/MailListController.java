@@ -68,6 +68,7 @@ import cn.didano.weichat.model.Tb_student4List;
 import cn.didano.weichat.model.Tb_studentData;
 import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_teacherAndStudent;
+import cn.didano.weichat.util.SendSms;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -458,7 +459,8 @@ public class MailListController {
 					
 					
 					
-			
+					//发送绑定短信
+					SendSms.sendMessage(vd_staff.getPhone());
 					// 引入二维码接口，生成对应的二维码
 					HttpPost httpPost = new HttpPost(appConfigProperties.getQrcodePath());
 					CloseableHttpClient client = HttpClients.createDefault();
@@ -1121,6 +1123,8 @@ public class MailListController {
 						vd_studentparent.setCreated(new Date());
 
 						studentService.insertStudentParentSelective(vd_studentparent);
+						//发送绑定短信
+						SendSms.sendMessage(vd_parent.getPhone());
 						HttpPost httpPost = new HttpPost(appConfigProperties.getQrcodePath());
 						logger.info("appConfigProperties.getQrcodePath()=" + appConfigProperties.getQrcodePath());
 						CloseableHttpClient client = HttpClients.createDefault();
@@ -1241,6 +1245,8 @@ public class MailListController {
 								vd_studentparent.setIcCardId(0);
 							}
 							studentService.insertStudentParentSelective(vd_studentparent);
+							//发送绑定短信
+							SendSms.sendMessage(vd_parent.getPhone());
 							// 引入二维码接口，为家长生成对应的二维码
 							HttpPost httpPost = new HttpPost(appConfigProperties.getQrcodePath());
 							logger.info("appConfigProperties.getQrcodePath()=" + appConfigProperties.getQrcodePath());
