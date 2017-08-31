@@ -27,6 +27,7 @@ import cn.didano.weichat.Service.MailListService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.PrincipalNoticeService;
 import cn.didano.weichat.Service.StaffService;
+import cn.didano.weichat.config.OssInfo;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.constant.StaffType;
@@ -44,6 +45,7 @@ import cn.didano.weichat.model.Tb_principal_notice;
 import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staffData;
+import cn.didano.weichat.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -66,6 +68,8 @@ public class PrincipalNoticeController {
 	private ClassService classService;
 	@Autowired
 	private StaffService staffService;
+	@Autowired
+	OssInfo ossInfo;
 
 	/**
 	 * 老师查询该班级学生信息
@@ -272,6 +276,13 @@ public class PrincipalNoticeController {
 			}
 			pricipalNotice.setSenderId(notice_edit.getOnlineId());
 			pricipalNotice.setCreated(new Date());
+			logger.info("pricipalNotice.getContent()="+pricipalNotice.getContent());
+			//stephen.wang 2017-8-30
+			//内容里面如果有临时图片，执行将临时图片转换为正式图片，上传一开始都是临时图片，当执行保存时，转为正式
+			String newContent = FileUtil.transferTempUrl2FormalUrlWithAliOss(pricipalNotice.getContent(), ossInfo);
+			pricipalNotice.setContent(newContent);
+			notice.setContent(newContent);
+			logger.info("newContent="+newContent);
 			// 插入园长通知表
 			principalNoticeService.insertSelective(pricipalNotice);
 			notice.setCreated(new Date());
