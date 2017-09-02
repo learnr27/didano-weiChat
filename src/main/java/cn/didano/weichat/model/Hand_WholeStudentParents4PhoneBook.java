@@ -44,7 +44,8 @@ public class Hand_WholeStudentParents4PhoneBook {
 	private Integer icCardId;
 	private Integer is_use;
 	private Integer switchId;
-	
+
+	private List<Hand_parent4mailList> parent = new ArrayList<Hand_parent4mailList>();
 	
 	public Integer getSwitchId() {
 		return switchId;
@@ -52,9 +53,6 @@ public class Hand_WholeStudentParents4PhoneBook {
 	public void setSwitchId(Integer switchId) {
 		this.switchId = switchId;
 	}
-	private List<Hand_parent4mailList> parent = new ArrayList<Hand_parent4mailList>();
-	
-	
 	public Integer getIs_use() {
 		return is_use;
 	}
