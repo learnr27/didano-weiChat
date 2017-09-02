@@ -22,6 +22,10 @@ public enum BackType {
 	INFO_ILLEGALACCESSEXCEPTION("IllegalAccessException异常，安全权限异常",50),
 	INFO_INVOCATIONTARGETEXCEPTION("InvocationTargetException异常，访问途径异常",51),
 	INFO_IOEXCEPTION("IoException异常，访问途径异常",51),
+	//阿里OSS操作
+	SUCCESS_UPLOAD_FILE("上传文件成功", 100),
+	FAIL_UPLOAD_FILE("上传文件失败", 101),
+	FAIL_UPLOAD_FILE_PARA_ERROR("上传文件参数有误", 101),
 	
 	//负数以下是底层数据库错误，查看DBException
 	SUCCESS("成功", 1000),
