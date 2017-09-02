@@ -647,6 +647,7 @@ public class MailListController {
 						// yang 编辑家长的rfid
 						parent.setParent_ic_number(c.getParent_ic_number());
 						parent.setIcCardId(c.getParentIcCardId());
+						parent.setParent_is_use(c.getParent_is_use());
 						parentall.add(parent);
 					}
 				}

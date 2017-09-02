@@ -8,7 +8,15 @@ public class Hand_parent4mailList{
 	private String parent_ic_number;
 	private Integer icCardId;
 	private String rfid;
+	private Boolean parent_is_use;
 	
+	public Boolean getParent_is_use() {
+		return parent_is_use;
+	}
+
+	public void setParent_is_use(Boolean parent_is_use) {
+		this.parent_is_use = parent_is_use;
+	}
 
 	public String getRfid() {
 		return rfid;
