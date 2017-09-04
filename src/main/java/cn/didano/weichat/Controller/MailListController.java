@@ -831,7 +831,7 @@ public class MailListController {
 					staff1.setIcCardId(teacher.getIcCardId());
 					all.add(staff1);
 				}
-				// 教职工（后勤）
+				// 教职工（勤务）
 				List<Hand_staffTransit4PhoneBook> workers = staffService.findByType(staff.getSchoolId());
 				Tb_sign_type t = null;
 				if (!workers.isEmpty()) {

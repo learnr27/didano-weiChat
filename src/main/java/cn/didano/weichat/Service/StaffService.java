@@ -66,7 +66,7 @@ public class StaffService {
 		return staffMapper.selectByExample(condition);
 	}
 	/**
-	 * 查询一个学校的后勤医生行政
+	 * 查询一个学校的勤务医生行政
 	 * 
 	 * @return
 	 */
@@ -83,7 +83,7 @@ public class StaffService {
 		return staffMapper.selectByExample(condition);
 	}
 	/**
-	 * 查询一个学校所有后勤
+	 * 查询一个学校所有勤务
 	 * 
 	 * @return
 	 */

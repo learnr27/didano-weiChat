@@ -72,7 +72,7 @@ public class FunctionController {
 				doctorFunctionList = functionService.findAreaItems(10);
 				back.setBackTypeWithLog(doctorFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
 			}else if (roletype == RoleType.SERVICE) {
-				//后勤头部功能项目;
+				//勤务头部功能项目;
 				List<Tb_function> serviceFunctionList = new LinkedList<>();
 				serviceFunctionList = functionService.findAreaItems(11);
 				back.setBackTypeWithLog(serviceFunctionList, BackType.SUCCESS_SEARCH_NORMAL);

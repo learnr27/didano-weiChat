@@ -74,7 +74,7 @@ public class LoginController {
 				public final static int ORG_ADMINISTRATOR = 28;			//组织管理员;
 				public final static int SUPER_ADMINISTRATOR = 29;		//超级管理员;
 			 */
-			//目前有11种角色类型,依次为家长,园长,老师,医生,后勤,行政,(超级管理员,组织管理员,学校管理员,生产管理员,代理商管理员);
+			//目前有11种角色类型,依次为家长,园长,老师,医生,勤务,行政,(超级管理员,组织管理员,学校管理员,生产管理员,代理商管理员);
 			Hand_RoleSelect hand_RoleSelect1 = new Hand_RoleSelect();
 			Hand_RoleSelect hand_RoleSelect2 = new Hand_RoleSelect();
 			Hand_RoleSelect hand_RoleSelect3 = new Hand_RoleSelect();
@@ -188,7 +188,7 @@ public class LoginController {
 				hand_RoleSelect4.getList().add(hand_Role_Weichat);
 			}
 			
-			// 后勤
+			// 勤务
 			List<Hand_staff> serviceList = userService.getServiceByOpenid(openId);
 			for (Hand_staff staff : serviceList) {
 				Hand_Role_Weichat hand_Role_Weichat = new Hand_Role_Weichat();
@@ -218,7 +218,7 @@ public class LoginController {
 				hand_RoleSelect6.getList().add(hand_Role_Weichat);
 			}
 			
-			// 医生,后勤,行政暂时没有做;
+			// 医生,勤务,行政暂时没有做;
 			hand_RoleSelect1.setNum(hand_RoleSelect1.getList().size());
 			hand_RoleSelect2.setNum(hand_RoleSelect2.getList().size());
 			hand_RoleSelect3.setNum(hand_RoleSelect3.getList().size());
