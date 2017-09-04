@@ -66,6 +66,21 @@ public class FunctionController {
 				List<Tb_function> parentFunctionList = new LinkedList<>();
 				parentFunctionList = functionService.findAreaItems(8);
 				back.setBackTypeWithLog(parentFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
+			}else if (roletype == RoleType.DOCTOR) {
+				//医生头部功能项目;
+				List<Tb_function> doctorFunctionList = new LinkedList<>();
+				doctorFunctionList = functionService.findAreaItems(10);
+				back.setBackTypeWithLog(doctorFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
+			}else if (roletype == RoleType.SERVICE) {
+				//后勤头部功能项目;
+				List<Tb_function> serviceFunctionList = new LinkedList<>();
+				serviceFunctionList = functionService.findAreaItems(11);
+				back.setBackTypeWithLog(serviceFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
+			}else if (roletype == RoleType.ASSISTANT) {
+				//行政头部功能项目;
+				List<Tb_function> assistantFunctionList = new LinkedList<>();
+				assistantFunctionList = functionService.findAreaItems(12);
+				back.setBackTypeWithLog(assistantFunctionList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
