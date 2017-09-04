@@ -37,6 +37,7 @@ public enum BackType {
 	SUCCESS_CREATE_OSS("创建OSS频道成功", 1011),
 	SUCCESS_OPER_SWITCH("设置视频频道开关成功", 1030),
 	SUCCESS_WEBSOCKET_SEND("成功发送websocket协议消息", 1040),
+	SUCCESS_SEARCH_TEACHER_NO_CLASS("查询成功,老师未绑定班级",1050),
 	
 	// fail 2000-3000  
 	// 数据库操作异常信息不能直接暴露给前端，采用FAIL_DB翻译

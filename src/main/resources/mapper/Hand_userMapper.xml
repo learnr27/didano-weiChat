@@ -87,7 +87,7 @@
   </select>
   
   <select id="getSchoolListByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">
-	    	 SELECT 
+	  SELECT 
 		tu.id,
 		tu.staff_id AS staffId,
 		sc.id AS schoolId,
@@ -115,22 +115,44 @@
 		tc.title AS className,
 		sc.id AS schoolId,
 		sc.title AS schoolName
-		FROM tb_staff s,
-		tb_school sc,
+		FROM 
 		tb_user tu,
+		tb_staff s,
+		tb_school sc,
 		tb_class tc,
 		tb_staff_class tsc
-		WHERE tu.type = 32
-		AND tu.openid = #{openid,jdbcType=VARCHAR}
-		AND tu.staff_id = s.id
+		WHERE 
+		tu.openid = #{openid,jdbcType=VARCHAR}
+		AND tu.type = 32
 		AND tu.deleted = 0
-		AND	s.deleted = 0
-		AND sc.deleted = 0
-		AND tc.deleted = 0
-		AND tsc.deleted = 0
+		AND tu.staff_id = s.id
+		AND s.deleted = 0
 		AND s.school_id = sc.id
+		AND sc.deleted = 0
 		AND tsc.class_id = tc.id
+		AND tc.deleted = 0
 		AND tsc.staff_id = s.id
+		AND tsc.deleted = 0
+  </select>
+  
+  <select id="getTeacherInSchoolByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">
+	  SELECT 
+		tu.id,
+		s.id AS staffId,
+		sc.id AS schoolId,
+		sc.title AS schoolName
+		FROM 
+		tb_user tu,
+		tb_staff s,
+		tb_school sc
+		WHERE 
+		tu.openid = #{openid,jdbcType=VARCHAR}
+		AND tu.type = 32
+		AND tu.deleted = 0
+		AND tu.staff_id = s.id
+		AND s.deleted = 0
+		AND s.school_id = sc.id
+		AND sc.deleted = 0
   </select>
   
   <select id="getDoctorByOpenid" parameterType="java.lang.String" resultType="cn.didano.weichat.model.Hand_staff">

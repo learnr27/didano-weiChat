@@ -26,7 +26,7 @@ import cn.didano.weichat.util.Hand_StudentParent;
 @Service
 public class UserService {
 	
-	static Logger logger = Logger.getLogger(LoginController.class);
+	static Logger logger = Logger.getLogger(UserService.class);
 
 	@Autowired
 	private Hand_userMapper handUserMapper;
@@ -175,6 +175,11 @@ public class UserService {
 	}
 
 
+	public List<Hand_staff> getTeacherInSchoolByOpenid(String openId) {
+		List<Hand_staff> teacherInSchoolList = handUserMapper.getTeacherInSchoolByOpenid(openId);
+		return teacherInSchoolList;
+	}
+
 	public List<Hand_StudentParent> getStudentParentListByPhone(String phone) {
 		List<Hand_StudentParent> list = handUserMapper.getStudentParentListByPhone(phone);
 		return list;
@@ -240,5 +245,7 @@ public class UserService {
 		List<Hand_staff> assistantList = handUserMapper.getAssistantByOpenid(openId);
 		return assistantList;
 	}
+
+
 	
 }

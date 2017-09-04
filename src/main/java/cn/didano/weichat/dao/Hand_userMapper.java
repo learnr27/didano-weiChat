@@ -49,6 +49,8 @@ public interface Hand_userMapper {
 
 	List<Hand_staff> getTeacherByOpenid(String openId);
 
+	List<Hand_staff> getTeacherInSchoolByOpenid(String openId);
+	
 	List<Hand_StudentParent> getStudentParentListByPhone(String phone);
 
 	Integer deleteDatafrom(Integer row);
@@ -66,6 +68,7 @@ public interface Hand_userMapper {
 	List<Hand_staff> getServiceByOpenid(String openId);
 
 	List<Hand_staff> getAssistantByOpenid(String openId);
+
 	
 	
 }
