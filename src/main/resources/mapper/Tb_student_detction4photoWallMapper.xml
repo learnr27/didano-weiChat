@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.didano.base.dao.Tb_student_detection4photoWallMapper">
+<mapper namespace="cn.didano.weichat.dao.Tb_student_detection4photoWallMapper">
   <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_student_detection4photoWall">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="student_id" jdbcType="INTEGER" property="studentId" />

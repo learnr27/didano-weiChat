@@ -7,9 +7,9 @@ public class Tb_student_detection4photoWall {
 
     private Integer studentId;
 
-    private Integer height;
+    private Float height;
 
-    private Integer weight;
+    private Float weight;
 
     private Float temperature;
 
@@ -57,23 +57,25 @@ public class Tb_student_detection4photoWall {
 
   
 
-	public Integer getHeight() {
+	
+
+    public Float getHeight() {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
+	public void setHeight(Float height) {
 		this.height = height;
 	}
 
-	public Integer getWeight() {
-        return weight;
-    }
+	public Float getWeight() {
+		return weight;
+	}
 
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
+	public void setWeight(Float weight) {
+		this.weight = weight;
+	}
 
-    public Float getTemperature() {
+	public Float getTemperature() {
         return temperature;
     }
 

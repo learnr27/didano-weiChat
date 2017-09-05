@@ -17,6 +17,8 @@ public class DreamService {
 	private Tb_dreamMapper dreamMapper;
 	
 	
+	
+	
 	/**
 	 * 查找所有爱好
 	 */
