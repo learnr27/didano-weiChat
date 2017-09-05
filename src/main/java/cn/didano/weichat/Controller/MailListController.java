@@ -45,6 +45,7 @@ import cn.didano.weichat.json.In_Teacher_Edit;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook;
+import cn.didano.weichat.model.Hand_ic_cardAll;
 import cn.didano.weichat.model.Hand_ic_type;
 import cn.didano.weichat.model.Hand_parent4mailList;
 import cn.didano.weichat.model.Hand_staff4PhoneBook;
@@ -418,6 +419,7 @@ public class MailListController {
 				if (vd_staff.getId() == null) {// 新增
 					if (teacher_a.getStaff_ic_number() != null) {
 						Tb_ic_card td = new Tb_ic_card();
+						td.setSchoolId(operator.getSchoolId());
 						td.setIcNumber(teacher_a.getStaff_ic_number());
 						iCCardService.updateInfoByic_number(td);
 					}
@@ -493,6 +495,7 @@ public class MailListController {
 				} else {// 编辑
 					if (teacher_a.getStaff_ic_number() != null) {
 						Tb_ic_card td = new Tb_ic_card();
+						td.setSchoolId(operator.getSchoolId());
 						td.setIcNumber(teacher_a.getStaff_ic_number());
 						iCCardService.updateInfoByic_number(td);
 					}
@@ -1341,10 +1344,8 @@ public class MailListController {
 	@PostMapping(value = "Student_add_parent_edit")
 	@ResponseBody
 	public Out<String> Student_add_parent_edit(
-			@ApiParam(value = "新增编辑小朋友和教师之前验证ic卡号是否被绑定过了", required = true) @RequestBody Hand_ic_type hand_id_type){
+			@ApiParam(value = "新增编辑小朋友和教师之前验证ic卡号是否被绑定过了", required = true) @RequestBody Hand_ic_cardAll hand_id_type){
 		logger.info("访问  MailListController:Student_add_parent_edit,ic_number=" + hand_id_type);
-		//得到学校的id
-		Hand_staff4PhoneBook s1 = mailListService.selectSchoolBystaffId(hand_id_type.getStaff_id());
 		Out<String> back = new Out<String>();
 		Tb_ic_card tb_ic_card = null;
 		Tb_student tb_student = new Tb_student();
@@ -1352,65 +1353,88 @@ public class MailListController {
 		Hand_wholeStudent4PhoneBook findParentByIcNumber = null;
 		Hand_staffTransit4PhoneBook selectInfoByic_number = null;
 		Tb_staff tb_staff = new Tb_staff();
-		try {
-			if ( hand_id_type.getIc_number() !=null) {
-				// 零时变量
-				int a = 0;
-				// 拿前端传过来的值进行判断，再进行保存类型到a变量中方便查询
-				if (hand_id_type.getType() == 2 || hand_id_type.getType() == 3) {
-					a = 1;
-				} else {
-					a = 2;
+		//循环判断是否存在重复的此卡编号
+		System.err.println(hand_id_type);
+		List<Hand_ic_type> listType=hand_id_type.getHand_ic_type();
+		
+		int num=0;
+		for(int i=0;i<listType.size();i++){
+			System.err.println(listType.get(i).getIc_number());
+			for(int j=0;j<i;j++){
+				if(listType.get(i).getIc_number().equals(listType.get(j).getIc_number())){
+					num=num+1;
 				}
-				// 查询前端传送过来的ic_nukber在tb_ic_card中对应的记录
-				tb_ic_card = iCCardService.selectIcByNumber(hand_id_type.getIc_number(), a);
 			}
-			// 判断是学生还是家长
-			if (tb_ic_card != null) {
-				if (hand_id_type.getType() == 1) {
-					// 查询学生信息最后返回该信息
-					tb_student.setRfid(tb_ic_card.getRfid());
-					tb_student.setId(hand_id_type.getId());
-					findStudentByIcNumber = mailListService.findStudentByIcNumber(tb_student);
-				} else if (hand_id_type.getType() == 2) {
-					// 查询家长的信息最后返回
-					tb_student.setRfid(tb_ic_card.getRfid());
-					tb_student.setId(hand_id_type.getId());
-					findParentByIcNumber = mailListService.findParentByIcNumber(tb_student);
-				} else if (hand_id_type.getType() == 3) {
-					// 同时区查询教师
-					tb_staff.setRfid(tb_ic_card.getRfid());
-					tb_staff.setId(hand_id_type.getId());
-					selectInfoByic_number = iCCardService.selectInfoByic_number(tb_staff);
-				}
-				if (findStudentByIcNumber != null) {
-					// 学生返回信息
-					back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
-							hand_id_type.getIc_number() + "，已经被" + findStudentByIcNumber.getSchoolTitle() + ","
-									+ findStudentByIcNumber.getClassTitle() + "的学生‘" + findStudentByIcNumber.getName()
-									+ "’绑定");
-				} else if (findParentByIcNumber != null) {
-					// 家长返回返回的信息
-					back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
-							hand_id_type.getIc_number() + "，已经被" + findParentByIcNumber.getSchoolTitle() + ","
-									+ findParentByIcNumber.getClassTitle() + "‘" + findParentByIcNumber.getName()
-									+ "小朋友的" + findParentByIcNumber.getTitle() + "’绑定");
-				} else if (selectInfoByic_number != null) {
-					back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
-							hand_id_type.getIc_number() + "，已经被" + selectInfoByic_number.getPhone() + "的教职工‘"
-									+ selectInfoByic_number.getName() + "’绑定");
-				} else {
-					back.setBackType(BackType.SUCCESS, "可以进行绑定");
-				}
+		}
+		if(num!=0){
+			System.err.println("ic从夫");
+			back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD,
+					"ic卡的编号不能重复，请重新输入","ic卡的编号不能重复,请重新输入");
+		}else{
+			//得到学校的id
+			Hand_staff4PhoneBook s1 = mailListService.selectSchoolBystaffId(hand_id_type.getStaff_id());
+			try {
+				for(int i=0;i<listType.size();i++){
+					if (listType.get(i).getIc_number() !=null) {
+						// 零时变量
+						int a = 0;
+						// 拿前端传过来的值进行判断，再进行保存类型到a变量中方便查询
+						if (listType.get(i).getType() == 2 || listType.get(i).getType() == 3) {
+							a = 1;
+						} else {
+							a = 2;
+						}
+						// 查询前端传送过来的ic_nukber在tb_ic_card中对应的记录
+						tb_ic_card = iCCardService.selectIcByNumber(listType.get(i).getIc_number(), a);
+					}
+					// 判断是学生还是家长
+					if (tb_ic_card != null) {
+						if (listType.get(i).getType() == 1) {
+							// 查询学生信息最后返回该信息
+							tb_student.setRfid(tb_ic_card.getRfid());
+							tb_student.setId(listType.get(i).getId());
+							findStudentByIcNumber = mailListService.findStudentByIcNumber(tb_student);
+						} else if (listType.get(i).getType() == 2) {
+							// 查询家长的信息最后返回
+							tb_student.setRfid(tb_ic_card.getRfid());
+							tb_student.setId(listType.get(i).getId());
+							findParentByIcNumber = mailListService.findParentByIcNumber(tb_student);
+						} else if (listType.get(i).getType() == 3) {
+							// 同时区查询教师
+							tb_staff.setRfid(tb_ic_card.getRfid());
+							tb_staff.setId(listType.get(i).getId());
+							selectInfoByic_number = iCCardService.selectInfoByic_number(tb_staff);
+						}
+						if (findStudentByIcNumber != null) {
+							// 学生返回信息
+							back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
+									listType.get(i).getIc_number() + "，已经被" + findStudentByIcNumber.getSchoolTitle() + ","
+											+ findStudentByIcNumber.getClassTitle() + "的学生‘" + findStudentByIcNumber.getName()
+											+ "’绑定");
+						} else if (findParentByIcNumber != null) {
+							// 家长返回返回的信息
+							back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
+									listType.get(i).getIc_number() + "，已经被" + findParentByIcNumber.getSchoolTitle() + ","
+											+ findParentByIcNumber.getClassTitle() + "‘" + findParentByIcNumber.getName()
+											+ "小朋友的" + findParentByIcNumber.getTitle() + "’绑定");
+						} else if (selectInfoByic_number != null) {
+							back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD, "已经被绑定",
+									listType.get(i).getIc_number() + "，已经被" + selectInfoByic_number.getPhone() + "的教职工‘"
+											+ selectInfoByic_number.getName() + "’绑定");
+						} else {
+							back.setBackType(BackType.SUCCESS, "可以进行绑定");
+						}
 
-			} else {
-				// 学生返回信息
-				back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD,
-						"没有该卡号为" + hand_id_type.getIc_number() + "的信息", hand_id_type.getIc_number() + "，在系统中没有记录");
+					} else {
+						// 学生返回信息
+						back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD,
+								"没有该卡号为" + listType.get(i).getIc_number() + "的信息", listType.get(i).getIc_number() + "，在系统中没有记录");
+					}
+				}
+			} catch (ServiceException e){
+				// 服务层错误，包括 内部service 和 对外service
+				back.setServiceExceptionWithLog(e.getExceptionEnums());
 			}
-		} catch (ServiceException e){
-			// 服务层错误，包括 内部service 和 对外service
-			back.setServiceExceptionWithLog(e.getExceptionEnums());
 		}
 		return back;
 	}
