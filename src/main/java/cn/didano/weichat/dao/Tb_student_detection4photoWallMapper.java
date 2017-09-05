@@ -29,4 +29,5 @@ public interface Tb_student_detection4photoWallMapper {
     int updateByPrimaryKeySelective(Tb_student_detection4photoWall record);
 
     int updateByPrimaryKey(Tb_student_detection4photoWall record);
+    List<Tb_student_detection4photoWall> selectStudentDectection(Integer studentId);
 }

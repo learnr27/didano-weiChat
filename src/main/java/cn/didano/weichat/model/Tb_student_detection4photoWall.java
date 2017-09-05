@@ -17,7 +17,27 @@ public class Tb_student_detection4photoWall {
 
     private Date created;
 
-    public Integer getId() {
+    private String hobby;
+    
+    private String dream;
+    
+    public String getHobby() {
+		return hobby;
+	}
+
+	public void setHobby(String hobby) {
+		this.hobby = hobby;
+	}
+
+	public String getDream() {
+		return dream;
+	}
+
+	public void setDream(String dream) {
+		this.dream = dream;
+	}
+
+	public Integer getId() {
         return id;
     }
 

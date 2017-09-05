@@ -190,6 +190,7 @@ LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from t
   temp4 .title AS parent_name,
   tmp3.ic_number AS parent_ic_number,
   temp4.ic_card_id AS icCardId,
+  temp4.type,
   temp4 .phone AS parent_phone FROM((
  SELECT
   p.id,
@@ -198,6 +199,7 @@ LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from t
 tmp2.rfid,
   tmp2.ic_card_id ,
   p.phone,
+  p.type,
  tmp2.parent_is_use
 FROM
  ( 

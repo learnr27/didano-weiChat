@@ -38,8 +38,18 @@ public class StudentService {
 	private Tb_student_parentMapper studentparentMapper;
 	@Autowired
 	private Tb_schoolparentMapper schoolparentMapper;
-	
 
+
+	
+	/**
+	 * 查找学生的晨检报告
+	 */
+	public Tb_student_detection4photoWall selectStudentDectection(Integer studentId){
+		return photoWallMapper.selectStudentDectection(studentId).get(0);
+	}
+	/**
+	 * 
+	 */
 	/**
 	 * 通过id查询
 	 */
@@ -60,6 +70,7 @@ public class StudentService {
 		Tb_studentExample condition=new Tb_studentExample();
 		Tb_studentExample.Criteria criteria=condition.createCriteria();
 		criteria.andIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
 		Tb_student selectByPrimaryKey = studentMapper.selectByPrimaryKey(id);
 		return selectByPrimaryKey;
 	}

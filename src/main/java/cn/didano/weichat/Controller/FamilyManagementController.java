@@ -32,9 +32,11 @@ import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_parent4mailList;
 import cn.didano.weichat.model.Tb_deleteParentDate;
+import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_relation;
 import cn.didano.weichat.model.Tb_schoolparent4;
 import cn.didano.weichat.model.Tb_student_parent;
+import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import cn.didano.weichat.util.SendSms;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -68,9 +70,28 @@ public class FamilyManagementController {
 		logger.info("访问  FamilyManagementController:studentParent_searchByChildId,student_id=" + student_id);
 		List<Hand_parent4mailList> parentall = null;
 		OutList<Hand_parent4mailList> outList = null;
+		Tb_head_sculpture head = null;
 		Out<OutList<Hand_parent4mailList>> back = new Out<OutList<Hand_parent4mailList>>();
 		try {
 			parentall = mailListService.findparent(student_id);
+			for (int i = 0; i < parentall.size(); i++) {
+				if(parentall.get(i).getRelation_id()==1){
+				head = HeadMemoryConfigStorageContainer.findByOriId(5);
+				}else if (parentall.get(i).getRelation_id()==2){
+					head = HeadMemoryConfigStorageContainer.findByOriId(6);
+				}else if (parentall.get(i).getRelation_id()==3){
+					head = HeadMemoryConfigStorageContainer.findByOriId(7);
+				}else if (parentall.get(i).getRelation_id()==4){
+					head = HeadMemoryConfigStorageContainer.findByOriId(8);
+				}else if (parentall.get(i).getRelation_id()==5){
+					head = HeadMemoryConfigStorageContainer.findByOriId(7);
+				}else if (parentall.get(i).getRelation_id()==6){
+					head = HeadMemoryConfigStorageContainer.findByOriId(8);
+				}else if (parentall.get(i).getRelation_id()==99){
+					head = HeadMemoryConfigStorageContainer.findByOriId(5);
+				}
+				parentall.get(i).setHeadUrl(head.getAddress());
+			}
 			outList = new OutList<Hand_parent4mailList>(parentall.size(), parentall);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 		} catch (ServiceException e) {
@@ -161,7 +182,7 @@ public class FamilyManagementController {
 		Hand_parent4mailList parent = new Hand_parent4mailList ();
 		Out<String> back = new Out<String>();
 		try {
-			if(parent_edit.getId()==null){
+			if(parent_edit.getId()==0){
 			vd_parent.setSchoolId(parent_edit.getSchoolId());
 			vd_parent.setPhone(parent_edit.getPhone());
 			vd_parent.setType(0);
