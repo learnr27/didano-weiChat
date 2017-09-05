@@ -51,7 +51,19 @@ public class ClassService {
 		Tb_classExample condition = new Tb_classExample();
 		return classMapper.selectByExample(condition);
 	}
-	
+	/**
+	 * 查询一个学校所有班级
+	 * 
+	 * @return
+	 */
+	public List<Tb_class> selectSchoolAllClass(Integer schoolId) {
+		Tb_classExample condition = new Tb_classExample();
+		Tb_classExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示
+		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
+		criteria.andSchoolIdEqualTo(schoolId);
+		return classMapper.selectByExample(condition);
+	}
 	/**
 	 * 查询所有
 	 * 
