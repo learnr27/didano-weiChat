@@ -218,7 +218,7 @@ FROM
       tb_student_parent p
     WHERE
       tmp1.id = p.student_id
-    AND tmp1.id =  940
+    AND tmp1.id =  #{id}
     AND p.deleted = 0
     AND tmp1.deleted = 0
   ) AS tmp2,tb_school_parent p 
