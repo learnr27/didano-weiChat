@@ -44,9 +44,7 @@ public class Hand_WholeStudentParents4PhoneBook {
 	private Integer icCardId;
 	private Integer is_use;
 	private Integer switchId;
-
 	private List<Hand_parent4mailList> parent = new ArrayList<Hand_parent4mailList>();
-	
 	public Integer getSwitchId() {
 		return switchId;
 	}

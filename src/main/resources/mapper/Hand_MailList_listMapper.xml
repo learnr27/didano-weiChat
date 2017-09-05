@@ -184,16 +184,23 @@ FROM
   ) AS tmp2
 LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from tb_ic_card where deleted=0 and ic_type=1) tmp3 on tmp2.rfid=tmp3.rfid 	
 -->
+ SELECT temp4 .id,
+  temp4.parent_is_use,
+  temp4 .relation_id,
+  temp4 .title AS parent_name,
+  tmp3.ic_number AS parent_ic_number,
+  temp4.ic_card_id AS icCardId,
+  temp4 .phone AS parent_phone FROM((
  SELECT
   p.id,
-  tmp2.parent_is_use,
   tmp2.relation_id,
-  tmp2.title AS parent_name,
-  tmp3.ic_number as parent_ic_number,
-  tmp2.ic_card_id as icCardId,
-  p.phone AS parent_phone
+  tmp2.title ,
+tmp2.rfid,
+  tmp2.ic_card_id ,
+  p.phone,
+ tmp2.parent_is_use
 FROM
-  (
+ ( 
     SELECT
       p.relation_id,
       tmp1.id,
@@ -201,21 +208,22 @@ FROM
       p.relation_title AS title,
       tmp1.birthday,
       tmp1.gender,
-      tmp1.class_id  as classId,
+      tmp1.class_id  AS classId,
       p.parent_id AS parent_id,
       p.rfid,
       p.ic_card_id,
-      p.parent_is_use
+     p.parent_is_use
     FROM
       tb_student AS tmp1,
       tb_student_parent p
     WHERE
       tmp1.id = p.student_id
-    AND tmp1.id = #{id}
+    AND tmp1.id =  940
     AND p.deleted = 0
     AND tmp1.deleted = 0
-  ) AS tmp2
-LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from tb_ic_card where deleted=0 and ic_type=1) tmp3 on tmp2.rfid=tmp3.rfid 
+  ) AS tmp2,tb_school_parent p 
+    WHERE  tmp2.parent_id = p.id
+    )AS temp4  LEFT JOIN (SELECT * FROM tb_ic_card WHERE deleted=0 AND ic_type=1) tmp3 ON temp4.rfid=tmp3.rfid )
 </select>
 
 <select id="findParentByStudentId" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_parent4mailList">
