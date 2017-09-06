@@ -2,6 +2,8 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Tb_student_parent {
     private Integer id;
 
@@ -139,6 +141,7 @@ public class Tb_student_parent {
         this.qrcodeSchoolKey = qrcodeSchoolKey == null ? null : qrcodeSchoolKey.trim();
     }
 
+   
     public Date getCreated() {
         return created;
     }

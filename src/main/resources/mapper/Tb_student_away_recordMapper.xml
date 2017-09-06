@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.didano.weichat.dao.Tb_student_detection4photoWallMapper">
-  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_student_detection4photoWall">
+<mapper namespace="cn.didano.weichat.dao.Tb_student_away_recordMapper">
+  <resultMap id="BaseResultMap" type="cn.didano.weichat.model.Tb_student_away_record">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="student_id" jdbcType="INTEGER" property="studentId" />
-    <result column="height" jdbcType="INTEGER" property="height" />
-    <result column="weight" jdbcType="INTEGER" property="weight" />
-    <result column="temperature" jdbcType="REAL" property="temperature" />
-    <result column="org_img_url" jdbcType="VARCHAR" property="orgImgUrl" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="img" jdbcType="VARCHAR" property="img" />
+    <result column="file_img_id" jdbcType="INTEGER" property="fileImgId" />
+    <result column="sub_img" jdbcType="VARCHAR" property="subImg" />
+    <result column="file_sub_img_id" jdbcType="INTEGER" property="fileSubImgId" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -69,16 +70,16 @@
     </where>
   </sql>
   <sql id="Base_Column_List">
-    id, student_id, height, weight, temperature, org_img_url, created
+    id, student_id, parent_id, img, file_img_id, sub_img, file_sub_img_id, created
   </sql>
-  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWallExample" resultMap="BaseResultMap">
+  <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_student_away_recordExample" resultMap="BaseResultMap">
     select
     <if test="distinct">
       distinct
     </if>
     'true' as QUERYID,
     <include refid="Base_Column_List" />
-    from tb_student_detection
+    from tb_student_away_record
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
@@ -89,87 +90,90 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from tb_student_detection
+    from tb_student_away_record
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from tb_student_detection
+    delete from tb_student_away_record
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWallExample">
-    delete from tb_student_detection
+  <delete id="deleteByExample" parameterType="cn.didano.weichat.model.Tb_student_away_recordExample">
+    delete from tb_student_away_record
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWall">
-    insert into tb_student_detection (id, student_id, height, 
-      weight, temperature, org_img_url, 
+  <insert id="insert" parameterType="cn.didano.weichat.model.Tb_student_away_record">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_student_away_record (student_id, parent_id, img, 
+      file_img_id, sub_img, file_sub_img_id, 
       created)
-    values (#{id,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, #{height,jdbcType=INTEGER}, 
-      #{weight,jdbcType=INTEGER}, #{temperature,jdbcType=REAL}, #{orgImgUrl,jdbcType=VARCHAR}, 
+    values (#{studentId,jdbcType=INTEGER}, #{parentId,jdbcType=INTEGER}, #{img,jdbcType=VARCHAR}, 
+      #{fileImgId,jdbcType=INTEGER}, #{subImg,jdbcType=VARCHAR}, #{fileSubImgId,jdbcType=INTEGER}, 
       #{created,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWall">
-    insert into tb_student_detection
+  <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_student_away_record">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tb_student_away_record
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
       <if test="studentId != null">
         student_id,
       </if>
-      <if test="height != null">
-        height,
+      <if test="parentId != null">
+        parent_id,
       </if>
-      <if test="weight != null">
-        weight,
+      <if test="img != null">
+        img,
       </if>
-      <if test="temperature != null">
-        temperature,
+      <if test="fileImgId != null">
+        file_img_id,
       </if>
-      <if test="orgImgUrl != null">
-        org_img_url,
+      <if test="subImg != null">
+        sub_img,
       </if>
-      <if test="status != null">
-        status,
+      <if test="fileSubImgId != null">
+        file_sub_img_id,
       </if>
       <if test="created != null">
         created,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
       <if test="studentId != null">
         #{studentId,jdbcType=INTEGER},
       </if>
-      <if test="height != null">
-        #{height,jdbcType=INTEGER},
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
       </if>
-      <if test="weight != null">
-        #{weight,jdbcType=INTEGER},
+      <if test="img != null">
+        #{img,jdbcType=VARCHAR},
       </if>
-      <if test="temperature != null">
-        #{temperature,jdbcType=REAL},
+      <if test="fileImgId != null">
+        #{fileImgId,jdbcType=INTEGER},
       </if>
-      <if test="orgImgUrl != null">
-        #{orgImgUrl,jdbcType=VARCHAR},
+      <if test="subImg != null">
+        #{subImg,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSubImgId != null">
+        #{fileSubImgId,jdbcType=INTEGER},
       </if>
       <if test="created != null">
         #{created,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
-  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWallExample" resultType="java.lang.Long">
-    select count(*) from tb_student_detection
+  <select id="countByExample" parameterType="cn.didano.weichat.model.Tb_student_away_recordExample" resultType="java.lang.Long">
+    select count(*) from tb_student_away_record
     <if test="_parameter != null">
       <include refid="Example_Where_Clause" />
     </if>
   </select>
   <update id="updateByExampleSelective" parameterType="map">
-    update tb_student_detection
+    update tb_student_away_record
     <set>
       <if test="record.id != null">
         id = #{record.id,jdbcType=INTEGER},
@@ -177,17 +181,20 @@
       <if test="record.studentId != null">
         student_id = #{record.studentId,jdbcType=INTEGER},
       </if>
-      <if test="record.height != null">
-        height = #{record.height,jdbcType=INTEGER},
+      <if test="record.parentId != null">
+        parent_id = #{record.parentId,jdbcType=INTEGER},
       </if>
-      <if test="record.weight != null">
-        weight = #{record.weight,jdbcType=INTEGER},
+      <if test="record.img != null">
+        img = #{record.img,jdbcType=VARCHAR},
       </if>
-      <if test="record.temperature != null">
-        temperature = #{record.temperature,jdbcType=REAL},
+      <if test="record.fileImgId != null">
+        file_img_id = #{record.fileImgId,jdbcType=INTEGER},
       </if>
-      <if test="record.orgImgUrl != null">
-        org_img_url = #{record.orgImgUrl,jdbcType=VARCHAR},
+      <if test="record.subImg != null">
+        sub_img = #{record.subImg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileSubImgId != null">
+        file_sub_img_id = #{record.fileSubImgId,jdbcType=INTEGER},
       </if>
       <if test="record.created != null">
         created = #{record.created,jdbcType=TIMESTAMP},
@@ -198,35 +205,39 @@
     </if>
   </update>
   <update id="updateByExample" parameterType="map">
-    update tb_student_detection
+    update tb_student_away_record
     set id = #{record.id,jdbcType=INTEGER},
       student_id = #{record.studentId,jdbcType=INTEGER},
-      height = #{record.height,jdbcType=INTEGER},
-      weight = #{record.weight,jdbcType=INTEGER},
-      temperature = #{record.temperature,jdbcType=REAL},
-      org_img_url = #{record.orgImgUrl,jdbcType=VARCHAR},
+      parent_id = #{record.parentId,jdbcType=INTEGER},
+      img = #{record.img,jdbcType=VARCHAR},
+      file_img_id = #{record.fileImgId,jdbcType=INTEGER},
+      sub_img = #{record.subImg,jdbcType=VARCHAR},
+      file_sub_img_id = #{record.fileSubImgId,jdbcType=INTEGER},
       created = #{record.created,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWall">
-    update tb_student_detection
+  <update id="updateByPrimaryKeySelective" parameterType="cn.didano.weichat.model.Tb_student_away_record">
+    update tb_student_away_record
     <set>
       <if test="studentId != null">
         student_id = #{studentId,jdbcType=INTEGER},
       </if>
-      <if test="height != null">
-        height = #{height,jdbcType=INTEGER},
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
       </if>
-      <if test="weight != null">
-        weight = #{weight,jdbcType=INTEGER},
+      <if test="img != null">
+        img = #{img,jdbcType=VARCHAR},
       </if>
-      <if test="temperature != null">
-        temperature = #{temperature,jdbcType=REAL},
+      <if test="fileImgId != null">
+        file_img_id = #{fileImgId,jdbcType=INTEGER},
       </if>
-      <if test="orgImgUrl != null">
-        org_img_url = #{orgImgUrl,jdbcType=VARCHAR},
+      <if test="subImg != null">
+        sub_img = #{subImg,jdbcType=VARCHAR},
+      </if>
+      <if test="fileSubImgId != null">
+        file_sub_img_id = #{fileSubImgId,jdbcType=INTEGER},
       </if>
       <if test="created != null">
         created = #{created,jdbcType=TIMESTAMP},
@@ -234,22 +245,19 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_student_detection4photoWall">
-    update tb_student_detection
+  <update id="updateByPrimaryKey" parameterType="cn.didano.weichat.model.Tb_student_away_record">
+    update tb_student_away_record
     set student_id = #{studentId,jdbcType=INTEGER},
-      height = #{height,jdbcType=INTEGER},
-      weight = #{weight,jdbcType=INTEGER},
-      temperature = #{temperature,jdbcType=REAL},
-      org_img_url = #{orgImgUrl,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      img = #{img,jdbcType=VARCHAR},
+      file_img_id = #{fileImgId,jdbcType=INTEGER},
+      sub_img = #{subImg,jdbcType=VARCHAR},
+      file_sub_img_id = #{fileSubImgId,jdbcType=INTEGER},
       created = #{created,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="selectStudentDectection" parameterType="cn.didano.weichat.model.Hand_studentAwayData" resultMap="BaseResultMap">
-  SELECT tb_student_detection.*, tb_file.file_path AS file_path
-            FROM tb_student_detection
-            LEFT JOIN tb_file ON  tb_student_detection.file_img_id = tb_file.id  AND tb_file.deleted = 0
-            WHERE tb_student_detection.deleted = 0 AND tb_student_detection.`status` = 1 AND tb_student_detection.student_id =#{studentId}
-            AND  DATE_FORMAT(tb_student_detection.created,'%Y-%m-%d') = #{date}
-            ORDER BY  tb_student_detection.created DESC
+  <select id="selectStudentAwayRecordById" parameterType="cn.didano.weichat.model.Hand_studentAwayData" resultMap="BaseResultMap">
+      SELECT * FROM tb_student_away_record WHERE  student_id = #{studentId} AND  DATE_FORMAT(created,'%Y-%m-%d') = #{date} order by created desc
   </select>
+ 
 </mapper>

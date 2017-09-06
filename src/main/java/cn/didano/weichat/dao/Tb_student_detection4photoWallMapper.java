@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import cn.didano.weichat.model.Hand_studentAwayData;
 import cn.didano.weichat.model.Tb_student_detection4photoWall;
 import cn.didano.weichat.model.Tb_student_detection4photoWallExample;
 
@@ -30,5 +31,5 @@ public interface Tb_student_detection4photoWallMapper {
 
     int updateByPrimaryKey(Tb_student_detection4photoWall record);
     //手写
-    List<Tb_student_detection4photoWall> selectStudentDectection(Integer studentId);
+    List<Tb_student_detection4photoWall> selectStudentDectection(Hand_studentAwayData data);
 }

@@ -2,6 +2,8 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Tb_student_detection4photoWall {
     private Integer id;
 
@@ -91,6 +93,7 @@ public class Tb_student_detection4photoWall {
         this.orgImgUrl = orgImgUrl == null ? null : orgImgUrl.trim();
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreated() {
         return created;
     }

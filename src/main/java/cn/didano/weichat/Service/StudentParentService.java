@@ -30,6 +30,22 @@ public class StudentParentService {
 	}
 
 	/**
+	 * 根据学生id家长id查询家长
+	 * @return
+	 */
+	public Tb_student_parent selectParentByid(Integer studentId,Integer parentId) {
+		Tb_student_parentExample condition = new Tb_student_parentExample();
+		Tb_student_parentExample.Criteria criteria = condition.createCriteria();
+		criteria.andDeletedEqualTo(false);
+		criteria.andStudentIdEqualTo(studentId);
+		criteria.andParentIdEqualTo(parentId);
+		if(tb_student_parentMapper.selectByExample(condition).size()!=0){
+		return tb_student_parentMapper.selectByExample(condition).get(0);
+		}else{
+			return null;
+		}
+	}
+	/**
 	 * 查询集合
 	 * @param page
 	 * @param size
