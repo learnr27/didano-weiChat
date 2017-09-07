@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.didano.weichat.dao.Hand_classMapper">
+
+	<select id ="findSchoolAll" resultType="cn.didano.weichat.model.Hand_class">
+		SELECT 
+	    sc.id AS schoolId,
+	    sc.title AS schoolName
+	    FROM  
+	      tb_staff st,
+	      tb_school sc,
+	      tb_user tu
+	    WHERE tu.openid = #{poenid ,jdbcType=VARCHAR}
+	    AND tu.type = 31
+	    AND tu.deleted = 0
+	    AND sc.deleted = 0
+	    AND st.deleted = 0
+	    AND tu.staff_id = st.id
+	    AND st.school_id = sc.id
+	    ORDER BY st.id
+	</select>
+	<select id ="findClassName" parameterType="cn.didano.weichat.model.Hand_class" resultType="cn.didano.weichat.model.Hand_class">
+		select id,school_id as schoolId,title,start,status from tb_class where title like #{title} and school_id=#{schoolId} and deleted=0
+	</select>
+	
+	<select id ="findScholById" parameterType="INTEGER" resultType="cn.didano.weichat.model.Hand_class">
+		select school_id as schoolId from tb_staff where id=#{staff_id} and deleted=0
+	</select>
+	
+	<select id ="findClass" parameterType="INTEGER" resultType="cn.didano.weichat.model.Hand_class">
+		select id,school_id as schoolId,title,start,status from tb_class where id=#{class_id} and deleted=0
+	</select>
+	
+	<select id ="findClassAll" parameterType="INTEGER" resultType="cn.didano.weichat.model.Hand_class">
+		select id,school_id as schoolId,title,start,status from tb_class where school_id=#{schoolId} and deleted=0
+	</select>
+	
+	<update id="updateClass" parameterType="cn.didano.weichat.model.Hand_class">
+		update tb_class set title=#{title},status=#{status} where id=#{id} and deleted=0
+	</update>
+	
+	<insert id="insertCalss" parameterType="cn.didano.weichat.model.Hand_class">
+		insert into tb_class (school_id,title,start,status,created) values(#{schoolId},#{title},#{start},#{status},#{created})
+	</insert>
+	<update id="deletedClass" parameterType="INTEGER">
+		update tb_class set deleted=1 where id=#{class_id} and deleted=0
+	</update>
+	<update id="deletedStudent" parameterType="INTEGER">
+		update tb_student set deleted=1 where class_id=#{class_id)} and deleted=0
+	</update>
+	
+	<update id="deletedParent" parameterType="INTEGER">
+		update tb_school_parent set deleted=1 where id in 
+		(select parent_id from tb_student_parent where class_id=#{class_id} and deleted=0) and deleted=0
+	</update>
+	<update id="deletedStudentParent" parameterType="INTEGER">
+		update tb_student_parent set deleted=1 where class_id=#{class_id} and deleted=0
+	</update>
+	<select id ="findClassByStudent" parameterType="INTEGER" resultType="INTEGER">
+		select COUNT(*) from tb_student where class_id=#{class_id} and deleted=0
+	</select>
+</mapper>
