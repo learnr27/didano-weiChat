@@ -38,6 +38,7 @@ import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook;
 import cn.didano.weichat.model.Hand_parent4mailList;
 import cn.didano.weichat.model.Hand_staff4PhoneBook;
+import cn.didano.weichat.model.Tb_class;
 import cn.didano.weichat.model.Tb_classStudent;
 import cn.didano.weichat.model.Tb_notice;
 import cn.didano.weichat.model.Tb_noticeUser;
@@ -196,6 +197,7 @@ public class PrincipalNoticeController {
 		List<Integer> parentsId = new ArrayList<Integer>();
 		List<Integer> studentId = new ArrayList<Integer>();
 		List<Hand_parent4mailList> studentParent = null;
+		List<Tb_class> schoolClass=null;
 		Map<Integer, List<Tb_schoolParent>> map = new HashMap<Integer, List<Tb_schoolParent>>();
 		Map<Integer, List<Hand_parent4mailList>> parentMap = new HashMap<Integer, List<Hand_parent4mailList>>();
 		Out<String> back = new Out<String>();
@@ -211,6 +213,7 @@ public class PrincipalNoticeController {
 			if (staff.getType() == 31 || staff.getType() == 35 ) {// 当登录者为园长或者行政时则为发布园长通知
 				// 按班级给父母职工分类
 				if (notice_edit.getAllStaff() == 0) {// 判断发布范围是否为仅员工
+					schoolClass = classService.selectAllBySchool(staff.getSchoolId());
 					for (int i = 0; i < classId.size(); i++) {
 						parents = mailListService.findParentByClass(classId.get(i));
 						classStaffs = mailListService.findTeacherByClass(classId.get(i));
@@ -231,7 +234,11 @@ public class PrincipalNoticeController {
 					}
 
 					// 设置发布范围
+					if(schoolClass.size()==classId.size()){
 					notice.setPublicationScope("全园");
+					}else{
+					notice.setPublicationScope("部分班");	
+					}
 				} else {// 发布范围仅为员工时
 					staffs = staffService.selectSchoolAllStaff(staff.getSchoolId());
 					// 设置发布范围

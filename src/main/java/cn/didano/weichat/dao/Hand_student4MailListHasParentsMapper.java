@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import cn.didano.weichat.model.Hand_student4MailListHasParents;
 import cn.didano.weichat.model.Hand_student4MailListHasParentsExample;
+import cn.didano.weichat.model.Tb_student_detection4photoWall;
 
 public interface Hand_student4MailListHasParentsMapper {
     long countByExample(Hand_student4MailListHasParentsExample example);
@@ -29,4 +30,6 @@ public interface Hand_student4MailListHasParentsMapper {
     int updateByPrimaryKeySelective(Hand_student4MailListHasParents record);
 
     int updateByPrimaryKey(Hand_student4MailListHasParents record);
+    
+   
 }

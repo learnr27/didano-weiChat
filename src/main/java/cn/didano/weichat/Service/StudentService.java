@@ -10,6 +10,7 @@ import cn.didano.weichat.constant.StatusType;
 import cn.didano.weichat.dao.Hand_student4MailListHasParentsMapper;
 import cn.didano.weichat.dao.Tb_schoolparentMapper;
 import cn.didano.weichat.dao.Tb_studentMapper;
+import cn.didano.weichat.dao.Tb_student_away_recordMapper;
 import cn.didano.weichat.dao.Tb_student_detection4photoWallMapper;
 import cn.didano.weichat.dao.Tb_student_parentMapper;
 import cn.didano.weichat.exception.DBExceptionEnums;
@@ -17,9 +18,11 @@ import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.model.Hand_parentAndStudentId;
 import cn.didano.weichat.model.Hand_student4MailListHasParents;
 import cn.didano.weichat.model.Hand_student4MailListHasParentsExample;
+import cn.didano.weichat.model.Hand_studentAwayData;
 import cn.didano.weichat.model.Tb_schoolparent4;
 import cn.didano.weichat.model.Tb_student;
 import cn.didano.weichat.model.Tb_studentExample;
+import cn.didano.weichat.model.Tb_student_away_record;
 import cn.didano.weichat.model.Tb_student_detection4photoWall;
 import cn.didano.weichat.model.Tb_student_detection4photoWallExample;
 import cn.didano.weichat.model.Tb_student_parent;
@@ -38,8 +41,30 @@ public class StudentService {
 	private Tb_student_parentMapper studentparentMapper;
 	@Autowired
 	private Tb_schoolparentMapper schoolparentMapper;
-	
+	@Autowired
+	private Tb_student_away_recordMapper awayMapper;
 
+
+	/**
+	 * 根据时间查找学生的接送报告
+	 */
+	public Tb_student_away_record selectStudentAwayRecordById(Hand_studentAwayData data){
+		if(awayMapper.selectStudentAwayRecordById(data).size()!=0){
+		return awayMapper.selectStudentAwayRecordById(data).get(0);
+		}else{
+			return null;
+		}
+		
+	}
+	/**
+	 * 查找学生的晨检报告
+	 */
+	public Tb_student_detection4photoWall selectStudentDectection(Hand_studentAwayData data){
+		return photoWallMapper.selectStudentDectection(data).get(0);
+	}
+	/**
+	 * 
+	 */
 	/**
 	 * 通过id查询
 	 */
@@ -60,6 +85,7 @@ public class StudentService {
 		Tb_studentExample condition=new Tb_studentExample();
 		Tb_studentExample.Criteria criteria=condition.createCriteria();
 		criteria.andIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
 		Tb_student selectByPrimaryKey = studentMapper.selectByPrimaryKey(id);
 		return selectByPrimaryKey;
 	}

@@ -41,7 +41,7 @@ on tmp3.class_id=tmp4.class_id) as tmp6 left join `vd_auth_switch` v on tmp6.id=
  SELECT a.id,a.class_id  as classId,a.name,a.birthday,a.gender FROM tb_student a WHERE  a.id=#{id} AND a.deleted =0 ORDER BY CONVERT( a.name USING gbk )
  </select>
 <select id="findClassIdBySid" parameterType="Integer" resultType="cn.didano.weichat.model.Tb_staffData">
-   SELECT class_id  as classId FROM tb_staff_class WHERE staff_id = #{id} and deleted=0
+   SELECT tb_staff_class.class_id AS classId,tb_staff.name  FROM tb_staff_class,tb_staff WHERE tb_staff.id = #{id} and tb_staff.deleted=0 and tb_staff.id=tb_staff_class.staff_id
 </select> 
  <select id="findByName"  parameterType="cn.didano.weichat.model.Tb_studentData" resultType="cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook">
 	select tmp3.id,v.id as switchId,tmp3.classId,tmp3.name,tmp3.gender,tmp3.birthday,tmp3.student_ic_number,tmp3.icCardId,v.`is_use` from (select tmp1.id,tmp1.class_id as classId,tmp1.name,tmp1.gender,tmp1.birthday,tmp2.ic_number as 
@@ -190,6 +190,7 @@ LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from t
   temp4 .title AS parent_name,
   tmp3.ic_number AS parent_ic_number,
   temp4.ic_card_id AS icCardId,
+  temp4.type,
   temp4 .phone AS parent_phone FROM((
  SELECT
   p.id,
@@ -198,6 +199,7 @@ LEFT JOIN tb_school_parent p ON tmp2.parent_id = p.id left join (select * from t
 tmp2.rfid,
   tmp2.ic_card_id ,
   p.phone,
+  p.type,
  tmp2.parent_is_use
 FROM
  ( 

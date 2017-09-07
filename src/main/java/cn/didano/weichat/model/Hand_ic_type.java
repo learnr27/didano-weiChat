@@ -10,8 +10,6 @@ package cn.didano.weichat.model;
 public class Hand_ic_type {
 	//ic卡的number
 	public String ic_number;
-	//登录老师的id
-	public Integer staff_id;
 	//类型
 	public Integer type;
 	//去除自身的验证
@@ -28,17 +26,14 @@ public class Hand_ic_type {
 	public void setIc_number(String ic_number) {
 		this.ic_number = ic_number;
 	}
-	public Integer getStaff_id() {
-		return staff_id;
-	}
-	public void setStaff_id(Integer staff_id) {
-		this.staff_id = staff_id;
-	}
 	public Integer getType() {
 		return type;
 	}
 	public void setType(Integer type) {
 		this.type = type;
 	}
-	
+	@Override
+	public String toString() {
+		return "Hand_ic_type [ic_number=" + ic_number + ", type=" + type + ", id=" + id + "]";
+	}
 }

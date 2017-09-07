@@ -17,6 +17,8 @@ public class DreamService {
 	private Tb_dreamMapper dreamMapper;
 	
 	
+	
+	
 	/**
 	 * 查找所有爱好
 	 */
@@ -26,5 +28,17 @@ public class DreamService {
 		// 对于已经deleted=1的不显示 禁用不显示
 		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
 		return dreamMapper.selectByExample(condition);
+	}
+	
+	/**
+	 * 查找所有爱好
+	 */
+	public Tb_dream selectDreamById(Integer dreamId){
+		Tb_dreamExample condition = new Tb_dreamExample();
+		Tb_dreamExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
+		criteria.andIdEqualTo(dreamId);
+		return dreamMapper.selectByExample(condition).get(0);
 	}
 }

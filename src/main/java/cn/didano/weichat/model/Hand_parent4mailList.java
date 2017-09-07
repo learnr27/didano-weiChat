@@ -7,9 +7,29 @@ public class Hand_parent4mailList{
 	private String parent_phone;
 	private String parent_ic_number;
 	private Integer icCardId;
+	private Integer type;
 	private String rfid;
 	private Boolean parent_is_use;
+	private String headUrl;
 	
+	
+	
+	public String getHeadUrl() {
+		return headUrl;
+	}
+
+	public void setHeadUrl(String headUrl) {
+		this.headUrl = headUrl;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 	public Boolean getParent_is_use() {
 		return parent_is_use;
 	}

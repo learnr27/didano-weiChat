@@ -2,14 +2,16 @@ package cn.didano.weichat.model;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 public class Tb_student_detection4photoWall {
     private Integer id;
 
     private Integer studentId;
 
-    private Integer height;
+    private Float height;
 
-    private Integer weight;
+    private Float weight;
 
     private Float temperature;
 
@@ -17,7 +19,27 @@ public class Tb_student_detection4photoWall {
 
     private Date created;
 
-    public Integer getId() {
+    private String hobby;
+    
+    private String dream;
+    
+    public String getHobby() {
+		return hobby;
+	}
+
+	public void setHobby(String hobby) {
+		this.hobby = hobby;
+	}
+
+	public String getDream() {
+		return dream;
+	}
+
+	public void setDream(String dream) {
+		this.dream = dream;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -37,23 +59,25 @@ public class Tb_student_detection4photoWall {
 
   
 
-	public Integer getHeight() {
+	
+
+    public Float getHeight() {
 		return height;
 	}
 
-	public void setHeight(Integer height) {
+	public void setHeight(Float height) {
 		this.height = height;
 	}
 
-	public Integer getWeight() {
-        return weight;
-    }
+	public Float getWeight() {
+		return weight;
+	}
 
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
+	public void setWeight(Float weight) {
+		this.weight = weight;
+	}
 
-    public Float getTemperature() {
+	public Float getTemperature() {
         return temperature;
     }
 
@@ -69,6 +93,7 @@ public class Tb_student_detection4photoWall {
         this.orgImgUrl = orgImgUrl == null ? null : orgImgUrl.trim();
     }
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     public Date getCreated() {
         return created;
     }
