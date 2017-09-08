@@ -15,6 +15,7 @@
     <result column="qrcode_url_old" jdbcType="VARCHAR" property="qrcodeUrlOld" />
     <result column="qrcode_school_key_old" jdbcType="VARCHAR" property="qrcodeSchoolKeyOld" />
     <result column="qrcode_school_key" jdbcType="VARCHAR" property="qrcodeSchoolKey" />
+    <result column="parent_is_use" jdbcType="BIT" property="parentIsUse" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
     <result column="updated" jdbcType="TIMESTAMP" property="updated" />
     <result column="deleted" jdbcType="BIT" property="deleted" />
@@ -79,8 +80,8 @@
   </sql>
   <sql id="Base_Column_List">
     id, school_id, class_id, student_id, parent_id, rfid, ic_card_id, relation_id, relation_title, 
-    qrcode_url, qrcode_url_old, qrcode_school_key_old, qrcode_school_key, created, updated, 
-    deleted
+    qrcode_url, qrcode_url_old, qrcode_school_key_old, qrcode_school_key, parent_is_use, 
+    created, updated, deleted
   </sql>
   <select id="selectByExample" parameterType="cn.didano.weichat.model.Tb_student_parentExample" resultMap="BaseResultMap">
     select
@@ -121,14 +122,14 @@
       parent_id, rfid, ic_card_id, 
       relation_id, relation_title, qrcode_url, 
       qrcode_url_old, qrcode_school_key_old, qrcode_school_key, 
-      created, updated, deleted
-      )
+      parent_is_use, created, updated, 
+      deleted)
     values (#{schoolId,jdbcType=INTEGER}, #{classId,jdbcType=INTEGER}, #{studentId,jdbcType=INTEGER}, 
       #{parentId,jdbcType=INTEGER}, #{rfid,jdbcType=VARCHAR}, #{icCardId,jdbcType=INTEGER}, 
       #{relationId,jdbcType=TINYINT}, #{relationTitle,jdbcType=VARCHAR}, #{qrcodeUrl,jdbcType=VARCHAR}, 
       #{qrcodeUrlOld,jdbcType=VARCHAR}, #{qrcodeSchoolKeyOld,jdbcType=VARCHAR}, #{qrcodeSchoolKey,jdbcType=VARCHAR}, 
-      #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, #{deleted,jdbcType=BIT}
-      )
+      #{parentIsUse,jdbcType=BIT}, #{created,jdbcType=TIMESTAMP}, #{updated,jdbcType=TIMESTAMP}, 
+      #{deleted,jdbcType=BIT})
   </insert>
   <insert id="insertSelective" parameterType="cn.didano.weichat.model.Tb_student_parent">
     <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
@@ -171,6 +172,9 @@
       </if>
       <if test="qrcodeSchoolKey != null">
         qrcode_school_key,
+      </if>
+      <if test="parentIsUse != null">
+        parent_is_use,
       </if>
       <if test="created != null">
         created,
@@ -218,6 +222,9 @@
       </if>
       <if test="qrcodeSchoolKey != null">
         #{qrcodeSchoolKey,jdbcType=VARCHAR},
+      </if>
+      <if test="parentIsUse != null">
+        #{parentIsUse,jdbcType=BIT},
       </if>
       <if test="created != null">
         #{created,jdbcType=TIMESTAMP},
@@ -278,6 +285,9 @@
       <if test="record.qrcodeSchoolKey != null">
         qrcode_school_key = #{record.qrcodeSchoolKey,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentIsUse != null">
+        parent_is_use = #{record.parentIsUse,jdbcType=BIT},
+      </if>
       <if test="record.created != null">
         created = #{record.created,jdbcType=TIMESTAMP},
       </if>
@@ -307,6 +317,7 @@
       qrcode_url_old = #{record.qrcodeUrlOld,jdbcType=VARCHAR},
       qrcode_school_key_old = #{record.qrcodeSchoolKeyOld,jdbcType=VARCHAR},
       qrcode_school_key = #{record.qrcodeSchoolKey,jdbcType=VARCHAR},
+      parent_is_use = #{record.parentIsUse,jdbcType=BIT},
       created = #{record.created,jdbcType=TIMESTAMP},
       updated = #{record.updated,jdbcType=TIMESTAMP},
       deleted = #{record.deleted,jdbcType=BIT}
@@ -353,6 +364,9 @@
       <if test="qrcodeSchoolKey != null">
         qrcode_school_key = #{qrcodeSchoolKey,jdbcType=VARCHAR},
       </if>
+      <if test="parentIsUse != null">
+        parent_is_use = #{parentIsUse,jdbcType=BIT},
+      </if>
       <if test="created != null">
         created = #{created,jdbcType=TIMESTAMP},
       </if>
@@ -379,6 +393,7 @@
       qrcode_url_old = #{qrcodeUrlOld,jdbcType=VARCHAR},
       qrcode_school_key_old = #{qrcodeSchoolKeyOld,jdbcType=VARCHAR},
       qrcode_school_key = #{qrcodeSchoolKey,jdbcType=VARCHAR},
+      parent_is_use = #{parentIsUse,jdbcType=BIT},
       created = #{created,jdbcType=TIMESTAMP},
       updated = #{updated,jdbcType=TIMESTAMP},
       deleted = #{deleted,jdbcType=BIT}

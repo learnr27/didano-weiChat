@@ -945,6 +945,66 @@ public class Tb_student_parentExample {
             return (Criteria) this;
         }
 
+        public Criteria andParentIsUseIsNull() {
+            addCriterion("parent_is_use is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseIsNotNull() {
+            addCriterion("parent_is_use is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseEqualTo(Boolean value) {
+            addCriterion("parent_is_use =", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseNotEqualTo(Boolean value) {
+            addCriterion("parent_is_use <>", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseGreaterThan(Boolean value) {
+            addCriterion("parent_is_use >", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseGreaterThanOrEqualTo(Boolean value) {
+            addCriterion("parent_is_use >=", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseLessThan(Boolean value) {
+            addCriterion("parent_is_use <", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseLessThanOrEqualTo(Boolean value) {
+            addCriterion("parent_is_use <=", value, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseIn(List<Boolean> values) {
+            addCriterion("parent_is_use in", values, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseNotIn(List<Boolean> values) {
+            addCriterion("parent_is_use not in", values, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseBetween(Boolean value1, Boolean value2) {
+            addCriterion("parent_is_use between", value1, value2, "parentIsUse");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentIsUseNotBetween(Boolean value1, Boolean value2) {
+            addCriterion("parent_is_use not between", value1, value2, "parentIsUse");
+            return (Criteria) this;
+        }
+
         public Criteria andCreatedIsNull() {
             addCriterion("created is null");
             return (Criteria) this;
