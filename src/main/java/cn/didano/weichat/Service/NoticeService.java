@@ -80,6 +80,23 @@ public class NoticeService {
 		
 		return noticeMapper.selectByExample(condition);
 	}
+	
+	/**
+	 * 根据来源id，来源类型查找通知
+	 */
+	public Tb_noticeUser findNoticeUserBySourceId(Integer id, byte type) {
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andNoticeIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
+		criteria.andUserTypeEqualTo(type);
+		if(noticeUserMapper.selectByExample(condition).size()!=0){
+		return noticeUserMapper.selectByExample(condition).get(0);
+		}else{
+			return null;
+		}
+	}
 
 	/**
 	 * 根据通知id更新用户表的时间

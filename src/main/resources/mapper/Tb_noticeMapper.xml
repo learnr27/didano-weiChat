@@ -357,7 +357,7 @@
   </select>
   <select id="selectAddressName" parameterType="cn.didano.weichat.model.Hand_UserAndStudent" resultType="cn.didano.weichat.model.Hand_addressName">
    SELECT temp.student_id,temp.parent_id,temp.relation_title,b.name FROM (SELECT a.student_id,a.relation_title,a.parent_id FROM tb_student_parent a 
-WHERE a.parent_id=(SELECT id FROM tb_school_parent WHERE id =#{userId}) and a.student_id=#{studentId}) as temp
+WHERE a.parent_id=(SELECT id FROM tb_school_parent WHERE id =#{userId} and deleted=0) and a.student_id=#{studentId} and a.deleted=0) as temp
 LEFT JOIN tb_student b ON temp.student_id = b.id
   </select>
 </mapper>

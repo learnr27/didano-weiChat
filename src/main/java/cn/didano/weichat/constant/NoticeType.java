@@ -10,7 +10,8 @@ public enum NoticeType {
 	PRINCIPAL_NOTICE("园长通知", (byte)1),
 	SHUTTLE_REPORT("接送报告", (byte)2),
 	PUBLIC_SIGNAL("公众号", (byte)3),
-	PRINCIPAL_MAIL("园长信箱", (byte)4);
+	PRINCIPAL_MAIL("园长信箱", (byte)4),
+	TeacherChat_Parent("园长信箱", (byte)5);
 	
 
 	
