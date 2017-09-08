@@ -299,7 +299,7 @@ public class MailListController {
 				data.getStaff().addAll(staffAll);
 			}
 			Tb_studentData data1 = new Tb_studentData();
-			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()) {
+			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()||staff4SchoolId.getType() == StaffType.ASSISTANT.getIndex()) {
 				// yang修改sql
 				data1.setName("%" + name + "%");
 				data1.setSchoolid(staff4SchoolId.getSchoolId());
