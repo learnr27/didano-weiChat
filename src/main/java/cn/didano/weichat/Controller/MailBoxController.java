@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
+
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.constant.BackType;
@@ -62,27 +64,27 @@ public class MailBoxController {
 	 * @return
 	 */
 	@ApiOperation(value = " 家长页面点击园长信箱", notes = " 家长页面点击园长信箱")
-	@PostMapping(value = "parentGetMailId/{own_id}")
+	@PostMapping(value = "parentGetMailId/{page}/{size}/{own_id}")
 	@ResponseBody
-	public Out<Hand_mailRecord> parentGetMailId(
+	public Out<Hand_mailRecord> parentGetMailId(@PathVariable("page") int page, @PathVariable("size") int size,
 			@ApiParam(value = "家长页面点击园长信箱", required = true) @PathVariable("own_id") Integer own_id) {
 		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
 
-		List<Tb_notice> notices = null;
+		PageInfo<Tb_notice> notices = null;
 		int mailId = 0;
 		Hand_mailRecord data = new Hand_mailRecord();
 		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
 		try {
 			
-			notices = noticeService.findNoticeByUserId(own_id, (byte) RoleType.PARENT);
-			if (notices.size() != 0) {
+			notices = noticeService.findNoticeByUserId(page,size,own_id, (byte) RoleType.PARENT);
+			if (notices.getList().size() != 0) {
 				// 找出邮件的通知
-				for (int i = 0; i < notices.size(); i++) {
-					if (notices.get(i).getNoticeType() == NoticeType.PRINCIPAL_MAIL.getIndex()) {
-						mailId = notices.get(i).getSourceId();
+				for (int i = 0; i < notices.getList().size(); i++) {
+					if (notices.getList().get(i).getNoticeType() == NoticeType.PRINCIPAL_MAIL.getIndex()) {
+						mailId = notices.getList().get(i).getSourceId();
 						data = findReply_ByNoticeId(mailId).getData();
 						//设置为已读
-						noticeService.setNoticeRead(own_id, notices.get(i).getId());
+						noticeService.setNoticeRead(own_id, notices.getList().get(i).getId());
 					}
 				}
 				
@@ -108,45 +110,44 @@ public class MailBoxController {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	@PostMapping(value = "mail_findtByBossId/{own_id}/{user_type}")
+	@PostMapping(value = "mail_findtByBossId/{page}/{size}/{own_id}/{user_type}")
 	@ApiOperation(value = "根据园长id,查看园长信箱列表", notes = "根据园长id,查看园长信箱列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("own_id") Integer own_id,
+	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("own_id") Integer own_id,
 			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,own_id=" + own_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
 		List<Tb_notice> mails = null;
-		List<Tb_notice> notices = null;
-		OutList<Tb_notice> outList = null;
+		PageInfo<Tb_notice> notices = null;
+		OutList<Tb_notice> outList=null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			mails = new ArrayList<Tb_notice>();
-			notices = noticeService.findNoticeByUserId(own_id, user_type);
-			
-			if (notices.size() != 0) {
+			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type);
+			System.out.println(notices.getList().size());
+			if (notices.getList().size() != 0) {
+				System.out.println(1111111);
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String date = null;
-				if (notices.size() != 0) {
+				if (notices.getList().size() != 0) {
 					// 获取头像地址
-					for (int i = 0; i < notices.size(); i++) {
-						notice = notices.get(i);
+					for (int i = 0; i < notices.getList().size(); i++) {
+						notice = notices.getList().get(i);
 						if (notice.getNoticeType() == 4) {
-							notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
+							notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0] + "小朋友的家庭");
 							head = HeadMemoryConfigStorageContainer.findByOriId(10);
 							notice.setHeadUrl(head.getAddress());
-							date = sdf.format(notices.get(i).getCreated());
+							date = sdf.format(notices.getList().get(i).getCreated());
 							notice.setDate(date);
 							mails.add(notice);
 						}
 					}
-
 					outList = new OutList<Tb_notice>(mails.size(), mails);
 					back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 				}
 			} else {
-				outList = new OutList<Tb_notice>(mails.size(), mails);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {

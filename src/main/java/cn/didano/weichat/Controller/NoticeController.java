@@ -3,11 +3,7 @@ package cn.didano.weichat.Controller;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,28 +13,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
+
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.WebSocketService;
 import cn.didano.weichat.constant.BackType;
-import cn.didano.weichat.constant.ModulePathType;
 import cn.didano.weichat.exception.ServiceException;
-import cn.didano.weichat.json.In_Notice_Edit;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
-import cn.didano.weichat.model.Hand_homeMailBox;
-import cn.didano.weichat.model.Hand_noticeList;
 import cn.didano.weichat.model.Tb_head_sculpture;
-import cn.didano.weichat.model.Tb_mail_reply;
 import cn.didano.weichat.model.Tb_notice;
-import cn.didano.weichat.model.Tb_noticeUser;
-import cn.didano.weichat.model.Tb_staff;
-import cn.didano.weichat.model.Tb_websocket_channel;
 import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 
 @Api(value = "消息通知服务", tags = "消息通知服务，提供给表现层")
 @RestController
@@ -150,30 +139,30 @@ public class NoticeController {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	@PostMapping(value = "notice_findtByUserid/{own_id}/{user_type}")
+	@PostMapping(value = "notice_findtByUserid/{page}/{size}/{own_id}/{user_type}")
 	@ApiOperation(value = "根据用户id,用户类型查找消息列表", notes = "根据用户id,用户类型查找消息列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("own_id") Integer own_id,
+	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("own_id") Integer own_id,
 			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,own_id=" + own_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
-		List<Tb_notice> notices = null;
+		PageInfo<Tb_notice> notices = null;
 		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
-			notices = noticeService.findNoticeByUserId(own_id, user_type);
-			if (notices.size() != 0) {
+			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type);
+			if (notices.getList().size() != 0) {
 				// 获取头像地址
-				for (int i = 0; i < notices.size(); i++) {
-					notice = notices.get(i);
+				for (int i = 0; i < notices.getList().size(); i++) {
+					notice = notices.getList().get(i);
 					if (notice.getNoticeType() != 4) {
 						head =HeadMemoryConfigStorageContainer.findByOriId(notice.getNoticeType()& 0xFF);
 						notice.setHeadUrl(head.getAddress());
 					} else {
 						// 给园长信箱设置标题和头像
 						if(user_type!=30){
-						notice.setTitle(notices.get(i).getSenderName().split("的")[0] + "小朋友的家庭");
+						notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0] + "小朋友的家庭");
 						}else{
 						notice.setTitle("园长信箱");
 						}
@@ -185,16 +174,16 @@ public class NoticeController {
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String date = null;
-				for (int i = 0; i < notices.size(); i++) {
-					date = sdf.format(notices.get(i).getCreated());
-					notices.get(i).setDate(date);
+				for (int i = 0; i < notices.getList().size(); i++) {
+					date = sdf.format(notices.getList().get(i).getCreated());
+					notices.getList().get(i).setDate(date);
 
 				}
 
-				outList = new OutList<Tb_notice>(notices.size(), notices);
+				outList = new OutList<Tb_notice>(notices.getList().size(),notices.getList());
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}else{
-				outList = new OutList<Tb_notice>(notices.size(), notices);
+				outList = new OutList<Tb_notice>(notices.getList().size(),notices.getList());
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {

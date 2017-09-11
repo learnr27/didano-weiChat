@@ -10,6 +10,10 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 import cn.didano.weichat.dao.Tb_head_sculptureMapper;
 import cn.didano.weichat.dao.Tb_noticeMapper;
@@ -159,7 +163,8 @@ public class NoticeService {
 	/**
 	 * 根据用户id查找消息列表
 	 */
-	public List<Tb_notice> findNoticeByUserId(Integer id, byte type) {
+	public PageInfo<Tb_notice> findNoticeByUserId(@PathVariable("page") int page, @PathVariable("size") int size,Integer id, byte type) {
+		PageHelper.startPage(page, size);
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
 		Tb_noticeUserExample condition = new Tb_noticeUserExample();
 		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
@@ -168,7 +173,7 @@ public class NoticeService {
 		criteria.andDeletedEqualTo(false);
 		criteria.andUserTypeEqualTo(type);
 		condition.setOrderByClause("created");
-		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByExample(condition);
+		List<Tb_noticeUser> noticeUser = new PageInfo<Tb_noticeUser>(noticeUserMapper.selectByExample(condition)).getList();
 		
 		//查询小诺通告
 		Tb_noticeUserExample xiaoNuo = new Tb_noticeUserExample();
@@ -213,7 +218,7 @@ public class NoticeService {
 			notices.add(notice);
 		}
 		}
-		return notices;
+		return  new PageInfo<Tb_notice>(notices);
 	}
 
 	/**
