@@ -215,7 +215,7 @@ public class MailListController {
 		List<Tb_staff> staffAll = new ArrayList<Tb_staff>();
 		try {
 			// 判断当前登录人员是园长还是老师
-			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()) {
+			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()||staff4SchoolId.getType() == StaffType.ASSISTANT.getIndex()) {
 				// 设置要查询的人员的名字和该学校id
 				Tb_staff staffNameData = new Tb_staff();
 				staffNameData.setName("%" + name + "%");
@@ -299,7 +299,7 @@ public class MailListController {
 				data.getStaff().addAll(staffAll);
 			}
 			Tb_studentData data1 = new Tb_studentData();
-			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()) {
+			if (staff4SchoolId.getType() == StaffType.SCHOOLMASTER.getIndex()||staff4SchoolId.getType() == StaffType.ASSISTANT.getIndex()) {
 				// yang修改sql
 				data1.setName("%" + name + "%");
 				data1.setSchoolid(staff4SchoolId.getSchoolId());
