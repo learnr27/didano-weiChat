@@ -257,7 +257,11 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectStudentAwayRecordById" parameterType="cn.didano.weichat.model.Hand_studentAwayData" resultMap="BaseResultMap">
-      SELECT * FROM tb_student_away_record WHERE  student_id = #{studentId} AND  DATE_FORMAT(created,'%Y-%m-%d') = #{date} order by created desc
+     SELECT tb_student_away_record.*, a.file_path AS filePath ,b.file_path AS fileSubPath FROM tb_student_away_record 
+            LEFT JOIN tb_file a ON tb_student_away_record.file_img_id = a.id
+             LEFT JOIN tb_file b ON tb_student_away_record.file_sub_img_id = b.id
+            WHERE  tb_student_away_record.student_id = #{studentId} AND  DATE_FORMAT(tb_student_away_record.created,'%Y-%m-%d') = #{date}
+            ORDER BY tb_student_away_record.created desc
   </select>
  
 </mapper>

@@ -19,6 +19,7 @@ import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.WebSocketService;
 import cn.didano.weichat.constant.BackType;
+import cn.didano.weichat.constant.NoticeType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
@@ -151,7 +152,7 @@ public class NoticeController {
 		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
-			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type);
+			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type,(byte)-1);
 			if (notices.getList().size() != 0) {
 				// 获取头像地址
 				for (int i = 0; i < notices.getList().size(); i++) {

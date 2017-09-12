@@ -16,6 +16,8 @@ public class Tb_student_detection4photoWall {
     private Float temperature;
 
     private String orgImgUrl;
+    
+    private String filePath;
 
     private Date created;
 
@@ -23,7 +25,16 @@ public class Tb_student_detection4photoWall {
     
     private String dream;
     
-    public String getHobby() {
+    
+    public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getHobby() {
 		return hobby;
 	}
 

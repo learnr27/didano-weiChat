@@ -79,6 +79,9 @@ public class StudentDetectionController {
 			StringBuilder address = new StringBuilder(ossInfo.getImgPath());
 			address.append(data.getOrgImgUrl());
 			data.setOrgImgUrl(address.toString());
+			address = new StringBuilder(ossInfo.getImgPath());
+			address.append(data.getFilePath());
+			data.setFilePath(address.toString());
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 
 		} catch (ServiceException e) {
@@ -128,6 +131,15 @@ public class StudentDetectionController {
 				StringBuilder address = new StringBuilder(ossInfo.getImgPath());
 				address.append(data.getImg());
 				data.setImg(address.toString());
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getSubImg());
+				data.setSubImg(address.toString());
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getFilePath());
+				data.setFilePath(address.toString());
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getFileSubPath());
+				data.setFileSubPath(address.toString());
 			}else{//未离校
 				data.setType("未接走");
 			}

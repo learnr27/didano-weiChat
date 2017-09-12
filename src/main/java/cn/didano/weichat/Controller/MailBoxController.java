@@ -64,9 +64,9 @@ public class MailBoxController {
 	 * @return
 	 */
 	@ApiOperation(value = " 家长页面点击园长信箱", notes = " 家长页面点击园长信箱")
-	@PostMapping(value = "parentGetMailId/{page}/{size}/{own_id}")
+	@PostMapping(value = "parentGetMailId/{own_id}")
 	@ResponseBody
-	public Out<Hand_mailRecord> parentGetMailId(@PathVariable("page") int page, @PathVariable("size") int size,
+	public Out<Hand_mailRecord> parentGetMailId(
 			@ApiParam(value = "家长页面点击园长信箱", required = true) @PathVariable("own_id") Integer own_id) {
 		logger.info("MailBoxController:parentGetMailId,own_id=" + own_id);
 
@@ -75,22 +75,23 @@ public class MailBoxController {
 		Hand_mailRecord data = new Hand_mailRecord();
 		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
 		try {
-			
-			notices = noticeService.findNoticeByUserId(page,size,own_id, (byte) RoleType.PARENT);
+
+			notices = noticeService.findNoticeByUserId(1, 5, own_id, (byte) RoleType.PARENT,
+					NoticeType.PRINCIPAL_MAIL.getIndex());
 			if (notices.getList().size() != 0) {
 				// 找出邮件的通知
 				for (int i = 0; i < notices.getList().size(); i++) {
-					if (notices.getList().get(i).getNoticeType() == NoticeType.PRINCIPAL_MAIL.getIndex()) {
-						mailId = notices.getList().get(i).getSourceId();
-						data = findReply_ByNoticeId(mailId).getData();
-						//设置为已读
-						noticeService.setNoticeRead(own_id, notices.getList().get(i).getId());
-					}
+
+					mailId = notices.getList().get(i).getSourceId();
+					data = findReply_ByNoticeId(mailId).getData();
+					// 设置为已读
+					noticeService.setNoticeRead(own_id, notices.getList().get(i).getId());
+
 				}
-				
-			    back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
-			} else {	
-					back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+			} else {
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
@@ -113,18 +114,19 @@ public class MailBoxController {
 	@PostMapping(value = "mail_findtByBossId/{page}/{size}/{own_id}/{user_type}")
 	@ApiOperation(value = "根据园长id,查看园长信箱列表", notes = "根据园长id,查看园长信箱列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("own_id") Integer own_id,
-			@PathVariable("user_type") byte user_type) {
+	public Out<OutList<Tb_notice>> notice_findtByUserid(@PathVariable("page") int page, @PathVariable("size") int size,
+			@PathVariable("own_id") Integer own_id, @PathVariable("user_type") byte user_type) {
 		logger.info("访问  NoticeController:notice_findtByUserid,own_id=" + own_id);
 		Tb_notice notice = null;
 		Tb_head_sculpture head = null;
 		List<Tb_notice> mails = null;
 		PageInfo<Tb_notice> notices = null;
-		OutList<Tb_notice> outList=null;
+		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			mails = new ArrayList<Tb_notice>();
-			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type);
+			notices = noticeService.findNoticeByUserId(page, size, own_id, user_type,
+					NoticeType.PRINCIPAL_MAIL.getIndex());
 			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				System.out.println(1111111);
@@ -135,19 +137,20 @@ public class MailBoxController {
 					// 获取头像地址
 					for (int i = 0; i < notices.getList().size(); i++) {
 						notice = notices.getList().get(i);
-						if (notice.getNoticeType() == 4) {
-							notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0] + "小朋友的家庭");
-							head = HeadMemoryConfigStorageContainer.findByOriId(10);
-							notice.setHeadUrl(head.getAddress());
-							date = sdf.format(notices.getList().get(i).getCreated());
-							notice.setDate(date);
-							mails.add(notice);
-						}
+
+						notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0] + "小朋友的家庭");
+						head = HeadMemoryConfigStorageContainer.findByOriId(10);
+						notice.setHeadUrl(head.getAddress());
+						date = sdf.format(notices.getList().get(i).getCreated());
+						notice.setDate(date);
+						mails.add(notice);
+
 					}
 					outList = new OutList<Tb_notice>(mails.size(), mails);
 					back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 				}
 			} else {
+				outList = new OutList<Tb_notice>(mails.size(), mails);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
 			}
 		} catch (ServiceException e) {
@@ -187,7 +190,7 @@ public class MailBoxController {
 				data.setStudentId(mail_write.getStudentId());
 				data.setUserId(mail_write.getUserId());
 				parents = mailBoxService.findParentByStudentId(mail_write.getStudentId());
-				//查询该家长所在学校的园长和行政
+				// 查询该家长所在学校的园长和行政
 				boss = mailBoxService.selectBossByParentId(mail_write.getUserId());
 				addressName = mailBoxService.selectAddressName(data);
 				// 插入邮件表
@@ -203,7 +206,7 @@ public class MailBoxController {
 				notice.setNoticeModel(NoticeModel.INSIDE_URL.getIndex());
 				notice.setNoticeType(NoticeType.PRINCIPAL_MAIL.getIndex());
 				notice.setPriority(NoticeTop.NOT_TOP.getIndex());
-				notice.setRedirectUrl(ModulePathType.PRINCIPAL_MAIL.getUrl()  + mail.getId() );
+				notice.setRedirectUrl(ModulePathType.PRINCIPAL_MAIL.getUrl() + mail.getId());
 				notice.setSenderName(addressName.getName() + "的" + addressName.getRelation_title());
 				notice.setSenderId(mail_write.getUserId());
 				notice.setSourceId(mail.getId());
@@ -227,10 +230,10 @@ public class MailBoxController {
 				for (int i = 0; i < parents.size(); i++) {
 					noticeUser = new Tb_noticeUser();
 					// 设置发送者家长为默认已读，其他家长默认未读
-					if(parents.get(i).getParentId().equals(mail_write.getUserId())){
-					noticeUser.setIsRead((byte) 1);
-					}else{
-					noticeUser.setIsRead((byte) 0);
+					if (parents.get(i).getParentId().equals(mail_write.getUserId())) {
+						noticeUser.setIsRead((byte) 1);
+					} else {
+						noticeUser.setIsRead((byte) 0);
 					}
 					noticeUser.setNoticeId(notice.getId());
 					noticeUser.setUserId(parents.get(i).getParentId());
@@ -255,10 +258,10 @@ public class MailBoxController {
 				if (mail_write.getUserType() == 31) {
 					Tb_staff staff = mailBoxService.selectStaffById(mail_write.getUserId());
 					mailReply.setSenderName(staff.getName() + "(园长)");
-				} else if(mail_write.getUserType() == 30) {
+				} else if (mail_write.getUserType() == 30) {
 					Hand_addressName parent = mailBoxService.selectAddressName(data);
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
-				}else if (mail_write.getUserType() == 35) {
+				} else if (mail_write.getUserType() == 35) {
 					Tb_staff staff = mailBoxService.selectStaffById(mail_write.getUserId());
 					mailReply.setSenderName(staff.getName() + "(行政)");
 				}
@@ -270,12 +273,12 @@ public class MailBoxController {
 				int rowNum = mailBoxService.replyMail(mailReply);
 				Tb_notice notice = noticeService.findNoticeBySourceId(mail_write.getMailId(), (byte) 4).get(0);
 				// 刷新其他接收者的时间，并且设置为未读，好让别人回复时，其他人收到新消息后再消息列表会排在前面
-				int row = noticeService.refreshTime(notice.getId(),mail_write.getUserId());
+				int row = noticeService.refreshTime(notice.getId(), mail_write.getUserId());
 				if (rowNum > 0) {
 					back.setBackTypeWithLog(mail_write.getMailId(), BackType.SUCCESS_INSERT);
 				} else {
 					// 更新有问题
-					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum="+row);
+					back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, "rowNum=" + row);
 				}
 			}
 		} catch (ServiceException e) {
@@ -309,69 +312,68 @@ public class MailBoxController {
 		try {
 			mail = mailBoxService.findMailById(mailId);
 			data = new Hand_mailRecord();
-		    if(mail!=null){
-			String mailTitle = mail.getSenderName();
-			String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
-			if ("爸爸".equals(senderName)) {
-				head = HeadMemoryConfigStorageContainer.findByOriId(5);
-				mail.setHead(head.getAddress());
-			} else if ("妈妈".equals(senderName)) {
-				head = HeadMemoryConfigStorageContainer.findByOriId(6);
-				mail.setHead(head.getAddress());
-			} else if ("爷爷".equals(senderName)) {
-				head = HeadMemoryConfigStorageContainer.findByOriId(7);
-				mail.setHead(head.getAddress());
-			} else if ("奶奶".equals(senderName)) {
-				head = HeadMemoryConfigStorageContainer.findByOriId(8);
-				mail.setHead(head.getAddress());
-			}
-			data.setMai(mail);
-			mails = mailBoxService.selectMailReplyByNoticeId(mailId);
-			// 根据时间排序
-			Collections.sort(mails, new Comparator<Tb_mail_reply>() {
-				public int compare(Tb_mail_reply o1, Tb_mail_reply o2) {
-					return (int) (o1.getCreated().getTime() - o2.getCreated().getTime());
-				}
-			});
-			// 转换时间格式
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-			mail.setDate(sdf.format(mail.getCreated()));
-			for (int i = 0; i < mails.size(); i++) {
-				mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));
-				String title = mails.get(i).getSenderName();
-				String name = title.substring(title.length() - 2, title.length());
-				// 设置头像
-				
-				if ("长)".equals(name)) {
-					head = HeadMemoryConfigStorageContainer.findByOriId(9);
-					mails.get(i).setHead(head.getAddress());
-				}else if("政)".equals(name)){
-					head = HeadMemoryConfigStorageContainer.findByOriId(9);
-					mails.get(i).setHead(head.getAddress());
-				}else if("园长".equals(name)){
-					head = HeadMemoryConfigStorageContainer.findByOriId(9);
-					mails.get(i).setHead(head.getAddress());
-				}
-				else if ("爸爸".equals(name)) {
+			if (mail != null) {
+				String mailTitle = mail.getSenderName();
+				String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
+				if ("爸爸".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(5);
-					mails.get(i).setHead(head.getAddress());
-				} else if ("妈妈".equals(name)) {
+					mail.setHead(head.getAddress());
+				} else if ("妈妈".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(6);
-					mails.get(i).setHead(head.getAddress());
-				} else if ("爷爷".equals(name)) {
+					mail.setHead(head.getAddress());
+				} else if ("爷爷".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(7);
-					mails.get(i).setHead(head.getAddress());
-				} else if ("奶奶".equals(name)) {
+					mail.setHead(head.getAddress());
+				} else if ("奶奶".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(8);
-					mails.get(i).setHead(head.getAddress());
+					mail.setHead(head.getAddress());
 				}
+				data.setMai(mail);
+				mails = mailBoxService.selectMailReplyByNoticeId(mailId);
+				// 根据时间排序
+				Collections.sort(mails, new Comparator<Tb_mail_reply>() {
+					public int compare(Tb_mail_reply o1, Tb_mail_reply o2) {
+						return (int) (o1.getCreated().getTime() - o2.getCreated().getTime());
+					}
+				});
+				// 转换时间格式
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				mail.setDate(sdf.format(mail.getCreated()));
+				for (int i = 0; i < mails.size(); i++) {
+					mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));
+					String title = mails.get(i).getSenderName();
+					String name = title.substring(title.length() - 2, title.length());
+					// 设置头像
 
+					if ("长)".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(9);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("政)".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(9);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("园长".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(9);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("爸爸".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(5);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("妈妈".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(6);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("爷爷".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(7);
+						mails.get(i).setHead(head.getAddress());
+					} else if ("奶奶".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(8);
+						mails.get(i).setHead(head.getAddress());
+					}
+
+				}
+				data.setReplys(mails);
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+			} else {
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			}
-			data.setReplys(mails);
-			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
-		    }else{
-		    back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
-		    }
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service
 			logger.warn(e.getMessage());

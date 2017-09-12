@@ -23,9 +23,28 @@ public class Tb_student_away_record {
     //手写
     private String type;
     private String parentName;
+    private String filePath;
+    private String fileSubPath;
+    
     
 
-    public String getParentName() {
+    public String getFilePath() {
+		return filePath;
+	}
+
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+
+	public String getFileSubPath() {
+		return fileSubPath;
+	}
+
+	public void setFileSubPath(String fileSubPath) {
+		this.fileSubPath = fileSubPath;
+	}
+
+	public String getParentName() {
 		return parentName;
 	}
 

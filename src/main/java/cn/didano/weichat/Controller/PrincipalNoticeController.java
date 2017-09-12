@@ -32,6 +32,7 @@ import cn.didano.weichat.Service.StaffService;
 import cn.didano.weichat.config.OssInfo;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.ModulePathType;
+import cn.didano.weichat.constant.NoticeType;
 import cn.didano.weichat.constant.StaffType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
@@ -139,25 +140,26 @@ public class PrincipalNoticeController {
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			principalNotices = new ArrayList<Tb_notice>();
-			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type);
+			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type,NoticeType.PRINCIPAL_NOTICE.getIndex());
 
+			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String date = null;
-				if (notices.getList().size() != 0) {
+				
 					for (int i = 0; i < notices.getList().size(); i++) {
 						notice = notices.getList().get(i);
-						if (notice.getNoticeType() == 1) {
+						
 							date = sdf.format(notices.getList().get(i).getCreated());
 							notice.setDate(date);
 							principalNotices.add(notice);
-						}
+						
 					}
 
 					outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
 					back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
-				}
+				
 			} else {
 				outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
