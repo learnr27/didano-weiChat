@@ -153,6 +153,7 @@ public class NoticeController {
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type,(byte)-1);
+			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				// 获取头像地址
 				for (int i = 0; i < notices.getList().size(); i++) {

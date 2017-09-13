@@ -168,6 +168,7 @@ public class NoticeService {
 	 */
 	public PageInfo<Tb_notice> findNoticeByUserId(@PathVariable("page") int page, @PathVariable("size") int size,Integer id, byte userType,byte noticeType) {
 		PageHelper.startPage(page, size);
+		
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
 //		Tb_noticeUserExample condition = new Tb_noticeUserExample();
 //		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
@@ -180,9 +181,19 @@ public class NoticeService {
 		data.setNoticeType(noticeType);
 		data.setUserId(id);
 		data.setUserType(userType);
-		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByNoticeType(data);
-		
-		System.out.println(noticeUser.size()+"noticeUser");
+		PageInfo<Tb_noticeUser> pageNoticeUser = new PageInfo<Tb_noticeUser>(noticeUserMapper.selectByNoticeType(data));
+		//设置分页，防止本应该显示为空的页还显示有数据的最后一页
+		pageNoticeUser.setPageNum(page);
+		pageNoticeUser.setPageSize(size);
+		List<Tb_noticeUser> noticeUser=null;
+		if(page<=pageNoticeUser.getPages()){
+		 noticeUser =pageNoticeUser.getList();
+		}else{
+		noticeUser	= new ArrayList<Tb_noticeUser>();
+		}
+//		System.out.println(pageNoticeUser);
+//		System.out.println(pageNoticeUser.getPages());
+//		System.out.println(noticeUser.size()+"noticeUser");
 		
 		//查询小诺通告
 		if(noticeType==-1){
