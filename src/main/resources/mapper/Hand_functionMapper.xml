@@ -2,9 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.didano.weichat.dao.Hand_functionMapper">
    
+   
+  <sql id="Base_Column_List">
+    id, name, code, created, updated, icon, order_no, deleted, type, url, parent_id
+  </sql>
+  
   <select id="findAllFunctions" resultType="cn.didano.weichat.model.Tb_function">
     select 
-    *
+    <include refid="Base_Column_List" />
     from tb_function where deleted = 0
   </select>
   
@@ -27,6 +32,38 @@
   
   <select id="findAreaItems" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Tb_function">
     SELECT * FROM tb_function WHERE parent_id=#{parentId,jdbcType=INTEGER} AND deleted = 0 ORDER BY order_no
+  </select>
+  
+  <select id="getStaffSchoolByStaffId" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Hand_videoAuthSchool">
+    SELECT 
+	 ts2.id,ts2.title
+   FROM tb_staff ts1
+     INNER JOIN tb_school ts2
+       ON ts1.id = #{id,jdbcType=INTEGER}
+	 AND ts1.deleted = 0
+	 AND ts1.school_id = ts2.id
+	 AND ts2.deleted = 0;
+  </select>
+  
+  <select id="getstudentSchoolByStudentId" parameterType="java.lang.Integer" resultType="cn.didano.weichat.model.Hand_videoAuthSchool">
+    SELECT 
+	 ts2.id,ts2.title
+   FROM tb_student ts1
+     INNER JOIN tb_school ts2
+       ON ts1.id = #{id,jdbcType=INTEGER}
+	 AND ts1.deleted = 0
+	 AND ts1.school_id = ts2.id
+	 AND ts2.deleted = 0;
+  </select>
+  
+  <select id="getAuthSchools" resultType="cn.didano.weichat.model.Hand_videoAuthSchool">
+    SELECT
+	 ts2.id,ts2.title
+	FROM tb_video_auth tva,
+	  tb_school ts2
+	WHERE tva.school_id = ts2.id
+	    AND tva.deleted = 0
+	    AND ts2.deleted = 0;
   </select>
   
   
