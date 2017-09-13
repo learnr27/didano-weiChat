@@ -63,12 +63,15 @@ public class StudentDetectionController {
 		Out<Tb_student_detection4photoWall> back = new Out<Tb_student_detection4photoWall>();
 		try {
 			student = studentService.selectStudentById(studentAndTime.getStudentId());
+			System.out.println(student);
 			// 查找梦想
 			if (student.getDreamId() != 0) {
 				dream = dreamService.selectDreamById(student.getDreamId());
 			}
 			data = studentService.selectStudentDectection(studentAndTime);
+			if(dream!=null){
 			data.setDream(dream.getName());
+			}
 			if (student.getHobby() != null) {
 				data.setHobby(student.getHobby());
 			}
