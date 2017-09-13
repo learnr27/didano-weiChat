@@ -127,17 +127,25 @@ public class StudentDetectionController {
 				}
 				// 转换图片地址
 				StringBuilder address = new StringBuilder(ossInfo.getImgPath());
+				if(!"".equals(data.getImg())){
 				address.append(data.getImg());
 				data.setImg(address.toString());
 				address = new StringBuilder(ossInfo.getImgPath());
-				address.append(data.getSubImg());
-				data.setSubImg(address.toString());
-				address = new StringBuilder(ossInfo.getImgPath());
 				address.append(data.getFilePath());
 				data.setFilePath(address.toString());
+				}
+				if(!"".equals(data.getSubImg())){
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getSubImg());
+				data.setSubImg(address.toString());				
 				address = new StringBuilder(ossInfo.getImgPath());
 				address.append(data.getFileSubPath());
-				data.setFileSubPath(address.toString());
+				data.setFileSubPath(address.toString());				
+				}else{
+					data.setSubImg(null);
+				}
+				
+				
 			} else {// 未离校
 				data.setType("未接走");
 			}
