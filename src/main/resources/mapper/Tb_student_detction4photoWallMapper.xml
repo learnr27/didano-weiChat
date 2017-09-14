@@ -245,7 +245,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="selectStudentDectection" parameterType="cn.didano.weichat.model.Hand_studentAwayData" resultMap="BaseResultMap">
-  SELECT tb_student_detection.*, tb_file.file_path AS file_path
+  SELECT tb_student_detection.*, tb_file.file_path AS filePath
             FROM tb_student_detection
             LEFT JOIN tb_file ON  tb_student_detection.file_img_id = tb_file.id  AND tb_file.deleted = 0
             WHERE tb_student_detection.deleted = 0 AND tb_student_detection.`status` = 1 AND tb_student_detection.student_id =#{studentId}

@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.pagehelper.PageInfo;
+
 import cn.didano.weichat.Service.ClassService;
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.MailListService;
@@ -30,6 +32,7 @@ import cn.didano.weichat.Service.StaffService;
 import cn.didano.weichat.config.OssInfo;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.ModulePathType;
+import cn.didano.weichat.constant.NoticeType;
 import cn.didano.weichat.constant.StaffType;
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Notice_Edit;
@@ -124,38 +127,39 @@ public class PrincipalNoticeController {
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
 	 */
-	@PostMapping(value = "principalNoticeFindById/{own_id}/{user_type}")
+	@PostMapping(value = "principalNoticeFindById/{page}/{size}/{own_id}/{user_type}")
 	@ApiOperation(value = "查看园长通知列表", notes = "查看园长通知列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> principalNoticeFindById(@PathVariable("own_id") Integer own_id,
+	public Out<OutList<Tb_notice>> principalNoticeFindById(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("own_id") Integer own_id,
 			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  PrincipalNoticeController:principalNoticeFindById,own_id=" + own_id);
 		Tb_notice notice = null;
 		List<Tb_notice> principalNotices = null;
-		List<Tb_notice> notices = null;
+		PageInfo<Tb_notice> notices = null;
 		OutList<Tb_notice> outList = null;
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			principalNotices = new ArrayList<Tb_notice>();
-			notices = noticeService.findNoticeByUserId(own_id, user_type);
+			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type,NoticeType.PRINCIPAL_NOTICE.getIndex());
 
-			if (notices.size() != 0) {
+			System.out.println(notices.getList().size());
+			if (notices.getList().size() != 0) {
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String date = null;
-				if (notices.size() != 0) {
-					for (int i = 0; i < notices.size(); i++) {
-						notice = notices.get(i);
-						if (notice.getNoticeType() == 1) {
-							date = sdf.format(notices.get(i).getCreated());
+				
+					for (int i = 0; i < notices.getList().size(); i++) {
+						notice = notices.getList().get(i);
+						
+							date = sdf.format(notices.getList().get(i).getCreated());
 							notice.setDate(date);
 							principalNotices.add(notice);
-						}
+						
 					}
 
 					outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
 					back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
-				}
+				
 			} else {
 				outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);

@@ -247,5 +247,11 @@ public class UserService {
 	}
 
 
+	public Tb_user getUserById(Integer userId) {
+		Tb_user user = userMapper.selectByPrimaryKey(userId);
+		return user;
+	}
+
+
 	
 }

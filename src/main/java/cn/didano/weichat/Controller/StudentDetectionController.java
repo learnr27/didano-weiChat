@@ -63,22 +63,25 @@ public class StudentDetectionController {
 		Out<Tb_student_detection4photoWall> back = new Out<Tb_student_detection4photoWall>();
 		try {
 			student = studentService.selectStudentById(studentAndTime.getStudentId());
+			data = studentService.selectStudentDectection(studentAndTime);
 			// 查找梦想
 			if (student.getDreamId() != 0) {
 				dream = dreamService.selectDreamById(student.getDreamId());
+				data.setDream(dream.getName());
 			}
-			data = studentService.selectStudentDectection(studentAndTime);
-			data.setDream(dream.getName());
 			if (student.getHobby() != null) {
 				data.setHobby(student.getHobby());
 			}
 			// 转换单位
-			data.setHeight(new BigDecimal(data.getHeight()/10).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
-			data.setWeight(new BigDecimal(data.getWeight()/1000).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
+			data.setHeight(new BigDecimal(data.getHeight() / 10).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
+			data.setWeight(new BigDecimal(data.getWeight() / 1000).setScale(1, BigDecimal.ROUND_HALF_UP).floatValue());
 			// 转换图片地址
 			StringBuilder address = new StringBuilder(ossInfo.getImgPath());
 			address.append(data.getOrgImgUrl());
 			data.setOrgImgUrl(address.toString());
+			address = new StringBuilder(ossInfo.getImgPath());
+			address.append(data.getFilePath());
+			data.setFilePath(address.toString());
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 
 		} catch (ServiceException e) {
@@ -92,7 +95,6 @@ public class StudentDetectionController {
 		return back;
 	}
 
-	
 	/**
 	 * 接送报告
 	 *
@@ -103,32 +105,48 @@ public class StudentDetectionController {
 	@PostMapping(value = "findStudentAwayRecord")
 	@ResponseBody
 	public Out<Tb_student_away_record> findStudentAwayRecord(
-			@ApiParam(value = "接送报告", required = true)  @RequestBody Hand_studentAwayData studentAndTime) {
+			@ApiParam(value = "接送报告", required = true) @RequestBody Hand_studentAwayData studentAndTime) {
 		logger.info("StudentDetectionController :findStudentAwayRecord,Hand_studentAwayData=" + studentAndTime);
 
-		
 		Tb_student_away_record data = null;
 		Tb_student_away_record test = null;
-		Tb_student_parent parentData=null;
+		Tb_student_parent parentData = null;
 		Out<Tb_student_away_record> back = new Out<Tb_student_away_record>();
-		try {			
+		try {
 			data = new Tb_student_away_record();
-			test=studentService.selectStudentAwayRecordById(studentAndTime);
-			if(test!=null){//已离校
+			test = studentService.selectStudentAwayRecordById(studentAndTime);
+			if (test != null) {// 已离校
 				BeanUtils.copyProperties(data, test);
 				data.setType("已接走");
-				//查询接送父母信息
-				parentData= studentParentService.selectParentByid(studentAndTime.getStudentId(), data.getParentId());
-				if(parentData!=null){
-				data.setParentName(parentData.getRelationTitle());	
-				}else{
+				// 查询接送父母信息
+				parentData = studentParentService.selectParentByid(studentAndTime.getStudentId(), data.getParentId());
+				if (parentData != null) {
+					data.setParentName(parentData.getRelationTitle());
+				} else {
 					data.setParentName("家长信息错误");
 				}
 				// 转换图片地址
 				StringBuilder address = new StringBuilder(ossInfo.getImgPath());
+				if(!"".equals(data.getImg())){
 				address.append(data.getImg());
 				data.setImg(address.toString());
-			}else{//未离校
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getFilePath());
+				data.setFilePath(address.toString());
+				}
+				if(!"".equals(data.getSubImg())){
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getSubImg());
+				data.setSubImg(address.toString());				
+				address = new StringBuilder(ossInfo.getImgPath());
+				address.append(data.getFileSubPath());
+				data.setFileSubPath(address.toString());				
+				}else{
+					data.setSubImg(null);
+				}
+				
+				
+			} else {// 未离校
 				data.setType("未接走");
 			}
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);

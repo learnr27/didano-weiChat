@@ -79,7 +79,7 @@
 	     tb_class tc,
 	     tb_student_parent tsp
 	   WHERE ts.id = tsp.student_id
-	   AND tsp.class_id = tc.id
+	   AND ts.class_id = tc.id
 	   AND ts.deleted = 0 
 	   AND tsp.deleted = 0) tmp1
 	WHERE tmp0.school_parent_id = tmp1.parentId AND tmp0.student_id=tmp1.studentId) tmp3 
@@ -388,4 +388,5 @@
   <select id="getDuplicateParentData" resultMap="Tb_school_parent">
   	select * from tb_school_parent tmp2 where status=1 and deleted=0 and id in (select tmp1.parent_id from (select *, count(*) as parent_id_num  from (select * from tb_student_parent where deleted=0) as tmp0 group by parent_id) as tmp1 where tmp1.parent_id_num>1)  order by tmp2.id desc
   </select>
+  
 </mapper>

@@ -172,4 +172,14 @@ public class Tb_student {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+	@Override
+	public String toString() {
+		return "Tb_student [id=" + id + ", schoolId=" + schoolId + ", classId=" + classId + ", name=" + name
+				+ ", nickname=" + nickname + ", hobby=" + hobby + ", dreamId=" + dreamId + ", comment=" + comment
+				+ ", gender=" + gender + ", birthday=" + birthday + ", deviceRegistered=" + deviceRegistered
+				+ ", status=" + status + ", rfid=" + rfid + ", icCardId=" + icCardId + ", created=" + created
+				+ ", updated=" + updated + ", deleted=" + deleted + "]";
+	}
+    
 }

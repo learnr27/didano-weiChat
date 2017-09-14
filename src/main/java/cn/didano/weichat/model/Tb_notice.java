@@ -173,4 +173,11 @@ public class Tb_notice {
     public void setDeleted(Boolean deleted) {
         this.deleted = deleted;
     }
+
+	@Override
+	public String toString() {
+		return " created=" + created + ", updated=" + updated + ", deleted="
+				+ deleted + ", is_read=" + is_read + ", headUrl=" + headUrl + ", date=" + date + "]";
+	}
+    
 }

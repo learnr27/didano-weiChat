@@ -256,4 +256,13 @@
       deleted = #{deleted,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+   <select id="selectByNoticeType" parameterType="cn.didano.weichat.model.Hand_noticeUserData" resultMap="BaseResultMap">
+    SELECT a.* ,b.notice_type FROM tb_notice_user a,tb_notice b WHERE a.user_id=#{userId} AND a.deleted=0 AND a.user_type=#{userType} AND a.notice_id=b.id  
+     <if test="noticeType != -1">
+        <![CDATA[AND b.notice_type=#{noticeType}]]>
+      </if>
+      ORDER BY a.created DESC
+  </select>
 </mapper>
