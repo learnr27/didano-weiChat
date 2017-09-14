@@ -353,6 +353,56 @@ public class MailBoxController {
 	}
 
 	/**
+	 * 家长页面点击园长信箱
+	 *
+	 * @param c_channel
+	 * @return
+	 */
+	@ApiOperation(value = " 老师页面点击学生对话", notes = "老师页面点击学生对话")
+	@PostMapping(value = "teacherGetMailId/{student_id}/{own_id}")
+	@ResponseBody
+	public Out<Hand_mailRecord> teacherGetMailId(
+			@ApiParam(value = "老师页面点击学生对话", required = true) @PathVariable("student_id") Integer student_id,
+			@PathVariable("own_id") Integer own_id) {
+		logger.info("MailBoxController:teacherGetMailId,student_id=" + student_id);
+
+		PageInfo<Tb_notice> notices = null;
+		int mailId = 0;
+		Hand_mailRecord data = new Hand_mailRecord();
+		List<Tb_student_parent> parents = null;
+		Out<Hand_mailRecord> back = new Out<Hand_mailRecord>();
+		try {
+
+			// 查询家长信息
+			parents = mailBoxService.findParentByStudentId(student_id);
+			notices = noticeService.findNoticeByUserId(1, 5, parents.get(0).getParentId(), (byte) RoleType.PARENT, (byte) 5);
+
+			if (notices.getList().size() != 0) {
+				// 找出邮件的通知
+				for (int i = 0; i < notices.getList().size(); i++) {
+					mailId = notices.getList().get(i).getSourceId();
+					data = findReply_ByNoticeId(mailId).getData();
+					// 设置为已读
+					noticeService.setNoticeRead(own_id, notices.getList().get(i).getId());
+
+				}
+
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+			} else {
+				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
+			}
+		} catch (ServiceException e) {
+			// 服务层错误，包括 内部service 和 对外service
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
+		} catch (Exception ex) {
+			logger.warn(ex.getMessage());
+			back.setBackTypeWithLog(BackType.FAIL_INSERT_NORMAL, ex.getMessage());
+		}
+		return back;
+	}
+
+	/**
 	 * 老师家长对话
 	 *
 	 * @param c_channel
@@ -521,6 +571,7 @@ public class MailBoxController {
 			if (mail != null) {
 				String mailTitle = mail.getSenderName();
 				String senderName = mailTitle.substring(mailTitle.length() - 2, mailTitle.length());
+				//给首条消息设置头像
 				if ("爸爸".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(5);
 					mail.setHead(head.getAddress());
@@ -532,6 +583,12 @@ public class MailBoxController {
 					mail.setHead(head.getAddress());
 				} else if ("奶奶".equals(senderName)) {
 					head = HeadMemoryConfigStorageContainer.findByOriId(8);
+					mail.setHead(head.getAddress());
+				}else if ("师)".equals(senderName)) {
+					head = HeadMemoryConfigStorageContainer.findByOriId(9);
+					mail.setHead(head.getAddress());
+				}else{
+					head = HeadMemoryConfigStorageContainer.findByOriId(5);
 					mail.setHead(head.getAddress());
 				}
 				data.setMai(mail);
@@ -545,6 +602,7 @@ public class MailBoxController {
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				mail.setDate(sdf.format(mail.getCreated()));
+				//给回复的消息设置头像
 				for (int i = 0; i < mails.size(); i++) {
 					mails.get(i).setDate(sdf.format(mails.get(i).getCreated()));
 					String title = mails.get(i).getSenderName();
@@ -571,6 +629,9 @@ public class MailBoxController {
 						mails.get(i).setHead(head.getAddress());
 					} else if ("奶奶".equals(name)) {
 						head = HeadMemoryConfigStorageContainer.findByOriId(8);
+						mails.get(i).setHead(head.getAddress());
+					}else{
+						head = HeadMemoryConfigStorageContainer.findByOriId(5);
 						mails.get(i).setHead(head.getAddress());
 					}
 
