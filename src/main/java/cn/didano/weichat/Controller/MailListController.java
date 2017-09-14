@@ -711,6 +711,7 @@ public class MailListController {
 				cs.setClassId(key);
 				if (!val.isEmpty()) {
 					cs.setClassName(val.get(0).getClass_name());
+					cs.setNumber(val.size());
 				}
 				cs.setStudent(val);
 				student2.add(cs);
@@ -805,6 +806,7 @@ public class MailListController {
 
 					cs.getStudent().addAll(students);
 				}
+				cs.setNumber(students.size());
 				cs.setClassId(classid.getClassId());
 				cs.setClassName(classService.selectNameByPrimaryKey(classid.getClassId()));
 

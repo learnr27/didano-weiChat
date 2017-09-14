@@ -8,7 +8,7 @@ public class Tb_classStudent {
 	private String className;
 	private Integer classId;
 	private List<Hand_WholeStudentParents4PhoneBook> student = new ArrayList<Hand_WholeStudentParents4PhoneBook>();
-	
+	private Integer number;
 	public Integer getClassId() {
 		return classId;
 	}
@@ -26,6 +26,13 @@ public class Tb_classStudent {
 	}
 	public void setStudent(List<Hand_WholeStudentParents4PhoneBook> student) {
 		this.student = student;
+	}
+	
+	public Integer getNumber() {
+		return number;
+	}
+	public void setNumber(Integer number) {
+		this.number = number;
 	}
 	@Override
 	public String toString() {
