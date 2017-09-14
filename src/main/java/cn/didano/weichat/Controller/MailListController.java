@@ -30,12 +30,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.didano.weichat.Service.AuthTimeControlService;
 import cn.didano.weichat.Service.ClassService;
 import cn.didano.weichat.Service.IcCardService;
 import cn.didano.weichat.Service.MailListService;
 import cn.didano.weichat.Service.StaffService;
 import cn.didano.weichat.Service.StudentService;
 import cn.didano.weichat.config.AppConfigProperties;
+import cn.didano.weichat.config.OssInfo;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.IcCardType;
 import cn.didano.weichat.constant.StaffType;
@@ -50,9 +52,11 @@ import cn.didano.weichat.model.Hand_ic_type;
 import cn.didano.weichat.model.Hand_parent4mailList;
 import cn.didano.weichat.model.Hand_staff4PhoneBook;
 import cn.didano.weichat.model.Hand_staffTransit4PhoneBook;
+import cn.didano.weichat.model.Hand_student;
 import cn.didano.weichat.model.Hand_student4MailListHasParents;
 import cn.didano.weichat.model.Hand_wholeStudent4PhoneBook;
 import cn.didano.weichat.model.Hand_wholeStudentParent4PhoneBook;
+import cn.didano.weichat.model.Tb_benchmark;
 import cn.didano.weichat.model.Tb_bossData;
 import cn.didano.weichat.model.Tb_class;
 import cn.didano.weichat.model.Tb_classStudent;
@@ -67,6 +71,8 @@ import cn.didano.weichat.model.Tb_staff_class;
 import cn.didano.weichat.model.Tb_student;
 import cn.didano.weichat.model.Tb_student4List;
 import cn.didano.weichat.model.Tb_studentData;
+import cn.didano.weichat.model.Tb_studentRecord;
+import cn.didano.weichat.model.Tb_student_detection;
 import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.model.Tb_teacherAndStudent;
 import cn.didano.weichat.util.SendSms;
@@ -94,7 +100,10 @@ public class MailListController {
 	AppConfigProperties appConfigProperties;
 	@Autowired
 	IcCardService iCCardService;
-
+	@Autowired
+	private AuthTimeControlService controlService;
+	@Autowired
+	OssInfo ossInfo;
 	/**
 	 * 家长查看本班老师
 	 *
@@ -1373,8 +1382,6 @@ public class MailListController {
 			back.setBackTypeWithLogInfo(BackType.FAIL_OPER_NO_BOUNDSTATE_CARD,
 					"ic卡的编号不能重复，请重新输入","ic卡的编号不能重复,请重新输入");
 		}else{
-			//得到学校的id
-			Hand_staff4PhoneBook s1 = mailListService.selectSchoolBystaffId(hand_id_type.getStaff_id());
 			try {
 				for(int i=0;i<listType.size();i++){
 					if (listType.get(i).getIc_number() !=null) {
@@ -1437,6 +1444,162 @@ public class MailListController {
 				// 服务层错误，包括 内部service 和 对外service
 				back.setServiceExceptionWithLog(e.getExceptionEnums());
 			}
+		}
+		return back;
+	}
+	
+	// 查询出学生的成长记录
+	@ApiOperation(value = "查询学生的成长记录", notes = "根据学生的ID进行查询学生的成长记录")
+	@PostMapping(value = "student_grow_record/{student_id}")
+	@ResponseBody
+	public Out<OutList<Hand_student>> student_grow_record(@PathVariable("student_id") int student_id)
+			throws ParseException {
+		logger.info("访问  PostController:select_student,student_id=" + student_id);
+		List<Tb_student_detection> classes = null;
+		List<Hand_student> studtentList = new ArrayList<Hand_student>();
+		OutList<Hand_student> outList = null;
+		Out<OutList<Hand_student>> back = new Out<OutList<Hand_student>>();
+		Hand_student hand = null;
+		try {
+			// 获取学生的检测记录（完成）
+			classes = controlService.selectBystudent(student_id);
+			if (classes.size() != 0) {
+				// 获取学生信息（完成）
+				List<Tb_studentRecord> selectstudent = controlService.selectstudent(student_id);
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String dateString = formatter.format(selectstudent.get(0).getBirthday());
+				// 得到第一个时间（完成）
+				String substring = dateString.substring(0, 7);
+				// 加上的时间（完成）
+				String substring1 = substring.substring(6, 7);
+				int substring2 = Integer.parseInt(substring1);
+				// 时间从当前月的1号加上一个月到下个月的1号来进行计算
+				int substring3 = substring2 + 1;
+
+				// 得到第二个时间（完成）
+				String substring4 = substring.replace(substring1, substring3 + "");
+				java.text.SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM");
+				// 字符串的时间类型转换为时间类型
+				Date date1 = formatter2.parse(substring);
+				Date date2 = formatter2.parse(substring4);
+
+				Tb_studentRecord tbs = new Tb_studentRecord();
+				tbs.setBirthday(date1);
+				tbs.setBirthday1(date2);
+				// 直接查询最新的数据
+				List<Tb_student_detection> select_student_detection = controlService.select_student_detection(date1,
+						date2);
+				// 计算同龄人的平均身高和体重（selectId中的id进行查询）
+				// 统计总的身高和体重
+				int totalHeight = 0;
+				int totalWeight = 0;
+				// 统计超过的了多少人
+				int heightPercentage = 0;
+				int weightPercentage = 0;
+				// 统计身高体重有数据的有多少人
+				int i = 0;
+				for (Tb_student_detection tb_student_detection : select_student_detection) {
+					if (tb_student_detection.getWeight() != null && tb_student_detection.getHeight() != null) {
+						totalHeight += tb_student_detection.getHeight();
+						totalWeight += tb_student_detection.getWeight();
+						i += 1;
+						// 统计自己身高超过的人数
+						if (classes.get(0).getHeight() > tb_student_detection.getHeight()) {
+							heightPercentage += 1;
+						}
+						// 统计体重身高超过的人数
+						if (classes.get(0).getWeight() > tb_student_detection.getWeight()) {
+							weightPercentage += 1;
+						}
+					}
+				}
+				// 平均身高和体重
+				if (i != 0) {
+					totalHeight = totalHeight / i / 10;
+					totalWeight = totalWeight / i / 1000;
+					// 超过的百分比
+					heightPercentage = heightPercentage * 100 / i;
+					weightPercentage = weightPercentage * 100 / i;
+				} else {
+					totalHeight = 0;
+					totalWeight = 0;
+				}
+				// 获取国家标准
+				// 计算月龄
+				// 当前的时间
+				Date dateTime = new Date();
+				String a = (dateTime.getTime() - selectstudent.get(0).getBirthday().getTime()) / (1000 * 60 * 60 * 24)
+						/ 30 + "";
+				// 时间差得到月龄
+				Tb_benchmark tb = new Tb_benchmark();
+				// 判断月龄在哪个阶段
+				if (Integer.parseInt(a) > 81) {
+					tb.setAge(81);
+				} else if (Integer.parseInt(a) < 12) {
+					tb.setAge(12);
+				} else if (Integer.parseInt(a) % 3 == 0 && Integer.parseInt(a) > 12) {
+					tb.setAge(Integer.parseInt(a));
+				} else {
+					if (Integer.parseInt(a) % 3 == 1) {
+						int b = (Integer.parseInt(a) / 3) * 3;
+						tb.setAge(b);
+					} else {
+						int b = ((Integer.parseInt(a) / 3) + 1) * 3;
+						tb.setAge(b);
+					}
+				}
+				tb.setSex((int) selectstudent.get(0).getGender());
+				List<Tb_benchmark> selectByHeightAddWeight = controlService.selectByHeightAddWeight(tb);
+
+				String compareHeight = null;
+				String compareWeight = null;
+
+				// 和标准的比较
+
+				Double CompareHeight = (double) (classes.get(0).getHeight() / 10);
+				Double CompareWeight = (double) (classes.get(0).getWeight() / 1000);
+				for (Tb_benchmark tb_benchmark : selectByHeightAddWeight) {
+
+					// 判断身高
+					if (CompareHeight >= tb_benchmark.getHeight1() && CompareHeight <= tb_benchmark.getHeight2()) {
+						compareHeight = "正常";
+					}
+					if (CompareHeight > tb_benchmark.getHeight2()) {
+						compareHeight = "偏高";
+					}
+					if (CompareHeight < tb_benchmark.getHeight1()) {
+						compareHeight = "偏矮";
+					}
+					// 判断体重
+					if (CompareWeight >= tb_benchmark.getWeight1() && CompareWeight <= tb_benchmark.getWeight2()) {
+						compareWeight = "正常";
+					}
+					if (CompareWeight > tb_benchmark.getWeight2()) {
+						compareWeight = "偏胖";
+					}
+					if (CompareWeight < tb_benchmark.getWeight1()) {
+						compareWeight = "偏瘦";
+					}
+				}
+
+				SimpleDateFormat ter = new SimpleDateFormat("yyyy.MM.dd");
+				String time = ter.format(classes.get(0).getCreated());
+				StringBuilder builder = new StringBuilder(ossInfo.getImgPath());
+				builder.append(classes.get(0).getOrgImgUrl());
+				// 為对象复制
+				hand = new Hand_student(selectstudent.get(0).getName(), time, classes.get(0).getHeight() / 10,
+						classes.get(0).getWeight() / 1000, totalHeight, totalWeight, heightPercentage + "%",
+						weightPercentage + "%", selectByHeightAddWeight.get(0).getHeight1(),
+						selectByHeightAddWeight.get(0).getHeight2(), selectByHeightAddWeight.get(0).getWeight1(),
+						selectByHeightAddWeight.get(0).getWeight2(), compareHeight, compareWeight, builder.toString());
+				studtentList.add(0, hand);
+				outList = new OutList<Hand_student>(studtentList.size(), studtentList);
+
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			}
+		} catch (ServiceException e) {
+			logger.warn(e.getMessage());
+			back.setServiceExceptionWithLog(e.getExceptionEnums());
 		}
 		return back;
 	}
