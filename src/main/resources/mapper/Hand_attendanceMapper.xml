@@ -178,7 +178,7 @@ LEFT JOIN tb_class e ON temp1.class_id = e.id
   </select>
   
   <select id="findTeacherMonthAttendanceById" parameterType="cn.didano.weichat.model.Hand_attendanceData" resultType="cn.didano.weichat.model.Hand_teacherAttendance">
- SELECT staff_id,sign_date as created,sign_status FROM tb_staff_signdate WHERE staff_id = #{staff_id} AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m') = #{date}
+ SELECT  DISTINCT staff_id,sign_date as created,sign_status FROM tb_staff_signdate WHERE staff_id = #{staff_id} AND FROM_UNIXTIME(tb_staff_signdate.sign_timestamp,'%Y-%m') = #{date}
   </select>
   
   <select id="getSchoolAllStudentNum" parameterType="Integer" resultType="Integer">
