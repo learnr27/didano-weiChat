@@ -58,6 +58,7 @@ public class ParentController {
 		OutList<Tb_student> outList = null;
 		Out<OutList<Tb_student>> back = new Out<OutList<Tb_student>>();
 		try {
+			
 			students = studentService.getStudentListByParentPhone(parentPhone);
 			outList = new OutList<Tb_student>(students.size(), students);
 			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
