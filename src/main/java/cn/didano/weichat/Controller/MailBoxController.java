@@ -325,7 +325,10 @@ public class MailBoxController {
 					mailReply.setSenderName(staff.getName() + "(行政)");
 				}
 				mailReply.setSenderId(mail_write.getUserId());
-				mailReply.setContent(mail_write.getContent());
+				// stephen.wang 2017-8-30
+				// 内容里面如果有临时图片，执行将临时图片转换为正式图片，上传一开始都是临时图片，当执行保存时，转为正式
+				String newContent = FileUtil.transferTempUrl2FormalUrlWithAliOss(mail_write.getContent(), ossInfo);
+				mailReply.setContent(newContent);
 				mailReply.setCreated(new Date());
 				mailReply.setMailId(mail_write.getMailId());
 				// 插入回信表
@@ -521,7 +524,10 @@ public class MailBoxController {
 					mailReply.setSenderName(parent.getName() + "的" + parent.getRelation_title());
 				}
 				mailReply.setSenderId(mail_write.getUserId());
-				mailReply.setContent(mail_write.getContent());
+				// stephen.wang 2017-8-30
+				// 内容里面如果有临时图片，执行将临时图片转换为正式图片，上传一开始都是临时图片，当执行保存时，转为正式
+				String newContent = FileUtil.transferTempUrl2FormalUrlWithAliOss(mail_write.getContent(), ossInfo);
+				mailReply.setContent(newContent);
 				mailReply.setCreated(new Date());
 				mailReply.setMailId(mail_write.getMailId());
 				// 插入回信表

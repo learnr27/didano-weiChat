@@ -441,6 +441,7 @@ public class PrincipalNoticeController {
 					}
 				}
 				data.setReaderNames(readerNames);
+				data.setReaderNum(readerNames.size());
 			}
 			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 

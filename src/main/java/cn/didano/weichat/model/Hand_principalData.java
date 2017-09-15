@@ -5,6 +5,14 @@ import java.util.List;
 public class Hand_principalData {
 	private List<Tb_principal_notice> principalNotices;
 	private List<String> readerNames;
+	private Integer readerNum=0;
+	
+	public Integer getReaderNum() {
+		return readerNum;
+	}
+	public void setReaderNum(Integer readerNum) {
+		this.readerNum = readerNum;
+	}
 	public List<Tb_principal_notice> getPrincipalNotices() {
 		return principalNotices;
 	}
