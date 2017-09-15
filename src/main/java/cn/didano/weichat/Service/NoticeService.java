@@ -206,7 +206,7 @@ public class NoticeService {
 		PageHelper.startPage(page, size);
 		
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
-	Hand_noticeUserData data = new Hand_noticeUserData();
+	    Hand_noticeUserData data = new Hand_noticeUserData();
 		data.setNoticeType(noticeType);
 		data.setUserId(id);
 		data.setUserType(userType);

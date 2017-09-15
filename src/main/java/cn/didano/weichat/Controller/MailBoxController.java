@@ -150,7 +150,6 @@ public class MailBoxController {
 			notices = noticeService.findNoticeByUserId(page, size, own_id, user_type, notice_type);
 			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
-				System.out.println(1111111);
 
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -186,19 +185,12 @@ public class MailBoxController {
 						}
 					}
 
-					// for (int i = 0; i < notices.getList().size(); i++) {
-					// notice = notices.getList().get(i);
-					//
-					// notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0]
-					// + "小朋友的家庭");
-					// head = HeadMemoryConfigStorageContainer.findByOriId(10);
-					// notice.setHeadUrl(head.getAddress());
-					// date = sdf.format(notices.getList().get(i).getCreated());
-					// notice.setDate(date);
-					// mails.add(notice);
-					//
-					//
-					// }
+					// 根据时间排序
+					Collections.sort(mails, new Comparator<Tb_notice>() {
+						public int compare(Tb_notice o1, Tb_notice o2) {
+							return (int) (o2.getCreated().getTime() - o1.getCreated().getTime());
+						}
+					});
 
 				}
 				outList = new OutList<Tb_notice>(mails.size(), mails);
