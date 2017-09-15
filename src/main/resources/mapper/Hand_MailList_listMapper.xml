@@ -127,6 +127,7 @@ where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 OR
 	)AS tmp1 LEFT JOIN tb_class c ON tmp1.class_id=c.id left join (select * from tb_ic_card where deleted=0 and school_id=#{id} and ic_type=1) tmp3 on tmp1.rfid=tmp3.rfid ORDER BY CONVERT( tmp1.name USING gbk ) 
  </select>
  
+ 
  <select id="findStaffById" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
  SELECT tmp1.status,
 		tmp1.in_time,
