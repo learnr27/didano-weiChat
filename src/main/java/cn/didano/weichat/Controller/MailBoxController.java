@@ -378,17 +378,20 @@ public class MailBoxController {
 
 			// 查询家长信息
 			parents = mailBoxService.findParentByStudentId(student_id);
+			System.out.println(parents.get(0).getParentId());			
 			notices = noticeService.findNoticeByUserId(1, 5, parents.get(0).getParentId(), (byte) RoleType.PARENT, (byte) 5);
 
+			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				// 找出邮件的通知
-				for (int i = 0; i < notices.getList().size(); i++) {
-					mailId = notices.getList().get(i).getSourceId();
+			    
+					mailId = notices.getList().get(0).getSourceId();
+					System.out.println(mailId);
 					data = findReply_ByNoticeId(mailId).getData();
 					// 设置为已读
-					noticeService.setNoticeRead(own_id, notices.getList().get(i).getId());
+					noticeService.setNoticeRead(own_id, notices.getList().get(0).getId());
 
-				}
+				
 
 				back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 			} else {
@@ -636,8 +639,8 @@ public class MailBoxController {
 					} else if ("奶奶".equals(name)) {
 						head = HeadMemoryConfigStorageContainer.findByOriId(8);
 						mails.get(i).setHead(head.getAddress());
-					}else{
-						head = HeadMemoryConfigStorageContainer.findByOriId(5);
+					}else if ("师)".equals(name)) {
+						head = HeadMemoryConfigStorageContainer.findByOriId(9);
 						mails.get(i).setHead(head.getAddress());
 					}
 

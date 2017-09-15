@@ -197,7 +197,7 @@ public class NoticeController {
 						}else{
 						notice.setTitle("老师对话");
 						}
-						head = HeadMemoryConfigStorageContainer.findByOriId(4);
+						head = HeadMemoryConfigStorageContainer.findByOriId(11);
 						notice.setHeadUrl(head.getAddress());
 
 					}
