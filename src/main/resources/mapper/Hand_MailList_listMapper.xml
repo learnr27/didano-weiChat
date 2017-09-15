@@ -106,7 +106,7 @@ where tmp1.name like #{name} and tmp1.class_id=#{schoolid} and tmp1.deleted=0 OR
 		from `tb_student_parent` d left join tb_class e on e.id=d.class_id
 		left join (select * from tb_ic_card where school_id=#{id} and deleted=0 and ic_type=1) f on f.rfid=d.rfid where d.school_id=#{id} and d.deleted=0
 		) tmp2
-		on tmp1.id=tmp2.student_id left join tb_school_parent tmp3 on tmp2.parent_id=tmp3.id; 
+		on tmp1.id=tmp2.student_id left join tb_school_parent tmp3 on tmp2.parent_id=tmp3.id where tmp3.deleted=0; 
  </select>
  <select id="findteacherByschool" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_staff4PhoneBook">
  SELECT tmp1.status,
@@ -224,8 +224,9 @@ FROM
     AND p.deleted = 0
     AND tmp1.deleted = 0
   ) AS tmp2,tb_school_parent p 
-    WHERE  tmp2.parent_id = p.id
+    WHERE  tmp2.parent_id = p.id and p.deleted=0
     )AS temp4  LEFT JOIN (SELECT * FROM tb_ic_card WHERE deleted=0 AND ic_type=1) tmp3 ON temp4.rfid=tmp3.rfid )
+    
 </select>
 
 <select id="findParentByStudentId" parameterType="Integer" resultType="cn.didano.weichat.model.Hand_parent4mailList">
