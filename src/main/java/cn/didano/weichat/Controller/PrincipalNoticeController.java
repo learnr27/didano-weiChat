@@ -29,6 +29,8 @@ import cn.didano.weichat.Service.MailListService;
 import cn.didano.weichat.Service.NoticeService;
 import cn.didano.weichat.Service.PrincipalNoticeService;
 import cn.didano.weichat.Service.StaffService;
+import cn.didano.weichat.Service.StudentParentService;
+import cn.didano.weichat.Service.StudentService;
 import cn.didano.weichat.config.OssInfo;
 import cn.didano.weichat.constant.BackType;
 import cn.didano.weichat.constant.ModulePathType;
@@ -40,6 +42,7 @@ import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Hand_WholeStudentParents4PhoneBook;
 import cn.didano.weichat.model.Hand_parent4mailList;
+import cn.didano.weichat.model.Hand_principalData;
 import cn.didano.weichat.model.Hand_staff4PhoneBook;
 import cn.didano.weichat.model.Tb_class;
 import cn.didano.weichat.model.Tb_classStudent;
@@ -49,6 +52,8 @@ import cn.didano.weichat.model.Tb_principal_notice;
 import cn.didano.weichat.model.Tb_schoolParent;
 import cn.didano.weichat.model.Tb_staff;
 import cn.didano.weichat.model.Tb_staffData;
+import cn.didano.weichat.model.Tb_student;
+import cn.didano.weichat.model.Tb_student_parent;
 import cn.didano.weichat.util.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -72,6 +77,10 @@ public class PrincipalNoticeController {
 	private ClassService classService;
 	@Autowired
 	private StaffService staffService;
+	@Autowired
+	private StudentParentService studentParentService;
+	@Autowired
+	private StudentService studentService;
 	@Autowired
 	OssInfo ossInfo;
 
@@ -130,7 +139,8 @@ public class PrincipalNoticeController {
 	@PostMapping(value = "principalNoticeFindById/{page}/{size}/{own_id}/{user_type}")
 	@ApiOperation(value = "查看园长通知列表", notes = "查看园长通知列表")
 	@ResponseBody
-	public Out<OutList<Tb_notice>> principalNoticeFindById(@PathVariable("page") int page, @PathVariable("size") int size,@PathVariable("own_id") Integer own_id,
+	public Out<OutList<Tb_notice>> principalNoticeFindById(@PathVariable("page") int page,
+			@PathVariable("size") int size, @PathVariable("own_id") Integer own_id,
 			@PathVariable("user_type") byte user_type) {
 		logger.info("访问  PrincipalNoticeController:principalNoticeFindById,own_id=" + own_id);
 		Tb_notice notice = null;
@@ -140,26 +150,27 @@ public class PrincipalNoticeController {
 		Out<OutList<Tb_notice>> back = new Out<OutList<Tb_notice>>();
 		try {
 			principalNotices = new ArrayList<Tb_notice>();
-			notices = noticeService.findNoticeByUserId(page,size,own_id, user_type,NoticeType.PRINCIPAL_NOTICE.getIndex());
+			notices = noticeService.findNoticeByUserId(page, size, own_id, user_type,
+					NoticeType.PRINCIPAL_NOTICE.getIndex());
 
 			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				// 转换时间格式
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				String date = null;
-				
-					for (int i = 0; i < notices.getList().size(); i++) {
-						notice = notices.getList().get(i);
-						
-							date = sdf.format(notices.getList().get(i).getCreated());
-							notice.setDate(date);
-							principalNotices.add(notice);
-						
-					}
 
-					outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
-					back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
-				
+				for (int i = 0; i < notices.getList().size(); i++) {
+					notice = notices.getList().get(i);
+
+					date = sdf.format(notices.getList().get(i).getCreated());
+					notice.setDate(date);
+					principalNotices.add(notice);
+
+				}
+
+				outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
+				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+
 			} else {
 				outList = new OutList<Tb_notice>(principalNotices.size(), principalNotices);
 				back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
@@ -201,7 +212,7 @@ public class PrincipalNoticeController {
 		List<Integer> parentsId = new ArrayList<Integer>();
 		List<Integer> studentId = new ArrayList<Integer>();
 		List<Hand_parent4mailList> studentParent = null;
-		List<Tb_class> schoolClass=null;
+		List<Tb_class> schoolClass = null;
 		Map<Integer, List<Tb_schoolParent>> map = new HashMap<Integer, List<Tb_schoolParent>>();
 		Map<Integer, List<Hand_parent4mailList>> parentMap = new HashMap<Integer, List<Hand_parent4mailList>>();
 		Out<String> back = new Out<String>();
@@ -214,7 +225,7 @@ public class PrincipalNoticeController {
 			BeanUtils.copyProperties(notice, notice_edit);
 			BeanUtils.copyProperties(pricipalNotice, notice_edit);
 			System.out.println(staff.getType());
-			if (staff.getType() == 31 || staff.getType() == 35 ) {// 当登录者为园长或者行政时则为发布园长通知
+			if (staff.getType() == 31 || staff.getType() == 35) {// 当登录者为园长或者行政时则为发布园长通知
 				// 按班级给父母职工分类
 				if (notice_edit.getAllStaff() == 0) {// 判断发布范围是否为仅员工
 					schoolClass = classService.selectAllBySchool(staff.getSchoolId());
@@ -224,7 +235,7 @@ public class PrincipalNoticeController {
 						map.put(classId.get(i), parents);
 						staffs.addAll(classStaffs);
 					}
-					//查找该学校的行政
+					// 查找该学校的行政
 					serveries = staffService.selectSchoolAllAdministrationInteger(staff.getSchoolId());
 					staffs.addAll(serveries);
 					// 将家长id放入一个集合
@@ -238,10 +249,10 @@ public class PrincipalNoticeController {
 					}
 
 					// 设置发布范围
-					if(schoolClass.size()==classId.size()){
-					notice.setPublicationScope("全园");
-					}else{
-					notice.setPublicationScope("部分班");	
+					if (schoolClass.size() == classId.size()) {
+						notice.setPublicationScope("全园");
+					} else {
+						notice.setPublicationScope("部分班");
 					}
 				} else {// 发布范围仅为员工时
 					staffs = staffService.selectSchoolAllStaff(staff.getSchoolId());
@@ -251,15 +262,15 @@ public class PrincipalNoticeController {
 				// 查询本校其他园长
 				boss = mailBoxService.findBossBySchoolId(staff.getSchoolId());
 				// 设置发送者身份
-				if(staff.getType() == 31){
-				notice.setSenderName(staff.getName() + "(园长)");
-				pricipalNotice.setSenderName(staff.getName() + "(园长)");
-				}else{
+				if (staff.getType() == 31) {
+					notice.setSenderName(staff.getName() + "(园长)");
+					pricipalNotice.setSenderName(staff.getName() + "(园长)");
+				} else {
 					notice.setSenderName(staff.getName() + "(行政)");
 					pricipalNotice.setSenderName(staff.getName() + "(行政)");
 				}
-			} else  if(staff.getType() == 32){// 当登录者为老师时则为发送班级通知
-				//查询班级
+			} else if (staff.getType() == 32) {// 当登录者为老师时则为发送班级通知
+				// 查询班级
 				Tb_staffData staffClass = mailListService.findClassIdBySid(notice_edit.getOnlineId());
 				// 设置发布范围
 				notice.setPublicationScope(classService.selectNameByPrimaryKey(staffClass.getClassId()));
@@ -279,7 +290,7 @@ public class PrincipalNoticeController {
 						parentsId.add(parentMap.get(key).get(i).getId());
 					}
 				}
-				//查找本班的老师
+				// 查找本班的老师
 				staffs = mailListService.findTeacherByClass(staffClass.getClassId());
 				// 设置发送者身份
 				notice.setSenderName(staff.getName() + "(老师)");
@@ -287,13 +298,13 @@ public class PrincipalNoticeController {
 			}
 			pricipalNotice.setSenderId(notice_edit.getOnlineId());
 			pricipalNotice.setCreated(new Date());
-			logger.info("pricipalNotice.getContent()="+pricipalNotice.getContent());
-			//stephen.wang 2017-8-30
-			//内容里面如果有临时图片，执行将临时图片转换为正式图片，上传一开始都是临时图片，当执行保存时，转为正式
+			logger.info("pricipalNotice.getContent()=" + pricipalNotice.getContent());
+			// stephen.wang 2017-8-30
+			// 内容里面如果有临时图片，执行将临时图片转换为正式图片，上传一开始都是临时图片，当执行保存时，转为正式
 			String newContent = FileUtil.transferTempUrl2FormalUrlWithAliOss(pricipalNotice.getContent(), ossInfo);
 			pricipalNotice.setContent(newContent);
 			notice.setContent(newContent);
-			logger.info("newContent="+newContent);
+			logger.info("newContent=" + newContent);
 			// 插入园长通知表
 			principalNoticeService.insertSelective(pricipalNotice);
 			notice.setCreated(new Date());
@@ -394,16 +405,44 @@ public class PrincipalNoticeController {
 	@PostMapping(value = "findprincipalNoticeByprincipalId/{principalId}")
 	@ApiOperation(value = "根据园长班级通知id查询通知", notes = "根据园长班级通知id查询通知")
 	@ResponseBody
-	public Out<OutList<Tb_principal_notice>> findReply_ByNoticeId(@PathVariable("principalId") Integer principalId) {
+	public Out<Hand_principalData> findReply_ByNoticeId(@PathVariable("principalId") Integer principalId) {
 		logger.info("访问 PrincipalNoticeController:findprincipalNoticeByprincipalId,principalId}=" + principalId);
 
 		List<Tb_principal_notice> principalNotices = null;
-		OutList<Tb_principal_notice> outList = null;
-		Out<OutList<Tb_principal_notice>> back = new Out<OutList<Tb_principal_notice>>();
+		List<Tb_noticeUser> noticeUser = null;
+        Tb_student_parent parent =null;
+        Tb_student student = null;
+        Tb_staff staff = null;
+        List<String> readerNames=new ArrayList<String>();
+        String name = "";
+		Hand_principalData data = new Hand_principalData();
+		Out<Hand_principalData> back = new Out<Hand_principalData>();
 		try {
 			principalNotices = principalNoticeService.selectById(principalId);
-			outList = new OutList<Tb_principal_notice>(principalNotices.size(), principalNotices);
-			back.setBackTypeWithLog(outList, BackType.SUCCESS_SEARCH_NORMAL);
+			data.setPrincipalNotices(principalNotices);
+			noticeUser = noticeService.findNoticeReadUserBySourceId(principalId, (byte) 1);
+			if (noticeUser != null) {
+				for (int i = 0; i < noticeUser.size(); i++) {
+					if (noticeUser.get(i).getUserType() == 30) {
+						parent=studentParentService.selectStudentByParentid(noticeUser.get(i).getUserId());
+						student= studentService.selectStudentById(parent.getStudentId());
+						name = student.getName()+"的"+parent.getRelationTitle();
+						readerNames.add(name);
+					} else if (noticeUser.get(i).getUserType() == 31) {
+
+						staff = staffService.selectByPrimaryKey(noticeUser.get(i).getUserId());
+						name = staff.getName()+"(园长)";
+						readerNames.add(name);
+					} else if (noticeUser.get(i).getUserType() == 32) {
+
+						staff = staffService.selectByPrimaryKey(noticeUser.get(i).getUserId());
+						name = staff.getName()+"(老师)";
+						readerNames.add(name);
+					}
+				}
+				data.setReaderNames(readerNames);
+			}
+			back.setBackTypeWithLog(data, BackType.SUCCESS_SEARCH_NORMAL);
 
 		} catch (ServiceException e) {
 			// 服务层错误，包括 内部service 和 对外service

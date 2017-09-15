@@ -55,7 +55,6 @@ public class StudentService {
 		// 对于已经deleted=1的不显示 禁用不显示
 		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
 		criteria.andParentIdEqualTo(parentId);
-System.out.println(studentparentMapper.selectByExample(condition).size());
 		Tb_student_parent parent = studentparentMapper.selectByExample(condition).get(0);
 			
 		return studentMapper.selectByPrimaryKey(parent.getStudentId());
@@ -101,8 +100,7 @@ System.out.println(studentparentMapper.selectByExample(condition).size());
 		Tb_studentExample.Criteria criteria=condition.createCriteria();
 		criteria.andIdEqualTo(id);
 		criteria.andDeletedEqualTo(false);
-		Tb_student selectByPrimaryKey = studentMapper.selectByPrimaryKey(id);
-		return selectByPrimaryKey;
+		return studentMapper.selectByExample(condition).get(0);
 	}
 
 	/**

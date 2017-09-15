@@ -172,7 +172,7 @@ public class NoticeController {
 				
 				for (int i = 0; i < notices.getList().size(); i++) {
 					notice = notices.getList().get(i);
-					if (notice.getNoticeType() != 4) {
+					if (notice.getNoticeType() != 4 && notice.getNoticeType() != 5) {
 
 						head =HeadMemoryConfigStorageContainer.findByOriId(notice.getNoticeType()& 0xFF);
 						notice.setHeadUrl(head.getAddress());
@@ -188,7 +188,7 @@ public class NoticeController {
 
 					}else if(notice.getNoticeType() == 5){//老师对话
 						if(user_type!=30){
-					    Tb_noticeUser noticeUser = noticeService.findNoticeUserBySourceId(notice.getId(), (byte)30);
+					    Tb_noticeUser noticeUser = noticeService.findNoticeUserByNoticeId(notice.getId(), (byte)30);
 					    //设置标题
 					       if(noticeUser!=null){
 							Tb_student student = studentService.selectStudentByParentId(noticeUser.getUserId());

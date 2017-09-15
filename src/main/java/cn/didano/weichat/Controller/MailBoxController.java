@@ -170,7 +170,7 @@ public class MailBoxController {
 							mails.add(notice);
 						} else if (notice_type == 5) {
 
-							Tb_noticeUser noticeUser = noticeService.findNoticeUserBySourceId(notice.getId(),
+							Tb_noticeUser noticeUser = noticeService.findNoticeUserByNoticeId(notice.getId(),
 									(byte) 30);
 							// 设置标题
 							if (noticeUser != null) {
