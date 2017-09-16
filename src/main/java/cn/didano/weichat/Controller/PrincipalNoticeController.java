@@ -422,14 +422,12 @@ public class PrincipalNoticeController {
 			principalNotices = principalNoticeService.selectById(principalId);
 			data.setPrincipalNotices(principalNotices);
 			noticeUser = noticeService.findNoticeReadUserBySourceId(principalId, (byte) 1);
-			System.out.println(noticeUser.size()+"noticeUser");
+
 			List<Tb_noticeUser> parentUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)30);
 			List<Tb_noticeUser> bossUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)31);
 			List<Tb_noticeUser> teacherUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)32);
 			data.setAllParent(parentUser.size());
-			System.out.println(parentUser.size()+"parentUser.size()");
 			data.setAllTeacher(bossUser.size()+teacherUser.size());
-			System.out.println(bossUser.size()+teacherUser.size());
 			int readParent=0;
 			int readTeacher=0;
 			if (noticeUser != null) {
