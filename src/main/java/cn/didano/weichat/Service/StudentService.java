@@ -26,6 +26,7 @@ import cn.didano.weichat.model.Tb_student_away_record;
 import cn.didano.weichat.model.Tb_student_detection4photoWall;
 import cn.didano.weichat.model.Tb_student_detection4photoWallExample;
 import cn.didano.weichat.model.Tb_student_parent;
+import cn.didano.weichat.model.Tb_student_parentExample;
 
 @Service
 public class StudentService {
@@ -45,6 +46,19 @@ public class StudentService {
 	private Tb_student_away_recordMapper awayMapper;
 
 
+	/**
+	 * 根据家长id查询小朋友
+	 */
+	public Tb_student selectStudentByParentId(Integer parentId){
+		Tb_student_parentExample condition = new Tb_student_parentExample();
+		Tb_student_parentExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andDeletedEqualTo(DeletedType.N0_DELETED.getValue());
+		criteria.andParentIdEqualTo(parentId);
+		Tb_student_parent parent = studentparentMapper.selectByExample(condition).get(0);
+			
+		return studentMapper.selectByPrimaryKey(parent.getStudentId());
+	}
 	/**
 	 * 根据时间查找学生的接送报告
 	 */
@@ -86,8 +100,7 @@ public class StudentService {
 		Tb_studentExample.Criteria criteria=condition.createCriteria();
 		criteria.andIdEqualTo(id);
 		criteria.andDeletedEqualTo(false);
-		Tb_student selectByPrimaryKey = studentMapper.selectByPrimaryKey(id);
-		return selectByPrimaryKey;
+		return studentMapper.selectByExample(condition).get(0);
 	}
 
 	/**

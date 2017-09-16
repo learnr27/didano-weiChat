@@ -10,7 +10,8 @@ public enum ModulePathType {
 	PRINCIPAL_NOTICE("园长通知", "/base/principal/post/findprincipalNoticeByprincipalId/"),
 	SHUTTLE_REPORT("接送报告", "/base/mailbox/post/findReply_ByNoticeId/"),
 	PUBLIC_SIGNAL("公众号", "/base/mailbox/post/findReply_ByNoticeId/"),
-	PRINCIPAL_MAIL("园长信箱", "/base/mailbox/post/findReply_ByNoticeId/");
+	PRINCIPAL_MAIL("园长信箱", "/base/mailbox/post/findReply_ByNoticeId/"),
+	TeacherChat_Parent("家长对话", "/base/mailbox/post/teacherTaklToParent/");
 
 	
 	private String name;

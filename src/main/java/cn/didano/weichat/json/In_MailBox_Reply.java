@@ -14,7 +14,7 @@ public class In_MailBox_Reply {
 	private Integer userId;
 	@ApiModelProperty(value = "学生id,登录者为园长时不填",required=true)
 	private Integer studentId;
-	@ApiModelProperty(value = "登录者类型 30家长 31园长，当通知id为0时使用",required=true)
+	@ApiModelProperty(value = "登录者类型 30家长 31园长 32老师",required=true)
 	private byte userType;
 	@ApiModelProperty(value = "通知id,仅回复时使用",required=true)
 	private Integer mailId;

@@ -84,7 +84,63 @@ public class NoticeService {
 		
 		return noticeMapper.selectByExample(condition);
 	}
+	
+	/**
+	 * 根据通知id，来源类型查找通知
+	 */
+	public Tb_noticeUser findNoticeUserByNoticeId(Integer id, byte type) {
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andNoticeIdEqualTo(id);
+		criteria.andDeletedEqualTo(false);
+		criteria.andUserTypeEqualTo(type);
+		if(noticeUserMapper.selectByExample(condition).size()!=0){
+		return noticeUserMapper.selectByExample(condition).get(0);
+		}else{
+			return null;
+		}
+	}
 
+
+	/**
+	 * 根据来源id，已经阅读人的id
+	 */
+	public List<Tb_noticeUser> findNoticeReadUserBySourceId(Integer sourceId, byte type) {
+		
+		List<Tb_notice> notice = findNoticeBySourceId(sourceId,type);
+		if(notice.size()!=0){
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		System.out.println(notice.get(0).getId());
+		criteria.andNoticeIdEqualTo(notice.get(0).getId());
+		criteria.andDeletedEqualTo(false);
+		criteria.andIsReadEqualTo((byte)1);
+		if(noticeUserMapper.selectByExample(condition).size()!=0){
+		return noticeUserMapper.selectByExample(condition);
+		}else{
+			return null;
+		}
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * 根据接收者类型，查看接收该通知的所有人
+	 */
+	public List<Tb_noticeUser> findNoticeUserByUserType(Integer noticeId, byte userType) {
+		
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andNoticeIdEqualTo(noticeId);
+		criteria.andDeletedEqualTo(false);
+		criteria.andUserTypeEqualTo(userType);
+		return noticeUserMapper.selectByExample(condition);
+		
+	}
 	/**
 	 * 根据通知id更新用户表的时间
 	 */
@@ -170,14 +226,7 @@ public class NoticeService {
 		PageHelper.startPage(page, size);
 		
 		List<Tb_notice> notices = new ArrayList<Tb_notice>();
-//		Tb_noticeUserExample condition = new Tb_noticeUserExample();
-//		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
-//		// 对于已经deleted=1的不显示 禁用不显示
-//		criteria.andUserIdEqualTo(id);
-//		criteria.andDeletedEqualTo(false);
-//		criteria.andUserTypeEqualTo(userType);
-//		condition.setOrderByClause("created");
-		Hand_noticeUserData data = new Hand_noticeUserData();
+	    Hand_noticeUserData data = new Hand_noticeUserData();
 		data.setNoticeType(noticeType);
 		data.setUserId(id);
 		data.setUserType(userType);
@@ -191,10 +240,7 @@ public class NoticeService {
 		}else{
 		noticeUser	= new ArrayList<Tb_noticeUser>();
 		}
-//		System.out.println(pageNoticeUser);
-//		System.out.println(pageNoticeUser.getPages());
-//		System.out.println(noticeUser.size()+"noticeUser");
-		
+	
 		//查询小诺通告
 		if(noticeType==-1){
 		Tb_noticeUserExample xiaoNuo = new Tb_noticeUserExample();
@@ -243,48 +289,8 @@ public class NoticeService {
 			notices.add(notice);
 			notice.setIs_read(noticeUser.get(i).getIsRead());
 			
-//			else if(noticeType==1){
-//				Tb_noticeExample noticeCondition = new Tb_noticeExample();
-//				Tb_noticeExample.Criteria noticeCriteria = noticeCondition.createCriteria();
-//				// 对于已经deleted=1的不显示 禁用不显示
-//				noticeCriteria.andNoticeTypeEqualTo(noticeType);
-//				noticeCriteria.andDeletedEqualTo(false);
-//				noticeCriteria.andIdEqualTo(noticeUser.get(i).getNoticeId());
-//				List<Tb_notice> notic=noticeMapper.selectByExample(noticeCondition);
-//				if(notic.size()!=0){
-//				
-//				noticeMapper.selectByExample(noticeCondition).get(0).setIs_read(noticeUser.get(i).getIsRead());
-//				notices.addAll(noticeMapper.selectByExample(noticeCondition));
-//				}
-//			}else if(noticeType==4){
-//				Tb_noticeExample noticeCondition = new Tb_noticeExample();
-//				Tb_noticeExample.Criteria noticeCriteria = noticeCondition.createCriteria();
-//				// 对于已经deleted=1的不显示 禁用不显示
-//				noticeCriteria.andNoticeTypeEqualTo(noticeType);
-//				noticeCriteria.andDeletedEqualTo(false);
-//				noticeCriteria.andIdEqualTo(noticeUser.get(i).getNoticeId());
-//				List<Tb_notice> notic=noticeMapper.selectByExample(noticeCondition);
-//				if(notic.size()!=0){
-//			
-//				noticeMapper.selectByExample(noticeCondition).get(0).setIs_read(noticeUser.get(i).getIsRead());
-//				notices.addAll(noticeMapper.selectByExample(noticeCondition));
-//				}
-//			}else if(noticeType==5){
-//				Tb_noticeExample noticeCondition = new Tb_noticeExample();
-//				Tb_noticeExample.Criteria noticeCriteria = noticeCondition.createCriteria();
-//				// 对于已经deleted=1的不显示 禁用不显示
-//				noticeCriteria.andNoticeTypeEqualTo(noticeType);
-//				noticeCriteria.andDeletedEqualTo(false);
-//				noticeCriteria.andIdEqualTo(noticeUser.get(i).getNoticeId());
-//				List<Tb_notice> notic=noticeMapper.selectByExample(noticeCondition);
-//				if(notic.size()!=0){
-//			
-//				noticeMapper.selectByExample(noticeCondition).get(0).setIs_read(noticeUser.get(i).getIsRead());
-//				notices.addAll(noticeMapper.selectByExample(noticeCondition));
-//				}
-//			}
+
 		}
-		System.out.println(notices.size()+"notice");
 		}
 		return  new PageInfo<Tb_notice>(notices);
 	}
@@ -343,10 +349,12 @@ public class NoticeService {
 		// 对于已经deleted=1的不显示 禁用不显示
 		criteria.andUserIdEqualTo(userId);
 		criteria.andNoticeIdEqualTo(noticeId);
-		criteria.andDeletedEqualTo(false);
 		List<Tb_noticeUser> noticeUser = noticeUserMapper.selectByExample(condition);
 		Tb_noticeUser user = noticeUser.get(0);
 		user.setIsRead((byte) 1);
+		if(user.getDeleted()==true){
+			user.setDeleted(false);
+		}
 		return noticeUserMapper.updateByPrimaryKeySelective(user);
 	}
 }

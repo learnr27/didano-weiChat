@@ -4,6 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,15 +19,23 @@ import com.github.pagehelper.PageInfo;
 
 import cn.didano.weichat.Service.MailBoxService;
 import cn.didano.weichat.Service.NoticeService;
+import cn.didano.weichat.Service.StudentService;
 import cn.didano.weichat.Service.WebSocketService;
 import cn.didano.weichat.constant.BackType;
+
+
 import cn.didano.weichat.constant.NoticeType;
+
 import cn.didano.weichat.exception.ServiceException;
 import cn.didano.weichat.json.In_Read_Date;
 import cn.didano.weichat.json.Out;
 import cn.didano.weichat.json.OutList;
 import cn.didano.weichat.model.Tb_head_sculpture;
 import cn.didano.weichat.model.Tb_notice;
+
+import cn.didano.weichat.model.Tb_noticeUser;
+import cn.didano.weichat.model.Tb_student;
+
 import cn.didano.weichat.repository.HeadMemoryConfigStorageContainer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,6 +54,8 @@ public class NoticeController {
 
 	@Autowired
 	private WebSocketService websocketService;
+	@Autowired
+	private StudentService studentService;
 
 	/**
 	 * 发布通知
@@ -156,19 +168,36 @@ public class NoticeController {
 			System.out.println(notices.getList().size());
 			if (notices.getList().size() != 0) {
 				// 获取头像地址
+				
+				
 				for (int i = 0; i < notices.getList().size(); i++) {
 					notice = notices.getList().get(i);
-					if (notice.getNoticeType() != 4) {
+					if (notice.getNoticeType() != 4 && notice.getNoticeType() != 5) {
+
 						head =HeadMemoryConfigStorageContainer.findByOriId(notice.getNoticeType()& 0xFF);
 						notice.setHeadUrl(head.getAddress());
-					} else {
+					} else if(notice.getNoticeType() == 4){//园长信箱
 						// 给园长信箱设置标题和头像
-						if(user_type!=30){
+						if (user_type!=30){
 						notice.setTitle(notices.getList().get(i).getSenderName().split("的")[0] + "小朋友的家庭");
 						}else{
 						notice.setTitle("园长信箱");
 						}
 						head = HeadMemoryConfigStorageContainer.findByOriId(4);
+						notice.setHeadUrl(head.getAddress());
+
+					}else if(notice.getNoticeType() == 5){//老师对话
+						if(user_type!=30){
+					    Tb_noticeUser noticeUser = noticeService.findNoticeUserByNoticeId(notice.getId(), (byte)30);
+					    //设置标题
+					       if(noticeUser!=null){
+							Tb_student student = studentService.selectStudentByParentId(noticeUser.getUserId());
+							notice.setTitle(student.getName().split("的")[0] + "小朋友的家庭");
+							}
+						}else{
+						notice.setTitle("老师对话");
+						}
+						head = HeadMemoryConfigStorageContainer.findByOriId(11);
 						notice.setHeadUrl(head.getAddress());
 
 					}
