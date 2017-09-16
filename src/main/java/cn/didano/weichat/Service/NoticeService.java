@@ -109,9 +109,11 @@ public class NoticeService {
 	public List<Tb_noticeUser> findNoticeReadUserBySourceId(Integer sourceId, byte type) {
 		
 		List<Tb_notice> notice = findNoticeBySourceId(sourceId,type);
+		if(notice.size()!=0){
 		Tb_noticeUserExample condition = new Tb_noticeUserExample();
 		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
 		// 对于已经deleted=1的不显示 禁用不显示
+		System.out.println(notice.get(0).getId());
 		criteria.andNoticeIdEqualTo(notice.get(0).getId());
 		criteria.andDeletedEqualTo(false);
 		criteria.andIsReadEqualTo((byte)1);
@@ -120,6 +122,24 @@ public class NoticeService {
 		}else{
 			return null;
 		}
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * 根据接收者类型，查看接收该通知的所有人
+	 */
+	public List<Tb_noticeUser> findNoticeUserByUserType(Integer noticeId, byte userType) {
+		
+		Tb_noticeUserExample condition = new Tb_noticeUserExample();
+		Tb_noticeUserExample.Criteria criteria = condition.createCriteria();
+		// 对于已经deleted=1的不显示 禁用不显示
+		criteria.andNoticeIdEqualTo(noticeId);
+		criteria.andDeletedEqualTo(false);
+		criteria.andUserTypeEqualTo(userType);
+		return noticeUserMapper.selectByExample(condition);
+		
 	}
 	/**
 	 * 根据通知id更新用户表的时间

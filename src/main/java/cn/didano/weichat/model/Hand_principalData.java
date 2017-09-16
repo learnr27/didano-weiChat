@@ -5,8 +5,36 @@ import java.util.List;
 public class Hand_principalData {
 	private List<Tb_principal_notice> principalNotices;
 	private List<String> readerNames;
-	private Integer readerNum=0;
+	private Integer readerNum;
+	private Integer allParent;
+	private Integer readParent;
+	private Integer allTeacher;
+	private Integer readTeacher;
 	
+	public Integer getAllParent() {
+		return allParent;
+	}
+	public void setAllParent(Integer allParent) {
+		this.allParent = allParent;
+	}
+	public Integer getReadParent() {
+		return readParent;
+	}
+	public void setReadParent(Integer readParent) {
+		this.readParent = readParent;
+	}
+	public Integer getAllTeacher() {
+		return allTeacher;
+	}
+	public void setAllTeacher(Integer allTeacher) {
+		this.allTeacher = allTeacher;
+	}
+	public Integer getReadTeacher() {
+		return readTeacher;
+	}
+	public void setReadTeacher(Integer readTeacher) {
+		this.readTeacher = readTeacher;
+	}
 	public Integer getReaderNum() {
 		return readerNum;
 	}

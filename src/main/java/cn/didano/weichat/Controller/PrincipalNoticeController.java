@@ -410,6 +410,7 @@ public class PrincipalNoticeController {
 
 		List<Tb_principal_notice> principalNotices = null;
 		List<Tb_noticeUser> noticeUser = null;
+	
         Tb_student_parent parent =null;
         Tb_student student = null;
         Tb_staff staff = null;
@@ -421,25 +422,56 @@ public class PrincipalNoticeController {
 			principalNotices = principalNoticeService.selectById(principalId);
 			data.setPrincipalNotices(principalNotices);
 			noticeUser = noticeService.findNoticeReadUserBySourceId(principalId, (byte) 1);
+			System.out.println(noticeUser.size()+"noticeUser");
+			List<Tb_noticeUser> parentUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)30);
+			List<Tb_noticeUser> bossUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)31);
+			List<Tb_noticeUser> teacherUser = noticeService.findNoticeUserByUserType(noticeUser.get(0).getNoticeId(), (byte)32);
+			data.setAllParent(parentUser.size());
+			System.out.println(parentUser.size()+"parentUser.size()");
+			data.setAllTeacher(bossUser.size()+teacherUser.size());
+			System.out.println(bossUser.size()+teacherUser.size());
+			int readParent=0;
+			int readTeacher=0;
 			if (noticeUser != null) {
 				for (int i = 0; i < noticeUser.size(); i++) {
 					if (noticeUser.get(i).getUserType() == 30) {
+						
 						parent=studentParentService.selectStudentByParentid(noticeUser.get(i).getUserId());
-						student= studentService.selectStudentById(parent.getStudentId());
+						if(parent!=null){
+						student= studentService.selectStudentById(parent.getStudentId());					
 						name = student.getName()+"的"+parent.getRelationTitle();
 						readerNames.add(name);
+						readParent++;
+						}
+						
 					} else if (noticeUser.get(i).getUserType() == 31) {
-
+					
 						staff = staffService.selectByPrimaryKey(noticeUser.get(i).getUserId());
+				       if(staff!=null){
 						name = staff.getName()+"(园长)";
 						readerNames.add(name);
+						readTeacher++;
+				       }
 					} else if (noticeUser.get(i).getUserType() == 32) {
-
+					
 						staff = staffService.selectByPrimaryKey(noticeUser.get(i).getUserId());
+						if(staff!=null){
 						name = staff.getName()+"(老师)";
 						readerNames.add(name);
+						readTeacher++;
+						}
+					}else if (noticeUser.get(i).getUserType() == 35) {
+					
+						staff = staffService.selectByPrimaryKey(noticeUser.get(i).getUserId());
+						if(staff!=null){
+						name = staff.getName()+"(行政)";
+						readerNames.add(name);
+						readTeacher++;
+						}
 					}
 				}
+				data.setReadParent(readParent);
+				data.setReadTeacher(readTeacher);
 				data.setReaderNames(readerNames);
 				data.setReaderNum(readerNames.size());
 			}
